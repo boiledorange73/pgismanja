@@ -1,0 +1,58 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>AddGeometryColumn</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.0.0 マニュアル"><link rel="up" href="reference.html#Management_Functions" title="8.2. テーブル管理関数"><link rel="prev" href="geography.html" title="geography"><link rel="next" href="DropGeometryColumn.html" title="DropGeometryColumn"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">AddGeometryColumn</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="geography.html">戻る</a> </td><th width="60%" align="center">8.2. テーブル管理関数</th><td width="20%" align="right"> <a accesskey="n" href="DropGeometryColumn.html">次へ</a></td></tr></table></div><div class="refentry"><a name="AddGeometryColumn"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>AddGeometryColumn — ジオメトリカラムを既存のテーブルに追加します。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">text <b class="fsfunc">AddGeometryColumn</b>(</code>varchar  <var class="pdparam">table_name</var>, varchar  <var class="pdparam">column_name</var>, integer  <var class="pdparam">srid</var>, varchar  <var class="pdparam">type</var>, integer  <var class="pdparam">dimension</var>, boolean  <var class="pdparam">use_typmod=true</var><code>)</code>;</p><p><code class="funcdef">text <b class="fsfunc">AddGeometryColumn</b>(</code>varchar  <var class="pdparam">schema_name</var>, varchar  <var class="pdparam">table_name</var>, varchar  <var class="pdparam">column_name</var>, integer  <var class="pdparam">srid</var>, varchar  <var class="pdparam">type</var>, integer  <var class="pdparam">dimension</var>, boolean  <var class="pdparam">use_typmod=true</var><code>)</code>;</p><p><code class="funcdef">text <b class="fsfunc">AddGeometryColumn</b>(</code>varchar  <var class="pdparam">catalog_name</var>, varchar  <var class="pdparam">schema_name</var>, varchar  <var class="pdparam">table_name</var>, varchar  <var class="pdparam">column_name</var>, integer  <var class="pdparam">srid</var>, varchar  <var class="pdparam">type</var>, integer  <var class="pdparam">dimension</var>, boolean  <var class="pdparam">use_typmod=true</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp70425800"></a><h2>説明</h2><p>ジオメトリカラムを既存の属性テーブルに追加します。<code class="varname">schema_name</code>はスキーマ名です。<code class="varname">srid</code>はSPATIAL_REF_SYSテーブルのエントリを参照する整数でなければなりません。<code class="varname">type</code>は'POLYGON'や'MULTILINESTRING'といった、ジオメトリタイプを示す文字でなければなりません。指定したスキーマが存在しない (または現在のsearch_pathからは見えない)場合、または指定したSRID、ジオメトリタイプもしくは次元が不正である場合はエラーが投げられます。</p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>Changed: 2.0.0 geometry_columnsがシステムカタログを読むビューになったため、geometry_columnsを更新しないようになりました。デフォルトでは制約を生成せず、PostgreSQLの型修飾子を使います。この関数によるWGS 84のPOINTカラムの構築と<code class="code">ALTER TABLE some_table ADD COLUMN geom geometry(Point,4326);</code>とは等価です。 </p><p>Changed: 2.0.0 制約を使う必要がある場合には、<code class="varname">use_typmod</code>をFALSEにします。</p></td></tr></table></div><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>Changed: 2.0.0 ビューについては、geometry_columnsへの手動登録はできなくなりました。しかし、typmodテーブルジオメトリに対して構築されていて、かつラッパ関数が無いビューは、親テーブルカラムのtypmodの挙動を継承するので、正しく登録されます。他のジオメトリを出力するジオメトリ関数を使うビューについては、ビューのジオメトリカラムが正しく登録されるようにするため、typmodジオメトリへのキャストが必要です。<a class="xref" href="using_postgis_dbmanagement.html#Manual_Register_Spatial_Column" title="4.3.4. 手動でジオメトリカラムをgeometry_columnsに登録する">「手動でジオメトリカラムをgeometry_columnsに登録する」</a>を参照して下さい。 </p></td></tr></table></div><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This method implements the <a class="ulink" href="http://www.opengeospatial.org/standards/sfs" target="_top">OpenGIS Simple Features
+ Implementation Specification for SQL 1.1.</a></p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports 3d and will not drop the z-index.</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This method supports Circular Strings and Curves</p><p>Enhanced: 2.0.0 use_typmod引数が導入されました。デフォルトでは制約を基にしたものでなくtypmodジオメトリカラムが生成されます。</p></div><div class="refsection"><a name="idp70459592"></a><h2>例</h2><pre class="programlisting">-- データを保持するスキーマの生成
+CREATE SCHEMA my_schema;
+-- 新しい単純なPostgreSQLテーブルの生成
+CREATE TABLE my_schema.my_spatial_table (id serial);
+
+-- "id"カラムのみを持つ単純なテーブルの説明
+postgis=# \d my_schema.my_spatial_table
+                                                         Table "my_schema.my_spatial_table"
+ Column |  Type   |                                Modifiers
+--------+---------+-------------------------------------------------------------------------
+ id     | integer | not null default nextval('my_schema.my_spatial_table_id_seq'::regclass)
+
+-- テーブルにジオメトリカラムを追加\
+SELECT AddGeometryColumn ('my_schema','my_spatial_table','geom',4326,'POINT',2);
+
+-- 制約を基にした古い方法でPOINTカラムを追加
+SELECT AddGeometryColumn ('my_schema','my_spatial_table','geom_c',4326,'POINT',2, false);
+
+-- 制約を基にした古い方法でCURVEPOLYGONカラムを追加
+SELECT AddGeometryColumn ('my_schema','my_spatial_table','geomcp_c',4326,'CURVEPOLYGON',2, false);
+
+-- 再度説明を表示し、新しいジオメトリカラムの追加を明らかにする
+\d my_schema.my_spatial_table
+                            addgeometrycolumn
+-------------------------------------------------------------------------
+ my_schema.my_spatial_table.geomcp_c SRID:4326 TYPE:CURVEPOLYGON DIMS:2
+(1 row)
+
+                                    Table "my_schema.my_spatial_table"
+  Column  |         Type         |                                Modifiers
+----------+----------------------+-------------------------------------------------------------------------
+ id       | integer              | not null default nextval('my_schema.my_spatial_table_id_seq'::regclass)
+ geom     | geometry(Point,4326) |
+ geom_c   | geometry             |
+ geomcp_c | geometry             |
+Check constraints:
+    "enforce_dims_geom_c" CHECK (st_ndims(geom_c) = 2)
+    "enforce_dims_geomcp_c" CHECK (st_ndims(geomcp_c) = 2)
+    "enforce_geotype_geom_c" CHECK (geometrytype(geom_c) = 'POINT'::text OR geom_c IS NULL)
+    "enforce_geotype_geomcp_c" CHECK (geometrytype(geomcp_c) = 'CURVEPOLYGON'::text OR geomcp_c IS NULL)
+    "enforce_srid_geom_c" CHECK (st_srid(geom_c) = 4326)
+    "enforce_srid_geomcp_c" CHECK (st_srid(geomcp_c) = 4326)
+
+-- geometry_columnsビューにも新しいカラムが登録されています --
+SELECT f_geometry_column As col_name, type, srid, coord_dimension As ndims
+    FROM geometry_columns
+    WHERE f_table_name = 'my_spatial_table' AND f_table_schema = 'my_schema';
+
+ col_name |     type     | srid | ndims
+----------+--------------+------+-------
+ geom     | Point        | 4326 |     2
+ geom_c   | Point        | 4326 |     2
+ geomcp_c | CurvePolygon | 4326 |     2
+</pre></div><div class="refsection"><a name="idp70460872"></a><h2>関連情報</h2><p><a class="xref" href="DropGeometryColumn.html" title="DropGeometryColumn">DropGeometryColumn</a>, <a class="xref" href="DropGeometryTable.html" title="DropGeometryTable">DropGeometryTable</a>, <a class="xref" href="using_postgis_dbmanagement.html#geometry_columns" title="4.3.2. GEOMETRY_COLUMNSビュー">「GEOMETRY_COLUMNSビュー」</a>, <a class="xref" href="using_postgis_dbmanagement.html#Manual_Register_Spatial_Column" title="4.3.4. 手動でジオメトリカラムをgeometry_columnsに登録する">「手動でジオメトリカラムをgeometry_columnsに登録する」</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="geography.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Management_Functions">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="DropGeometryColumn.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">geography </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> DropGeometryColumn</td></tr></table></div></body></html>

@@ -1,0 +1,24 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>AddOverviewConstraints</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.0.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Management_Functions" title="9.2. ラスタ管理"><link rel="prev" href="RT_DropRasterConstraints.html" title="DropRasterConstraints"><link rel="next" href="RT_DropOverviewConstraints.html" title="DropOverviewConstraints"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">AddOverviewConstraints</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_DropRasterConstraints.html">戻る</a> </td><th width="60%" align="center">9.2. ラスタ管理</th><td width="20%" align="right"> <a accesskey="n" href="RT_DropOverviewConstraints.html">次へ</a></td></tr></table></div><div class="refentry"><a name="RT_AddOverviewConstraints"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>AddOverviewConstraints — ラスタカラムに対して、他のオーバビューであることをタグ付けします。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">boolean <b class="fsfunc">AddOverviewConstraints</b>(</code>name  <var class="pdparam">ovschema</var>, name  <var class="pdparam">ovtable</var>, name  <var class="pdparam">ovcolumn</var>, name  <var class="pdparam">refschema</var>, name  <var class="pdparam">reftable</var>, name  <var class="pdparam">refcolumn</var>, int  <var class="pdparam">ovfactor</var><code>)</code>;</p><p><code class="funcdef">boolean <b class="fsfunc">AddOverviewConstraints</b>(</code>name  <var class="pdparam">ovtable</var>, name  <var class="pdparam">ovcolumn</var>, name  <var class="pdparam">reftable</var>, name  <var class="pdparam">refcolumn</var>, int  <var class="pdparam">ovfactor</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp93143368"></a><h2>説明</h2><p><code class="varname">raster_overviews</code>ラスタカタログ内の情報を表示するために使われるラスタカラムに制約を追加します。 </p><p><code class="varname">ovfactor</code>引数は、オーバビューカラムの縮尺乗数を示します。縮尺乗数は大きいほど低い解像度になります。 </p><p><code class="varname">ovschema</code>と<code class="varname">refschema</code>が省略されると、<code class="varname">search_path</code>を走査して発見した最初のテーブルを使います。 </p><p>Availability: 2.0.0</p></div><div class="refsection"><a name="idp93147336"></a><h2>例</h2><pre class="programlisting">CREATE TABLE res1 AS SELECT
+ST_AddBand(
+  ST_MakeEmptyRaster(1000, 1000, 0, 0, 2),
+  1, '8BSI'::text, -129, NULL
+) r1;
+
+CREATE TABLE res2 AS SELECT
+ST_AddBand(
+  ST_MakeEmptyRaster(500, 500, 0, 0, 4),
+  1, '8BSI'::text, -129, NULL
+) r2;
+
+SELECT AddOverviewConstraints('res2', 'r2', 'res1', 'r1', 2);
+
+-- raster_overviewsビューに正しく登録されたか確認します --
+SELECT o_table_name ot, o_raster_column oc,
+       r_table_name rt, r_raster_column rc,
+       overview_factor f
+FROM raster_overviews WHERE o_table_name = 'res2';
+  ot  | oc |  rt  | rc | f
+------+----+------+----+---
+ res2 | r2 | res1 | r1 | 2
+(1 row)
+                </pre></div><div class="refsection"><a name="idp93148616"></a><h2>関連情報</h2><p><a class="xref" href="using_raster_dataman.html#RT_Raster_Overviews" title="5.2.2. ラスタオーバビュー">「ラスタオーバビュー」</a>, <a class="xref" href="RT_DropOverviewConstraints.html" title="DropOverviewConstraints">DropOverviewConstraints</a>, <a class="xref" href="RT_CreateOverview.html" title="ST_CreateOverview">ST_CreateOverview</a>, <a class="xref" href="RT_AddRasterConstraints.html" title="AddRasterConstraints">AddRasterConstraints</a> </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_DropRasterConstraints.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Management_Functions">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_DropOverviewConstraints.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">DropRasterConstraints </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> DropOverviewConstraints</td></tr></table></div></body></html>

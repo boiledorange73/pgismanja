@@ -1,0 +1,214 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_GDALDrivers</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.0.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Management_Functions" title="9.2. ラスタ管理"><link rel="prev" href="RT_PostGIS_Raster_Lib_Version.html" title="PostGIS_Raster_Lib_Version"><link rel="next" href="RT_UpdateRasterSRID.html" title="UpdateRasterSRID"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_GDALDrivers</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_PostGIS_Raster_Lib_Version.html">戻る</a> </td><th width="60%" align="center">9.2. ラスタ管理</th><td width="20%" align="right"> <a accesskey="n" href="RT_UpdateRasterSRID.html">次へ</a></td></tr></table></div><div class="refentry"><a name="RT_ST_GDALDrivers"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_GDALDrivers — 使用しているGDALライブラリが対応するラスタ書式の一覧を返します。この一覧でcan_write=TrueとなっているものだけがST_AsGDALRasterで使えます。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">setof record <b class="fsfunc">ST_GDALDrivers</b>(</code>integer  <var class="pdparam">OUT idx</var>, text  <var class="pdparam">OUT short_name</var>, text  <var class="pdparam">OUT long_name</var>, text  <var class="pdparam">OUT can_read</var>, text  <var class="pdparam">OUT can_write</var>, text  <var class="pdparam">OUT create_options</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp93215048"></a><h2>説明</h2><p>使用しているGDALライブラリが対応するラスタ書式のshort_name, long_nameと作成オプションの一覧を返します。short_nameは、<a class="xref" href="RT_ST_AsGDALRaster.html" title="ST_AsGDALRaster">ST_AsGDALRaster</a>の<code class="varname">format</code>パラメタに使います。オプションはGDALライブラリのコンパイルに使ったドライバに依存します。<code class="varname">create_options</code>は、XML形式のCretionOptionList/Optionの集合で、ドライバごとの生成オプションごとに、名前を持ち、追加情報の<code class="varname">type</code>, <code class="varname">description</code>と<code class="varname">VALUE</code>の集合を持ちます。 </p><p>Changed: 2.5.0 - can_readカラムとcan_writeカラムを追加</p><p>Changed: 2.0.6, 2.1.3 - GUC (訳注: Grand Unified Configurationの略で、動的に変更できるPostgreSQLパラメータ)または環境変数gdal_enabled_driversが設定されていないデフォルトではドライバが全て無効になりました。</p><p>Availability: 2.0.0 - GDAL 1.6.0以上が必要です。 </p></div><div class="refsection"><a name="idp93219784"></a><h2>例: ドライバ一覧</h2><pre class="programlisting">SET postgis.gdal_enabled_drivers = 'ENABLE_ALL';
+SELECT short_name, long_name, can_write
+FROM st_gdaldrivers()
+ORDER BY short_name;
+
+   short_name    |                          long_name                          | can_write
+-----------------+-------------------------------------------------------------+-----------
+ AAIGrid         | Arc/Info ASCII Grid                                         | t
+ ACE2            | ACE2                                                        | f
+ ADRG            | ARC Digitized Raster Graphics                               | f
+ AIG             | Arc/Info Binary Grid                                        | f
+ AirSAR          | AirSAR Polarimetric Image                                   | f
+ ARG             | Azavea Raster Grid format                                   | t
+ BAG             | Bathymetry Attributed Grid                                  | f
+ BIGGIF          | Graphics Interchange Format (.gif)                          | f
+ BLX             | Magellan topo (.blx)                                        | t
+ BMP             | MS Windows Device Independent Bitmap                        | f
+ BSB             | Maptech BSB Nautical Charts                                 | f
+ PAux            | PCI .aux Labelled                                           | f
+ PCIDSK          | PCIDSK Database File                                        | f
+ PCRaster        | PCRaster Raster File                                        | f
+ PDF             | Geospatial PDF                                              | f
+ PDS             | NASA Planetary Data System                                  | f
+ PDS4            | NASA Planetary Data System 4                                | t
+ PLMOSAIC        | Planet Labs Mosaics API                                     | f
+ PLSCENES        | Planet Labs Scenes API                                      | f
+ PNG             | Portable Network Graphics                                   | t
+ PNM             | Portable Pixmap Format (netpbm)                             | f
+ PRF             | Racurs PHOTOMOD PRF                                         | f
+ R               | R Object Data Store                                         | t
+ Rasterlite      | Rasterlite                                                  | t
+ RDA             | DigitalGlobe Raster Data Access driver                      | f
+ RIK             | Swedish Grid RIK (.rik)                                     | f
+ RMF             | Raster Matrix Format                                        | f
+ ROI_PAC         | ROI_PAC raster                                              | f
+ RPFTOC          | Raster Product Format TOC format                            | f
+ RRASTER         | R Raster                                                    | f
+ RS2             | RadarSat 2 XML Product                                      | f
+ RST             | Idrisi Raster A.1                                           | t
+ SAFE            | Sentinel-1 SAR SAFE Product                                 | f
+ SAGA            | SAGA GIS Binary Grid (.sdat, .sg-grd-z)                     | t
+ SAR_CEOS        | CEOS SAR Image                                              | f
+ SDTS            | SDTS Raster                                                 | f
+ SENTINEL2       | Sentinel 2                                                  | f
+ SGI             | SGI Image File Format 1.0                                   | f
+ SNODAS          | Snow Data Assimilation System                               | f
+ SRP             | Standard Raster Product (ASRP/USRP)                         | f
+ SRTMHGT         | SRTMHGT File Format                                         | t
+ Terragen        | Terragen heightfield                                        | f
+ TIL             | EarthWatch .TIL                                             | f
+ TSX             | TerraSAR-X Product                                          | f
+ USGSDEM         | USGS Optional ASCII DEM (and CDED)                          | t
+ VICAR           | MIPL VICAR file                                             | f
+ VRT             | Virtual Raster                                              | t
+ WCS             | OGC Web Coverage Service                                    | f
+ WMS             | OGC Web Map Service                                         | t
+ WMTS            | OGC Web Map Tile Service                                    | t
+ XPM             | X11 PixMap Format                                           | t
+ XYZ             | ASCII Gridded XYZ                                           | t
+ ZMap            | ZMap Plus Grid                                              | t
+</pre></div><div class="refsection"><a name="idp93221064"></a><h2>例: ドライバ毎のオプション一覧</h2><pre class="programlisting">-- JPEGのXMLカラムから生成オプションをテーブルとして出力します --
+-- この生成オプションはST_AsGDALRasterのオプション引数で使えます --
+SELECT (xpath('@name', g.opt))[1]::text As oname,
+       (xpath('@type', g.opt))[1]::text As otype,
+       (xpath('@description', g.opt))[1]::text As descrip
+FROM (SELECT unnest(xpath('/CreationOptionList/Option', create_options::xml)) As opt
+FROM  st_gdaldrivers()
+WHERE short_name = 'JPEG') As g;
+
+       oname        |  otype  |      descrip
+--------------------+---------+-------------------------------------------------
+ PROGRESSIVE        | boolean | whether to generate a progressive JPEG
+ QUALITY            | int     | good=100, bad=0, default=75
+ WORLDFILE          | boolean | whether to geneate a worldfile
+ INTERNAL_MASK      | boolean | whether to generate a validity mask
+ COMMENT            | string  | Comment
+ SOURCE_ICC_PROFILE | string  | ICC profile encoded in Base64
+ EXIF_THUMBNAIL     | boolean | whether to generate an EXIF thumbnail(overview).
+                                By default its max dimension will be 128
+ THUMBNAIL_WIDTH    | int     | Forced thumbnail width
+ THUMBNAIL_HEIGHT   | int     | Forced thumbnail height
+(9 rows)
+</pre><pre class="programlisting">-- GeoTIFFの生成オプションを生のXMLで出力します --
+SELECT create_options
+FROM st_gdaldrivers()
+WHERE short_name = 'GTiff';
+
+&lt;CreationOptionList&gt;
+    &lt;Option name="COMPRESS" type="string-select"&gt;
+        &lt;Value
+&gt;NONE&lt;/Value&gt;
+        &lt;Value
+&gt;LZW&lt;/Value&gt;
+        &lt;Value
+&gt;PACKBITS&lt;/Value&gt;
+        &lt;Value
+&gt;JPEG&lt;/Value&gt;
+        &lt;Value
+&gt;CCITTRLE&lt;/Value&gt;
+        &lt;Value
+&gt;CCITTFAX3&lt;/Value&gt;
+        &lt;Value
+&gt;CCITTFAX4&lt;/Value&gt;
+        &lt;Value
+&gt;DEFLATE&lt;/Value&gt;
+    &lt;/Option&gt;
+    &lt;Option name="PREDICTOR" type="int" description="Predictor Type"/&gt;
+    &lt;Option name="JPEG_QUALITY" type="int" description="JPEG quality 1-100" default="75"/&gt;
+    &lt;Option name="ZLEVEL" type="int" description="DEFLATE compression level 1-9" default="6"/&gt;
+    &lt;Option name="NBITS" type="int" description="BITS for sub-byte files (1-7), sub-uint16 (9-15), sub-uint32 (17-31)"/&gt;
+    &lt;Option name="INTERLEAVE" type="string-select" default="PIXEL"&gt;
+        &lt;Value
+&gt;BAND&lt;/Value&gt;
+        &lt;Value
+&gt;PIXEL&lt;/Value&gt;
+    &lt;/Option&gt;
+    &lt;Option name="TILED" type="boolean" description="Switch to tiled format"/&gt;
+    &lt;Option name="TFW" type="boolean" description="Write out world file"/&gt;
+    &lt;Option name="RPB" type="boolean" description="Write out .RPB (RPC) file"/&gt;
+    &lt;Option name="BLOCKXSIZE" type="int" description="Tile Width"/&gt;
+    &lt;Option name="BLOCKYSIZE" type="int" description="Tile/Strip Height"/&gt;
+    &lt;Option name="PHOTOMETRIC" type="string-select"&gt;
+        &lt;Value
+&gt;MINISBLACK&lt;/Value&gt;
+        &lt;Value
+&gt;MINISWHITE&lt;/Value&gt;
+        &lt;Value
+&gt;PALETTE&lt;/Value&gt;
+        &lt;Value
+&gt;RGB&lt;/Value&gt;
+        &lt;Value
+&gt;CMYK&lt;/Value&gt;
+        &lt;Value
+&gt;YCBCR&lt;/Value&gt;
+        &lt;Value
+&gt;CIELAB&lt;/Value&gt;
+        &lt;Value
+&gt;ICCLAB&lt;/Value&gt;
+        &lt;Value
+&gt;ITULAB&lt;/Value&gt;
+    &lt;/Option&gt;
+    &lt;Option name="SPARSE_OK" type="boolean" description="Can newly created files have missing blocks?" default="FALSE"/&gt;
+    &lt;Option name="ALPHA" type="boolean" description="Mark first extrasample as being alpha"/&gt;
+    &lt;Option name="PROFILE" type="string-select" default="GDALGeoTIFF"&gt;
+        &lt;Value
+&gt;GDALGeoTIFF&lt;/Value&gt;
+        &lt;Value
+&gt;GeoTIFF&lt;/Value&gt;
+        &lt;Value
+&gt;BASELINE&lt;/Value&gt;
+    &lt;/Option&gt;
+    &lt;Option name="PIXELTYPE" type="string-select"&gt;
+        &lt;Value
+&gt;DEFAULT&lt;/Value&gt;
+        &lt;Value
+&gt;SIGNEDBYTE&lt;/Value&gt;
+    &lt;/Option&gt;
+    &lt;Option name="BIGTIFF" type="string-select" description="Force creation of BigTIFF file"&gt;
+        &lt;Value
+&gt;YES&lt;/Value&gt;
+        &lt;Value
+&gt;NO&lt;/Value&gt;
+        &lt;Value
+&gt;IF_NEEDED&lt;/Value&gt;
+        &lt;Value
+&gt;IF_SAFER&lt;/Value&gt;
+    &lt;/Option&gt;
+    &lt;Option name="ENDIANNESS" type="string-select" default="NATIVE" description="Force endianness of created file. For DEBUG purpose mostly"&gt;
+        &lt;Value
+&gt;NATIVE&lt;/Value&gt;
+        &lt;Value
+&gt;INVERTED&lt;/Value&gt;
+        &lt;Value
+&gt;LITTLE&lt;/Value&gt;
+        &lt;Value
+&gt;BIG&lt;/Value&gt;
+    &lt;/Option&gt;
+    &lt;Option name="COPY_SRC_OVERVIEWS" type="boolean" default="NO" description="Force copy of overviews of source dataset (CreateCopy())"/&gt;
+&lt;/CreationOptionList
+&gt;
+
+-- GeoTIFF生成オプションのXMLをテーブルとして出力します --
+-- Output the create options XML column for GTiff as a table  --
+SELECT (xpath('@name', g.opt))[1]::text As oname,
+       (xpath('@type', g.opt))[1]::text As otype,
+       (xpath('@description', g.opt))[1]::text As descrip,
+       array_to_string(xpath('Value/text()', g.opt),', ') As vals
+FROM (SELECT unnest(xpath('/CreationOptionList/Option', create_options::xml)) As opt
+FROM  st_gdaldrivers()
+WHERE short_name = 'GTiff') As g;
+
+       oname        |     otype     |                               descrip                                |                                   vals
+--------------------+---------------+----------------------------------------------------------------------+---------------------------------------------------------------------------
+ COMPRESS           | string-select |                                                                      | NONE, LZW, PACKBITS, JPEG, CCITTRLE, CCITTFAX3, CCITTFAX4, DEFLATE
+ PREDICTOR          | int           | Predictor Type                                                       |
+ JPEG_QUALITY       | int           | JPEG quality 1-100                                                   |
+ ZLEVEL             | int           | DEFLATE compression level 1-9                                        |
+ NBITS              | int           | BITS for sub-byte files (1-7), sub-uint16 (9-15), sub-uint32 (17-31) |
+ INTERLEAVE         | string-select |                                                                      | BAND, PIXEL
+ TILED              | boolean       | Switch to tiled format                                               |
+ TFW                | boolean       | Write out world file                                                 |
+ RPB                | boolean       | Write out .RPB (RPC) file                                            |
+ BLOCKXSIZE         | int           | Tile Width                                                           |
+ BLOCKYSIZE         | int           | Tile/Strip Height                                                    |
+ PHOTOMETRIC        | string-select |                                                                      | MINISBLACK, MINISWHITE, PALETTE, RGB, CMYK, YCBCR, CIELAB, ICCLAB, ITULAB
+ SPARSE_OK          | boolean       | Can newly created files have missing blocks?                         |
+ ALPHA              | boolean       | Mark first extrasample as being alpha                                |
+ PROFILE            | string-select |                                                                      | GDALGeoTIFF, GeoTIFF, BASELINE
+ PIXELTYPE          | string-select |                                                                      | DEFAULT, SIGNEDBYTE
+ BIGTIFF            | string-select | Force creation of BigTIFF file                                       | YES, NO, IF_NEEDED, IF_SAFER
+ ENDIANNESS         | string-select | Force endianness of created file. For DEBUG purpose mostly           | NATIVE, INVERTED, LITTLE, BIG
+ COPY_SRC_OVERVIEWS | boolean       | Force copy of overviews of source dataset (CreateCopy())             |
+(19 rows)
+</pre></div><div class="refsection"><a name="idp93222728"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_AsGDALRaster.html" title="ST_AsGDALRaster">ST_AsGDALRaster</a>, <a class="xref" href="ST_SRID.html" title="ST_SRID">ST_SRID</a>, <a class="xref" href="postgis_gdal_enabled_drivers.html" title="postgis.gdal_enabled_drivers">postgis.gdal_enabled_drivers</a> </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_PostGIS_Raster_Lib_Version.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Management_Functions">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_UpdateRasterSRID.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">PostGIS_Raster_Lib_Version </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> UpdateRasterSRID</td></tr></table></div></body></html>

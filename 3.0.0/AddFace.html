@@ -1,0 +1,39 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>AddFace</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.0.0 マニュアル"><link rel="up" href="Topology.html#Topology_Processing" title="11.7. トポロジ処理"><link rel="prev" href="AddEdge.html" title="AddEdge"><link rel="next" href="TP_ST_Simplify.html" title="ST_Simplify"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">AddFace</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="AddEdge.html">戻る</a> </td><th width="60%" align="center">11.7. トポロジ処理</th><td width="20%" align="right"> <a accesskey="n" href="TP_ST_Simplify.html">次へ</a></td></tr></table></div><div class="refentry"><a name="AddFace"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>AddFace — フェイスプリミティブをトポロジに登録し、その識別番号を得ます。 </p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">integer <b class="fsfunc">AddFace</b>(</code>varchar  <var class="pdparam">toponame</var>, geometry  <var class="pdparam">apolygon</var>, boolean  <var class="pdparam">force_new=false</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp103681608"></a><h2>説明</h2><p>フェイスプリミティブをトポロジに登録し、その識別番号を得ます。  </p><p>新しく追加されたフェイスのために、境界を形成するエッジとフェイスに含まれるエッジはleft_faceとright_faceフィールドに正しい値を持つよう更新されます。フェイスに含まれる孤立ノードも正しいcontaining_faceフィールド値を持つよう更新されます。 </p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>この関数はエッジテーブルのnext_left_edgeとnext_right_edgeフィールドの読み書きを行いません。 </p></td></tr></table></div><p>対象トポロジは妥当 (自己インタセクトするエッジが無い)と仮定しています。ポリゴンの境界が既存のエッジでは完全には定義されない場合や、ポリゴンが既存のフェイスにオーバラップする場合には、例外が投げられます。</p><p><code class="varname">apolygon</code>ジオメトリが既にフェイスとして存在している場合には、
+<code class="varname">force_new</code>がfalse (デフォルト)の場合は、既存フェイスのフェイス識別番号が返り、<code class="varname">force_new</code>がtrueの場合は、新しい識別番号が </p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>既存フェイスの新規登録が実行される時(force_new=true)、そのエッジ内の既存のフェイスへの参照のダングルを解決しません。また、関連テーブルのノードと既存フェイスのレコードのMBR(訳注: 最小境界矩形)フィールドの更新も行いません。これに対応するのは、この関数を呼び出した側です。 </p></td></tr></table></div><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p><code class="varname">apolygon</code>ジオメトリはトポロジと同じ<code class="varname">srid</code>である必要があり、異なる場合には、不正な空間参照系エラーが投げられます。</p></td></tr></table></div><p>Availability: 2.0.0</p></div><div class="refsection"><a name="idp103687880"></a><h2>例</h2><pre class="programlisting">-- 最初に、反復子にgenerate_seriesを使用してエッジを追加
+-- (generate_seriesの最大値の関係上、
+-- 頂点が10000個未満のポリゴンでのみ動作します)
+
+SELECT topology.AddEdge('ma_topo', ST_MakeLine(ST_PointN(geom,i), ST_PointN(geom, i + 1) )) As edgeid
+    FROM (SELECT  ST_NPoints(geom) AS npt, geom
+            FROM
+                (SELECT ST_Boundary(ST_GeomFromText('POLYGON((234896.5 899456.7,234914 899436.4,234946.6 899356.9,234872.5 899328.7,
+                234891 899285.4,234992.5 899145, 234890.6 899069,234755.2 899255.4,
+                234612.7 899379.4,234776.9 899563.7,234896.5 899456.7))', 26986) )  As geom
+            )  As geoms) As facen CROSS JOIN generate_series(1,10000) As i
+         WHERE i &lt; npt;
+-- 結果 --
+ edgeid
+--------
+      3
+      4
+      5
+      6
+      7
+      8
+      9
+     10
+     11
+     12
+(10 rows)
+-- フェイスの追加
+
+SELECT topology.AddFace('ma_topo',
+    ST_GeomFromText('POLYGON((234896.5 899456.7,234914 899436.4,234946.6 899356.9,234872.5 899328.7,
+    234891 899285.4,234992.5 899145, 234890.6 899069,234755.2 899255.4,
+    234612.7 899379.4,234776.9 899563.7,234896.5 899456.7))', 26986) ) As faceid;
+-- 結果 --
+faceid
+--------
+ 1
+
+</pre></div><div class="refsection"><a name="idp103689416"></a><h2>関連情報</h2><p><a class="xref" href="AddEdge.html" title="AddEdge">AddEdge</a>, <a class="xref" href="CreateTopology.html" title="CreateTopology">CreateTopology</a>, <a class="xref" href="using_postgis_dbmanagement.html#spatial_ref_sys" title="4.3.1. SPATIAL_REF_SYSテーブルと空間参照系">「SPATIAL_REF_SYSテーブルと空間参照系」</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="AddEdge.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="Topology.html#Topology_Processing">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="TP_ST_Simplify.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">AddEdge </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_Simplify</td></tr></table></div></body></html>

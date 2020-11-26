@@ -1,0 +1,29 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>&lt;#&gt;</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.0.0 マニュアル"><link rel="up" href="reference.html#idp76953672" title="8.10.2. 距離演算子"><link rel="prev" href="geometry_distance_cpa.html" title="|=|"><link rel="next" href="geometry_distance_centroid_nd.html" title="&lt;&lt;-&gt;&gt;"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">&lt;#&gt;</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="geometry_distance_cpa.html">戻る</a> </td><th width="60%" align="center">8.10.2. 距離演算子</th><td width="20%" align="right"> <a accesskey="n" href="geometry_distance_centroid_nd.html">次へ</a></td></tr></table></div><div class="refentry"><a name="geometry_distance_box"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>&lt;#&gt; — AのバウンディングボックスとBのバウンディングボックスの2次元距離を返します。 </p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">double precision <b class="fsfunc">&lt;#&gt;</b>(</code> geometry  <var class="pdparam">A</var> ,  geometry  <var class="pdparam">B</var> <code>)</code>;</p></div></div><div class="refsection"><a name="idp77009608"></a><h2>説明</h2><p><code class="varname">&lt;#&gt;</code>演算子は二つの浮動小数点数によるバウンディングボックス間の距離を返します。可能なら空間インデクス (PostgreSQL 9.1以上が必要です)を読みます。近傍の<span class="strong"><strong>概ねの</strong></span>距離による並び替えに使います。</p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>これのオペランドはジオメトリで利用できるインデクスを使用します。他の演算子との相違点は、ORDER BY句でのみインデクスが使用される点です。</p></td></tr></table></div><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>ジオメトリのひとつがg1.geom &lt;#&gt;と違って ORDER BY (ST_GeomFromText('POINT(1 2)') &lt;#&gt; geom)というように定数である場合には、インデクスが有効になるだけです。</p></td></tr></table></div><p>Availability: 2.0.0 PostgreSQL 9.1以上でのみ有効です。</p></div><div class="refsection"><a name="idp77012936"></a><h2>例</h2><pre class="programlisting">SELECT *
+FROM (
+SELECT b.tlid, b.mtfcc,
+        b.geom &lt;#
+&gt; ST_GeomFromText('LINESTRING(746149 2948672,745954 2948576,
+                745787 2948499,745740 2948468,745712 2948438,
+                745690 2948384,745677 2948319)',2249) As b_dist,
+                ST_Distance(b.geom, ST_GeomFromText('LINESTRING(746149 2948672,745954 2948576,
+                745787 2948499,745740 2948468,745712 2948438,
+                745690 2948384,745677 2948319)',2249)) As act_dist
+    FROM bos_roads As b
+    ORDER BY b_dist, b.tlid
+    LIMIT 100) As foo
+    ORDER BY act_dist, tlid LIMIT 10;
+
+   tlid    | mtfcc |      b_dist      |     act_dist
+-----------+-------+------------------+------------------
+  85732027 | S1400 |                0 |                0
+  85732029 | S1400 |                0 |                0
+  85732031 | S1400 |                0 |                0
+  85734335 | S1400 |                0 |                0
+  85736037 | S1400 |                0 |                0
+ 624683742 | S1400 |                0 | 128.528874268666
+  85719343 | S1400 | 260.839270432962 | 260.839270432962
+  85741826 | S1400 | 164.759294123275 | 260.839270432962
+  85732032 | S1400 |           277.75 | 311.830282365264
+  85735592 | S1400 |           222.25 | 311.830282365264
+(10 rows)
+</pre></div><div class="refsection"><a name="idp77014216"></a><h2>関連情報</h2><p><a class="xref" href="ST_DWithin.html" title="ST_DWithin">ST_DWithin</a>, <a class="xref" href="ST_Distance.html" title="ST_Distance">ST_Distance</a>, <a class="xref" href="geometry_distance_knn.html" title="&lt;-&gt;">&lt;-&gt;</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="geometry_distance_cpa.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#idp76953672">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="geometry_distance_centroid_nd.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">|=| </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> &lt;&lt;-&gt;&gt;</td></tr></table></div></body></html>

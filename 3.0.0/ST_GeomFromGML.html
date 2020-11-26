@@ -1,0 +1,90 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_GeomFromGML</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.0.0 マニュアル"><link rel="up" href="reference.html#idp74489672" title="8.8.3. その他の書式"><link rel="prev" href="ST_GeomFromGeoHash.html" title="ST_GeomFromGeoHash"><link rel="next" href="ST_GeomFromGeoJSON.html" title="ST_GeomFromGeoJSON"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_GeomFromGML</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_GeomFromGeoHash.html">戻る</a> </td><th width="60%" align="center">8.8.3. その他の書式</th><td width="20%" align="right"> <a accesskey="n" href="ST_GeomFromGeoJSON.html">次へ</a></td></tr></table></div><div class="refentry"><a name="ST_GeomFromGML"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_GeomFromGML — GML表現からPostGISジオメトリオブジェクトを出力します。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_GeomFromGML</b>(</code>text  <var class="pdparam">geomgml</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_GeomFromGML</b>(</code>text  <var class="pdparam">geomgml</var>, integer  <var class="pdparam">srid</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp74648392"></a><h2>説明</h2><p>OGC GML表現からPostGIS ST_Geometryオブジェクトを生成します。</p><p>ST_GeomFromGMLは、GMLのうちジオメトリ部分でのみ動作します。GML文書全体に使用しようとするとエラーが投げられます。</p><p>サポートされているOGC GMLの版は次のとおりです。</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>GML 3.2.1 Namespace</p></li><li class="listitem"><p>GML 3.1.1 Simple Features profile SF-2 (GML 3.1.0と3.0.0の後方互換)</p></li><li class="listitem"><p>GML 2.1.2</p></li></ul></div><p> OGC GML標準については、<a class="ulink" href="http://www.opengeospatial.org/standards/gml" target="_top">http://www.opengeospatial.org/standards/gml</a>をご覧下さい。 </p><p>Availability: 1.5 libxml2 1.6+が必要です。</p><p>Enhanced: 2.0.0 多面体サーフェス対応とTIN対応が導入されました。</p><p>Enhanced: 2.0.0 SRID任意引数が追加されました。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports 3d and will not drop the z-index.</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports Polyhedral surfaces.</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports Triangles and Triangulated Irregular Network Surfaces (TIN).</p><p>GMLは、複合次元 (たとえば、2次元と3次元が同じMultiGeometry内にある)を許します。PostGISジオメトリは許さないので、ST_GeomFromGMLは、Z次元が無いジオメトリを一つでも発見すると、ジオメトリ全体を2次元に変換します。</p><p>GMLは同じMultiGeometry内での複合SRSをサポートします。PostGISではサポートしないので、ST_GeomFromGMLは、この場合には、全てのサブジオメトリをルートノードのSRSに投影変換します。GMLのルートノードにsrsName属性が無い場合、関数はエラーを投げます。</p><p>ST_GeomFromGML関数は、明示的なGML名前空間について杓子定規ではありません。共通使用で名前空間の明示を避けることができます。ただし、GML内でXLink機能を使いたい場合は必要です。</p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>ST_GeomFromGMLはSQL/MM曲線ジオメトリに対応していません。</p></td></tr></table></div></div><div class="refsection"><a name="idp74660936"></a><h2>例 - srsName属性を持つ単一のジオメトリ</h2><pre class="programlisting">SELECT ST_GeomFromGML('
+                &lt;gml:LineString srsName="EPSG:4269"&gt;
+                        &lt;gml:coordinates&gt;
+                                -71.16028,42.258729 -71.160837,42.259112 -71.161143,42.25932
+                        &lt;/gml:coordinates&gt;
+                &lt;/gml:LineString
+&gt;');
+                </pre></div><div class="refsection"><a name="idp74662216"></a><h2>例 - XLink使用法</h2><pre class="programlisting">SELECT ST_GeomFromGML('
+                &lt;gml:LineString xmlns:gml="http://www.opengis.net/gml"
+                                xmlns:xlink="http://www.w3.org/1999/xlink"
+                                srsName="urn:ogc:def:crs:EPSG::4269"&gt;
+                        &lt;gml:pointProperty&gt;
+                                &lt;gml:Point gml:id="p1"
+&gt;&lt;gml:pos
+&gt;42.258729 -71.16028&lt;/gml:pos
+&gt;&lt;/gml:Point&gt;
+                        &lt;/gml:pointProperty&gt;
+                        &lt;gml:pos
+&gt;42.259112 -71.160837&lt;/gml:pos&gt;
+                        &lt;gml:pointProperty&gt;
+                                &lt;gml:Point xlink:type="simple" xlink:href="#p1"/&gt;
+                        &lt;/gml:pointProperty&gt;
+                &lt;/gml:LineString
+&gt;'););
+                </pre></div><div class="refsection"><a name="idp74663496"></a><h2>例 - 多面体サーフェス</h2><pre class="programlisting">SELECT ST_AsEWKT(ST_GeomFromGML('
+&lt;gml:PolyhedralSurface&gt;
+&lt;gml:polygonPatches&gt;
+  &lt;gml:PolygonPatch&gt;
+    &lt;gml:exterior&gt;
+      &lt;gml:LinearRing
+&gt;&lt;gml:posList srsDimension="3"
+&gt;0 0 0 0 0 1 0 1 1 0 1 0 0 0 0&lt;/gml:posList
+&gt;&lt;/gml:LinearRing&gt;
+    &lt;/gml:exterior&gt;
+  &lt;/gml:PolygonPatch&gt;
+  &lt;gml:PolygonPatch&gt;
+    &lt;gml:exterior&gt;
+        &lt;gml:LinearRing
+&gt;&lt;gml:posList srsDimension="3"
+&gt;0 0 0 0 1 0 1 1 0 1 0 0 0 0 0&lt;/gml:posList
+&gt;&lt;/gml:LinearRing&gt;
+    &lt;/gml:exterior&gt;
+  &lt;/gml:PolygonPatch&gt;
+  &lt;gml:PolygonPatch&gt;
+    &lt;gml:exterior&gt;
+        &lt;gml:LinearRing
+&gt;&lt;gml:posList srsDimension="3"
+&gt;0 0 0 1 0 0 1 0 1 0 0 1 0 0 0&lt;/gml:posList
+&gt;&lt;/gml:LinearRing&gt;
+    &lt;/gml:exterior&gt;
+  &lt;/gml:PolygonPatch&gt;
+  &lt;gml:PolygonPatch&gt;
+    &lt;gml:exterior&gt;
+        &lt;gml:LinearRing
+&gt;&lt;gml:posList srsDimension="3"
+&gt;1 1 0 1 1 1 1 0 1 1 0 0 1 1 0&lt;/gml:posList
+&gt;&lt;/gml:LinearRing&gt;
+    &lt;/gml:exterior&gt;
+  &lt;/gml:PolygonPatch&gt;
+  &lt;gml:PolygonPatch&gt;
+    &lt;gml:exterior&gt;
+        &lt;gml:LinearRing
+&gt;&lt;gml:posList srsDimension="3"
+&gt;0 1 0 0 1 1 1 1 1 1 1 0 0 1 0&lt;/gml:posList
+&gt;&lt;/gml:LinearRing&gt;
+    &lt;/gml:exterior&gt;
+  &lt;/gml:PolygonPatch&gt;
+  &lt;gml:PolygonPatch&gt;
+    &lt;gml:exterior&gt;
+        &lt;gml:LinearRing
+&gt;&lt;gml:posList srsDimension="3"
+&gt;0 0 1 1 0 1 1 1 1 0 1 1 0 0 1&lt;/gml:posList
+&gt;&lt;/gml:LinearRing&gt;
+    &lt;/gml:exterior&gt;
+  &lt;/gml:PolygonPatch&gt;
+&lt;/gml:polygonPatches&gt;
+&lt;/gml:PolyhedralSurface
+&gt;'));
+
+-- 結果--
+ POLYHEDRALSURFACE(((0 0 0,0 0 1,0 1 1,0 1 0,0 0 0)),
+ ((0 0 0,0 1 0,1 1 0,1 0 0,0 0 0)),
+ ((0 0 0,1 0 0,1 0 1,0 0 1,0 0 0)),
+ ((1 1 0,1 1 1,1 0 1,1 0 0,1 1 0)),
+ ((0 1 0,0 1 1,1 1 1,1 1 0,0 1 0)),
+ ((0 0 1,1 0 1,1 1 1,0 1 1,0 0 1)))
+                </pre></div><div class="refsection"><a name="idp74664776"></a><h2>関連情報</h2><p><a class="xref" href="postgis_installation.html#installation_configuration" title="2.5.1. コンフィギュレーション">「コンフィギュレーション」</a>, <a class="xref" href="ST_AsGML.html" title="ST_AsGML">ST_AsGML</a>, <a class="xref" href="ST_GMLToSQL.html" title="ST_GMLToSQL">ST_GMLToSQL</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_GeomFromGeoHash.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#idp74489672">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_GeomFromGeoJSON.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_GeomFromGeoHash </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_GeomFromGeoJSON</td></tr></table></div></body></html>

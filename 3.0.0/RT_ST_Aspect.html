@@ -1,0 +1,50 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Aspect</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.0.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Processing_DEM" title="9.12.3. DEM (標高)"><link rel="prev" href="RT_ST_Sum4ma.html" title="ST_Sum4ma"><link rel="next" href="RT_ST_HillShade.html" title="ST_HillShade"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Aspect</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_Sum4ma.html">戻る</a> </td><th width="60%" align="center">9.12.3. DEM (標高)</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_HillShade.html">次へ</a></td></tr></table></div><div class="refentry"><a name="RT_ST_Aspect"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_Aspect — 標高ラスタバンドの傾斜方向 (デフォルトの単位は度)を返します。地形解析に使えます。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">raster <b class="fsfunc">ST_Aspect</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">band=1</var>, text  <var class="pdparam">pixeltype=32BF</var>, text  <var class="pdparam">units=DEGREES</var>, boolean  <var class="pdparam">interpolate_nodata=FALSE</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_Aspect</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">band</var>, raster  <var class="pdparam">customextent</var>, text  <var class="pdparam">pixeltype=32BF</var>, text  <var class="pdparam">units=DEGREES</var>, boolean  <var class="pdparam">interpolate_nodata=FALSE</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp97062984"></a><h2>説明</h2><p>標高ラスタバンドの傾斜方向 (デフォルトの単位は度)を返します。地図代数を利用して、傾斜方向方程式を隣接ピクセルに適用します。</p><p><code class="varname">units</code>は、傾斜方向の単位を示します。取りえる値はRADIANS, DEGREES (デフォルト)です。 </p><p><code class="varname">units</code>がRADIANSの時、値は0から2πラジアンの間で、北から時計回りに計ります。 </p><p><code class="varname">units</code>がDEGREESの時、値は0から360度の間で、北から時計回りに計ります。 </p><p>ピクセルの傾斜角が0の場合には、傾斜方向は-1とします。 </p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>傾斜角、傾斜方および陰影起伏に関する詳細情報については、<a class="ulink" href="http://webhelp.esri.com/arcgisdesktop/9.3/index.cfm?TopicName=How%20Hillshade%20works" target="_top">ESRI - How hillshade works</a>および<a class="ulink" href="http://e2b.erdas.com/fieldguide/wwhelp/wwhimpl/common/html/wwhelp.htm?context=FieldGuide&amp;file=Aspect_Images.html" target="_top">ERDAS Field Guide - Aspect Images</a>を参照して下さい。 </p></td></tr></table></div><p>Availability: 2.0.0 </p><p>Enhanced: 2.1.0 ST_MapAlgebra()を使用するようにし、<code class="varname">interpolate_nodata</code>任意引数を追加しました。</p><p>Changed: 2.1.0 以前の版では、返り値はラジアン単位でした。現在は、デフォルトでは度で返します。</p></div><div class="refsection"><a name="idp97070024"></a><h2>例: 一つ目の形式</h2><pre class="programlisting">WITH foo AS (
+        SELECT ST_SetValues(
+                ST_AddBand(ST_MakeEmptyRaster(5, 5, 0, 0, 1, -1, 0, 0, 0), 1, '32BF', 0, -9999),
+                1, 1, 1, ARRAY[
+                        [1, 1, 1, 1, 1],
+                        [1, 2, 2, 2, 1],
+                        [1, 2, 3, 2, 1],
+                        [1, 2, 2, 2, 1],
+                        [1, 1, 1, 1, 1]
+                ]::double precision[][]
+        ) AS rast
+)
+SELECT
+        ST_DumpValues(ST_Aspect(rast, 1, '32BF'))
+FROM foo
+
+                                                                                                    st_dumpvalues
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------
+ (1,"{{315,341.565063476562,0,18.4349479675293,45},{288.434936523438,315,0,45,71.5650482177734},{270,270,-1,90,90},{251.565048217773,225,180,135,108.434951782227},{225,198.43495178
+2227,180,161.565048217773,135}}")
+(1 row)
+                                        </pre></div><div class="refsection"><a name="idp97071304"></a><h2>例: 二つ目の形式</h2><p>カバレッジのタイルの完全な例です。このクエリはPostgreSQL 9.1以上でのみ動作します。</p><pre class="programlisting">WITH foo AS (
+        SELECT ST_Tile(
+                ST_SetValues(
+                        ST_AddBand(
+                                ST_MakeEmptyRaster(6, 6, 0, 0, 1, -1, 0, 0, 0),
+                                1, '32BF', 0, -9999
+                        ),
+                        1, 1, 1, ARRAY[
+                                [1, 1, 1, 1, 1, 1],
+                                [1, 1, 1, 1, 2, 1],
+                                [1, 2, 2, 3, 3, 1],
+                                [1, 1, 3, 2, 1, 1],
+                                [1, 2, 2, 1, 2, 1],
+                                [1, 1, 1, 1, 1, 1]
+                        ]::double precision[]
+                ),
+                2, 2
+        ) AS rast
+)
+SELECT
+        t1.rast,
+        ST_Aspect(ST_Union(t2.rast), 1, t1.rast)
+FROM foo t1
+CROSS JOIN foo t2
+WHERE ST_Intersects(t1.rast, t2.rast)
+GROUP BY t1.rast;
+                                        </pre></div><div class="refsection"><a name="idp97073096"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_MapAlgebra.html" title="ST_MapAlgebra (コールバック関数版)">ST_MapAlgebra (コールバック関数版)</a>, <a class="xref" href="RT_ST_TRI.html" title="ST_TRI">ST_TRI</a>, <a class="xref" href="RT_ST_TPI.html" title="ST_TPI">ST_TPI</a>, <a class="xref" href="RT_ST_Roughness.html" title="ST_Roughness">ST_Roughness</a>, <a class="xref" href="RT_ST_HillShade.html" title="ST_HillShade">ST_HillShade</a>, <a class="xref" href="RT_ST_Slope.html" title="ST_Slope">ST_Slope</a> </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_Sum4ma.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Processing_DEM">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_HillShade.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Sum4ma </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_HillShade</td></tr></table></div></body></html>

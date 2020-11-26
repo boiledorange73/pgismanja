@@ -1,0 +1,25 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_AddMeasure</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.0.0 マニュアル"><link rel="up" href="reference.html#Linear_Referencing" title="8.17. 線型参照"><link rel="prev" href="ST_InterpolatePoint.html" title="ST_InterpolatePoint"><link rel="next" href="ST_IsValidTrajectory.html" title="ST_IsValidTrajectory"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_AddMeasure</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_InterpolatePoint.html">戻る</a> </td><th width="60%" align="center">8.17. 線型参照</th><td width="20%" align="right"> <a accesskey="n" href="ST_IsValidTrajectory.html">次へ</a></td></tr></table></div><div class="refentry"><a name="ST_AddMeasure"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_AddMeasure — 始点と終点の間を線型補完した、M値を持つ派生ジオメトリを返します。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_AddMeasure</b>(</code>geometry  <var class="pdparam">geom_mline</var>, float8  <var class="pdparam">measure_start</var>, float8  <var class="pdparam">measure_end</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp83564232"></a><h2>説明</h2><p>始点と終点の間を線型補完した、M値を持つ派生ジオメトリを返します。ジオメトリにM値が無い場合には、1が追加されます。ジオメトリがM値を持つ場合には、新しい値で上書きされます。LINESTRINGとMULTILINESTRINGのみ対応しています。</p><p>Availability: 1.5.0</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports 3d and will not drop the z-index.</p></div><div class="refsection"><a name="idp83567176"></a><h2>例</h2><pre class="programlisting">SELECT ST_AsText(ST_AddMeasure(
+ST_GeomFromEWKT('LINESTRING(1 0, 2 0, 4 0)'),1,4)) As ewelev;
+           ewelev
+--------------------------------
+ LINESTRINGM(1 0 1,2 0 2,4 0 4)
+
+SELECT ST_AsText(ST_AddMeasure(
+ST_GeomFromEWKT('LINESTRING(1 0 4, 2 0 4, 4 0 4)'),10,40)) As ewelev;
+                 ewelev
+----------------------------------------
+ LINESTRING(1 0 4 10,2 0 4 20,4 0 4 40)
+
+SELECT ST_AsText(ST_AddMeasure(
+ST_GeomFromEWKT('LINESTRINGM(1 0 4, 2 0 4, 4 0 4)'),10,40)) As ewelev;
+                 ewelev
+----------------------------------------
+ LINESTRINGM(1 0 10,2 0 20,4 0 40)
+
+SELECT ST_AsText(ST_AddMeasure(
+ST_GeomFromEWKT('MULTILINESTRINGM((1 0 4, 2 0 4, 4 0 4),(1 0 4, 2 0 4, 4 0 4))'),10,70)) As ewelev;
+                             ewelev
+-----------------------------------------------------------------
+ MULTILINESTRINGM((1 0 10,2 0 20,4 0 40),(1 0 40,2 0 50,4 0 70))
+</pre></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_InterpolatePoint.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Linear_Referencing">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_IsValidTrajectory.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_InterpolatePoint </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_IsValidTrajectory</td></tr></table></div></body></html>

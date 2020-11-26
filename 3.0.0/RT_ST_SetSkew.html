@@ -1,0 +1,30 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_SetSkew</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.0.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Editors" title="9.7. ラスタエディタ"><link rel="prev" href="RT_ST_SetScale.html" title="ST_SetScale"><link rel="next" href="RT_ST_SetSRID.html" title="ST_SetSRID"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_SetSkew</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_SetScale.html">戻る</a> </td><th width="60%" align="center">9.7. ラスタエディタ</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_SetSRID.html">次へ</a></td></tr></table></div><div class="refentry"><a name="RT_ST_SetSkew"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_SetSkew — 地理参照のスキュー (回転パラメタ)のX値とY値を設定します。一つだけ渡した場合には、X値とY値は同じ値に設定されます。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">raster <b class="fsfunc">ST_SetSkew</b>(</code>raster  <var class="pdparam">rast</var>, float8  <var class="pdparam">skewxy</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_SetSkew</b>(</code>raster  <var class="pdparam">rast</var>, float8  <var class="pdparam">skewx</var>, float8  <var class="pdparam">skewy</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp94912712"></a><h2>説明</h2><p>地理参照のスキュー (回転パラメタ)のX値とY値を設定します。一つだけ渡した場合には、X値とY値は同じ値に設定されます。詳細については<a class="ulink" href="http://en.wikipedia.org/wiki/World_file" target="_top">World File</a> (英語版WikiPedia)をご覧下さい。</p></div><div class="refsection"><a name="idp94914376"></a><h2>例</h2><pre class="programlisting">-- 例1
+UPDATE dummy_rast SET rast = ST_SetSkew(rast,1,2) WHERE rid = 1;
+SELECT rid, ST_SkewX(rast) As skewx, ST_SkewY(rast) As skewy,
+    ST_GeoReference(rast) as georef
+FROM dummy_rast WHERE rid = 1;
+
+rid | skewx | skewy |    georef
+----+-------+-------+--------------
+  1 |     1 |     2 | 2.0000000000
+                    : 2.0000000000
+                    : 1.0000000000
+                    : 3.0000000000
+                    : 0.5000000000
+                    : 0.5000000000
+
+                                </pre><pre class="programlisting">-- 例2 同じ値に設定
+UPDATE dummy_rast SET rast = ST_SetSkew(rast,0) WHERE rid = 1;
+SELECT rid, ST_SkewX(rast) As skewx, ST_SkewY(rast) As skewy,
+    ST_GeoReference(rast) as georef
+FROM dummy_rast WHERE rid = 1;
+
+ rid | skewx | skewy |    georef
+-----+-------+-------+--------------
+   1 |     0 |     0 | 2.0000000000
+                     : 0.0000000000
+                     : 0.0000000000
+                     : 3.0000000000
+                     : 0.5000000000
+                     : 0.5000000000
+                                </pre></div><div class="refsection"><a name="idp94916424"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_GeoReference.html" title="ST_GeoReference">ST_GeoReference</a>, <a class="xref" href="RT_ST_SetGeoReference.html" title="ST_SetGeoReference">ST_SetGeoReference</a>, <a class="xref" href="RT_ST_SkewX.html" title="ST_SkewX">ST_SkewX</a>, <a class="xref" href="RT_ST_SkewY.html" title="ST_SkewY">ST_SkewY</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_SetScale.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Editors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_SetSRID.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_SetScale </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_SetSRID</td></tr></table></div></body></html>

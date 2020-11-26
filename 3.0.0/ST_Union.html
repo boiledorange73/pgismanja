@@ -1,0 +1,55 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Union</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.0.0 マニュアル"><link rel="up" href="reference.html#Geometry_Processing" title="8.13. ジオメトリ処理関数"><link rel="prev" href="ST_Subdivide.html" title="ST_Subdivide"><link rel="next" href="ST_UnaryUnion.html" title="ST_UnaryUnion"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Union</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_Subdivide.html">戻る</a> </td><th width="60%" align="center">8.13. ジオメトリ処理関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_UnaryUnion.html">次へ</a></td></tr></table></div><div class="refentry"><a name="ST_Union"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_Union — ジオメトリの結合の点集合を表現するジオメトリを返します。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_Union</b>(</code>geometry set <var class="pdparam">g1field</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_Union</b>(</code>geometry <var class="pdparam">g1</var>, geometry <var class="pdparam">g2</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_Union</b>(</code>geometry[] <var class="pdparam">g1_array</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp80951368"></a><h2>説明</h2><p>MULTI系、単一ジオメトリ、ジオメトリコレクションのいずれでも出力されます。二つの形式があります。一つ目は、二つのジオメトリを結合して、インタセクトしている領域の無い新しいジオメトリを返します。二つ目は、ジオメトリの集合を結合して、インタセクトしている領域の無い単一のST_Geometryを返すものです。</p><p>集約関数版: この関数は、ジオメトリの集合から、MULTI系ジオメトリまたは非MULTI系ジオメトリを返します。ST_Union()関数は、PostgreSQL用語で言うところの「集約関数」です。SUM()やMEAN()と同じ方法でデータリストの操作を行い、NULLジオメトリを無視することを意味します。</p><p>非集約関数版: この関数は二つの入力ジオメトリの結合したジオメトリを返します。出力型はMULTI系、非MULTI系またはGEOMETRYCOLLECTIONです。入力が全てNULLならNULLを返します。</p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>ST_CollectとST_Unionはしばしば交換して使うことができます。ST_Unionは境界を更新し、生成されるMULTI系ジオメトリがインタセクトした領域を持たないようにするため、一般的にST_Collectよりも桁違いに遅く動きます。</p></td></tr></table></div><p>ST_Unionでは<a class="ulink" href="http://blog.cleverelephant.ca/2009/01/must-faster-unions-in-postgis-14.html" target="_top">http://blog.cleverelephant.ca/2009/01/must-faster-unions-in-postgis-14.html</a>にある高速なカスケード結合アルゴリズムが使われています。</p><p>GEOSモジュールで実現しています。</p><p>ご注意: この関数は以前は、"Union"から名称変更してGeomUnion()と呼ばれていました。UNIONはSQLの予約語であるためです。</p><p>Availability: 1.4.0 - ST_Unionが機能強化されました。ST_Union(geomarray)が導入され、PostgreSQLの高速なコレクションの集約が導入されました。</p><p>Changed: 3.0.0 SFCGAL非依存になりました。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This method implements the <a class="ulink" href="http://www.opengeospatial.org/standards/sfs" target="_top">OpenGIS Simple Features
+ Implementation Specification for SQL 1.1.</a> s2.1.1.3</p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>集約関数版は、OGC仕様に明示的に定義されていません。</p></td></tr></table></div><p><span class="inlinemediaobject"><img src="images/check.png"></span> This method implements the SQL/MM specification. SQL-MM 3: 5.1.19 ポリゴンが含まれる時、Z値 (標高)を持ちます。</p></div><div class="refsection"><a name="idp80959816"></a><h2>例</h2><p>集約関数版の例</p><pre class="programlisting">SELECT stusps,
+             ST_Union(f.geom) as singlegeom
+FROM sometable f
+GROUP BY stusps
+                          </pre><p>非集約関数の例</p><pre class="programlisting">select ST_AsText(ST_Union('POINT(1 2)' :: geometry, 'POINT(-2 3)' :: geometry))
+
+st_astext
+----------
+MULTIPOINT(-2 3,1 2)
+
+select ST_AsText(ST_Union('POINT(1 2)' :: geometry, 'POINT(1 2)' :: geometry))
+
+st_astext
+----------
+POINT(1 2)</pre><p>3次元の例 - 3次元 (かつ混合次元)の種類</p><pre class="programlisting">select ST_AsEWKT(ST_Union(geom))
+from (
+         select 'POLYGON((-7 4.2,-7.1 4.2,-7.1 4.3, -7 4.2))'::geometry geom
+         union all
+         select 'POINT(5 5 5)'::geometry geom
+         union all
+         select 'POINT(-2 3 1)'::geometry geom
+         union all
+         select 'LINESTRING(5 5 5, 10 10 10)'::geometry geom
+     ) as foo;
+
+st_asewkt
+---------
+GEOMETRYCOLLECTION(POINT(-2 3 1),LINESTRING(5 5 5,10 10 10),POLYGON((-7 4.2 5,-7.1 4.2 5,-7.1 4.3 5,-7 4.2 5)));
+</pre><p>3次元の例 - 混合次元なし</p><pre class="programlisting">select ST_AsEWKT(ST_Union(geom))
+from (
+         select 'POLYGON((-7 4.2 2,-7.1 4.2 3,-7.1 4.3 2, -7 4.2 2))'::geometry geom
+         union all
+         select 'POINT(5 5 5)'::geometry geom
+         union all
+         select 'POINT(-2 3 1)'::geometry geom
+         union all
+         select 'LINESTRING(5 5 5, 10 10 10)'::geometry geom
+     ) as foo;
+
+st_asewkt
+---------
+GEOMETRYCOLLECTION(POINT(-2 3 1),LINESTRING(5 5 5,10 10 10),POLYGON((-7 4.2 2,-7.1 4.2 3,-7.1 4.3 2,-7 4.2 2)))
+
+--Examples using new Array construct
+SELECT ST_Union(ARRAY(SELECT the_geom FROM sometable));
+
+SELECT ST_AsText(ST_Union(ARRAY[ST_GeomFromText('LINESTRING(1 2, 3 4)'),
+                        ST_GeomFromText('LINESTRING(3 4, 4 5)')])) As wktunion;
+
+--wktunion---
+MULTILINESTRING((3 4,4 5),(1 2,3 4))
+
+                          </pre></div><div class="refsection"><a name="idp80964296"></a><h2>関連情報</h2><p><a class="xref" href="ST_Collect.html" title="ST_Collect">ST_Collect</a>, <a class="xref" href="ST_UnaryUnion.html" title="ST_UnaryUnion">ST_UnaryUnion</a>, <a class="xref" href="ST_Intersection.html" title="ST_Intersection">ST_Intersection</a>, <a class="xref" href="ST_Difference.html" title="ST_Difference">ST_Difference</a> <a class="xref" href="ST_SymDifference.html" title="ST_SymDifference">ST_SymDifference</a> </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_Subdivide.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Geometry_Processing">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_UnaryUnion.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Subdivide </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_UnaryUnion</td></tr></table></div></body></html>

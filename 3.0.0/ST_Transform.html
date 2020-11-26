@@ -1,0 +1,43 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Transform</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.0.0 マニュアル"><link rel="up" href="reference.html#SRS_Functions" title="8.7. 空間参照系関数"><link rel="prev" href="ST_SRID.html" title="ST_SRID"><link rel="next" href="ST_BdPolyFromText.html" title="ST_BdPolyFromText"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Transform</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_SRID.html">戻る</a> </td><th width="60%" align="center">8.7. 空間参照系関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_BdPolyFromText.html">次へ</a></td></tr></table></div><div class="refentry"><a name="ST_Transform"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_Transform — 異なる空間参照系に投影変換された新しいジオメトリを返します。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_Transform</b>(</code>geometry  <var class="pdparam">g1</var>, integer  <var class="pdparam">srid</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_Transform</b>(</code>geometry  <var class="pdparam">geom</var>, text  <var class="pdparam">to_proj</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_Transform</b>(</code>geometry  <var class="pdparam">geom</var>, text  <var class="pdparam">from_proj</var>, text  <var class="pdparam">to_proj</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_Transform</b>(</code>geometry  <var class="pdparam">geom</var>, text  <var class="pdparam">from_proj</var>, integer  <var class="pdparam">to_srid</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp72837960"></a><h2>説明</h2><p>異なる空間参照系に投影変換された新しいジオメトリを返します。変換先空間参照系である<code class="varname">to_srid</code>は、妥当なSRID整数パラメータ (<code class="varname">spatial_ref_sys</code>にあるということ)です。他にも、<code class="varname">to_proj</code>と<code class="varname">from_proj</code>にPROJ.4文字列で定義された空間参照系を指定することができますが、最適化されません。変換先空間参照系がSRIDの代わりにPROJ.4文字列で表現されている場合には、出力ジオメトリのSRIDは0になります。<code class="varname">from_proj</code>を使う場合には、入力ジオメトリは定義されたSRIDを持っていなければなりません。 </p><p>ST_Transformはしばしば<a class="xref" href="ST_SetSRID.html" title="ST_SetSRID">ST_SetSRID</a>と混同されます。ST_Transformは実際にジオメトリの座標を、ある空間参照系から他のものに変換します。ST_SetSRIDは単にジオメトリのSRIDを変更するだけです。</p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>PostGISがProj対応でコンパイルされている必要があります。<a class="xref" href="PostGIS_Full_Version.html" title="PostGIS_Full_Version">PostGIS_Full_Version</a>を使ってProj対応でコンパイルされているか確認して下さい。</p></td></tr></table></div><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>一つ以上の変換を行う場合は、インデクスの利点を得るために、使用する変換に関する関数インデクスを持つと便利です。</p></td></tr></table></div><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>1.3.4より前では、曲線を含むジオメトリで使用すると、この関数はクラッシュします。これは1.3.4以上で訂正されています。</p></td></tr></table></div><p>Enhanced: 2.0.0 多面体サーフェス対応が導入されました。</p><p>Enhanced: 2.3.0 直接のPROJ.4文字列への対応が導入されました。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span> This method implements the SQL/MM specification. SQL-MM 3: 5.1.6</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This method supports Circular Strings and Curves</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports Polyhedral surfaces.</p></div><div class="refsection"><a name="idp72849224"></a><h2>例</h2><p>マサチューセッツ州平面座標系 (アメリカ測量フィート)をWGS84経度緯度に変更します。</p><pre class="programlisting">SELECT ST_AsText(ST_Transform(ST_GeomFromText('POLYGON((743238 2967416,743238 2967450,
+        743265 2967450,743265.625 2967416,743238 2967416))',2249),4326)) As wgs_geom;
+
+ wgs_geom
+---------------------------
+ POLYGON((-71.1776848522251 42.3902896512902,-71.1776843766326 42.3903829478009,
+-71.1775844305465 42.3903826677917,-71.1775825927231 42.3902893647987,-71.177684
+8522251 42.3902896512902));
+(1 row)
+
+-- 3次元曲線ストリングの例
+SELECT ST_AsEWKT(ST_Transform(ST_GeomFromEWKT('SRID=2249;CIRCULARSTRING(743238 2967416 1,743238 2967450 2,743265 2967450 3,743265.625 2967416 3,743238 2967416 4)'),4326));
+
+                                 st_asewkt
+--------------------------------------------------------------------------------------
+ SRID=4326;CIRCULARSTRING(-71.1776848522251 42.3902896512902 1,-71.1776843766326 42.3903829478009 2,
+ -71.1775844305465 42.3903826677917 3,
+ -71.1775825927231 42.3902893647987 3,-71.1776848522251 42.3902896512902 4)
+
+                </pre><p>部分関数インデクスを作る例です。全てのジオメトリが入っているとは確信できないテーブルのためには、スペースの節約とインデクスを小さく効率的にするために、NULLジオメトリを無視する部分インデクスを使うのが最善です。</p><pre class="programlisting">CREATE INDEX idx_the_geom_26986_parcels
+  ON parcels
+  USING gist
+  (ST_Transform(the_geom, 26986))
+  WHERE the_geom IS NOT NULL;
+                </pre><p>PROJ.4テキストを使って、独自の空間参照系に投影変換する例です。</p><pre class="programlisting">-- 独自の心射方位図法を使って北極付近の二つのポリゴンのインタセクションを探します
+-- http://boundlessgeo.com/2012/02/flattening-the-peel/ を参照して下さい。
+ WITH data AS (
+   SELECT
+     ST_GeomFromText('POLYGON((170 50,170 72,-130 72,-130 50,170 50))', 4326) AS p1,
+     ST_GeomFromText('POLYGON((-170 68,-170 90,-141 90,-141 68,-170 68))', 4326) AS p2,
+     '+proj=gnom +ellps=WGS84 +lat_0=70 +lon_0=-160 +no_defs'::text AS gnom
+ )
+ SELECT ST_AsText(
+   ST_Transform(
+     ST_Intersection(ST_Transform(p1, gnom), ST_Transform(p2, gnom)),
+   gnom, 4326))
+ FROM data;
+                                          st_astext
+ --------------------------------------------------------------------------------
+  POLYGON((-170 74.053793645338,-141 73.4268621378904,-141 68,-170 68,-170 74.053793645338))
+                </pre></div><div class="refsection"><a name="idp72852808"></a><h2>変換の挙動の設定</h2><p>グリッドシフトを含む座標変換は、ときどき失敗します。たとえば、PROJ.4にグリッドシフトファイルを付けてビルドされていなかった場合や、座標がグリッドシフト定義の範囲内に無い、といった場合です。デフォルトでは、PostGISはグリッドシフトファイルが無い場合はエラーを投げますが、この挙動は、<code class="varname">spatial_ref_sys</code>テーブルの<code class="varname">proj4text</code>値を変更することで、SRID毎の原則を設定することができます。 </p><p>たとえば、proj4textパラメータ +datum=NAD87 は次に示す+nadgridsパラメータの短縮形です。</p><pre class="programlisting">+nadgrids=@conus,@alaska,@ntv2_0.gsb,@ntv1_can.dat</pre><p>接頭辞@は、ファイルが無くてもエラー報告をしないという意味ですが、適切だった (発見されてオーバラップした)ファイルがないままリストの終わりに達した場合はエラーが出ます。</p><p>逆に、少なくとも標準的なファイルが確実にあって欲しいけれども、該当が無いまま全てのファイルが走査された場合に、NULL変換としたいなら、次が使えます。</p><pre class="programlisting">+nadgrids=@conus,@alaska,@ntv2_0.gsb,@ntv1_can.dat,null</pre><p>NULLグリッドシフトファイルは、世界全体をカバーして、シフトを行わない、妥当なグリッドシフトファイルです。 完全な例のために、正しい範囲にないSRID 4267への変換でエラーが投げられないようPostGISを変えたいなら、次のようにします。</p><pre class="programlisting">UPDATE spatial_ref_sys SET proj4text = '+proj=longlat +ellps=clrk66 +nadgrids=@conus,@alaska,@ntv2_0.gsb,@ntv1_can.dat,null +no_defs' WHERE srid = 4267;</pre></div><div class="refsection"><a name="idp72858184"></a><h2>関連情報</h2><p><a class="xref" href="PostGIS_Full_Version.html" title="PostGIS_Full_Version">PostGIS_Full_Version</a>, <a class="xref" href="ST_AsText.html" title="ST_AsText">ST_AsText</a>, <a class="xref" href="ST_SetSRID.html" title="ST_SetSRID">ST_SetSRID</a>, <a class="xref" href="UpdateGeometrySRID.html" title="UpdateGeometrySRID">UpdateGeometrySRID</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_SRID.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#SRS_Functions">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_BdPolyFromText.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_SRID </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_BdPolyFromText</td></tr></table></div></body></html>

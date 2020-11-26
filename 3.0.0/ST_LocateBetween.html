@@ -1,0 +1,29 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_LocateBetween</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.0.0 マニュアル"><link rel="up" href="reference.html#Linear_Referencing" title="8.17. 線型参照"><link rel="prev" href="ST_LocateAlong.html" title="ST_LocateAlong"><link rel="next" href="ST_LocateBetweenElevations.html" title="ST_LocateBetweenElevations"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_LocateBetween</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_LocateAlong.html">戻る</a> </td><th width="60%" align="center">8.17. 線型参照</th><td width="20%" align="right"> <a accesskey="n" href="ST_LocateBetweenElevations.html">次へ</a></td></tr></table></div><div class="refentry"><a name="ST_LocateBetween"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_LocateBetween — 指定したM値の範囲内にある要素からなる、派生ジオメトリコレクション値を返します。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_LocateBetween</b>(</code>geometry  <var class="pdparam">geom</var>, float8  <var class="pdparam">measure_start</var>, float8  <var class="pdparam">measure_end</var>, float8  <var class="pdparam">offset</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp83466312"></a><h2>説明</h2><p>指定したM値の範囲内にある要素からなる、派生ジオメトリコレクションを返します。</p><p>凸でないPOLYGONを抜き出すと不正なジオメトリを返すことがあります。</p><p>offsetを与えた場合には、結果は入力ラインの右または左に、指定した数字分ずれます。正のオフセットでは左に、負のオフセットでは右にずれます。</p><p>意味は ISO/IEC CD 13249-3:200x(E) - Text for Continuation CD Editing Meeting で決められています。</p><p>Availability: 1.1.0 それより前はST_Locate_Between_Measuresでした。 </p><p>Changed: 2.0.0 以前の版でST_Locate_Between_Measuresと呼ばれていましたが、古い名前は非推奨となり、将来的には削除しますが現時点では後方互換のため有効になっています。</p><p>Enhanced: 3.0.0 - POLYGON, TIN, TRIANGLEへの対応が追加されました。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports M coordinates.</p></div><div class="refsection"><a name="idp83471304"></a><h2>例</h2><pre class="programlisting">SELECT ST_AsText(the_geom)
+FROM (
+    SELECT ST_LocateBetween(
+       'MULTILINESTRING M ((1 2 3, 3 4 2, 9 4 3),(1 2 3, 5 4 5))'),
+       1.5,
+       3
+    ) as the_geom
+) As foo;
+
+                                                         st_asewkt
+------------------------------------------------------------------------
+ GEOMETRYCOLLECTION M (LINESTRING M (1 2 3,3 4 2,9 4 3),POINT M (1 2 3))
+
+-- ジオメトリコレクションは難しいですので、
+-- 分かりやすくするためにダンプしています。
+SELECT ST_AsText((ST_Dump(the_geom)).geom)
+FROM (
+    SELECT ST_LocateBetween(
+        'MULTILINESTRING M ((1 2 3, 3 4 2, 9 4 3),(1 2 3, 5 4 5))'),
+        1.5,
+        3
+    ) As the_geom
+) As foo;
+
+                   st_asewkt
+--------------------------------
+ LINESTRING M (1 2 3,3 4 2,9 4 3)
+ POINT M (1 2 3)</pre></div><div class="refsection"><a name="idp83472840"></a><h2>関連情報</h2><p><a class="xref" href="ST_Dump.html" title="ST_Dump">ST_Dump</a>, <a class="xref" href="ST_LocateAlong.html" title="ST_LocateAlong">ST_LocateAlong</a>, <a class="xref" href="ST_LocateBetweenElevations.html" title="ST_LocateBetweenElevations">ST_LocateBetweenElevations</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_LocateAlong.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Linear_Referencing">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_LocateBetweenElevations.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_LocateAlong </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_LocateBetweenElevations</td></tr></table></div></body></html>

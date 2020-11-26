@@ -1,0 +1,39 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_ClusterDBSCAN</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.0.0 マニュアル"><link rel="up" href="reference.html#Clustering_Functions" title="8.15. クラスタリング関数"><link rel="prev" href="ST_TransScale.html" title="ST_TransScale"><link rel="next" href="ST_ClusterIntersecting.html" title="ST_ClusterIntersecting"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_ClusterDBSCAN</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_TransScale.html">戻る</a> </td><th width="60%" align="center">8.15. クラスタリング関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_ClusterIntersecting.html">次へ</a></td></tr></table></div><div class="refentry"><a name="ST_ClusterDBSCAN"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_ClusterDBSCAN — 入力ジオメトリごとにDBSCANアルゴリズムを使ってクラスタ番号を返すウィンドウ関数です。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">integer <b class="fsfunc">ST_ClusterDBSCAN</b>(</code>geometry winset  <var class="pdparam">geom</var>, float8  <var class="pdparam">eps</var>, integer  <var class="pdparam">minpoints</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp82567240"></a><h2>説明</h2><p><a class="ulink" href="https://en.wikipedia.org/wiki/DBSCAN" target="_top">DBSCAN (ノイズ適用可能な密度に基づいた空間クラスタリング)</a>アルゴリズムの2次元実装に基づいて、それぞれの入力ジオメトリが入るクラスタの整数識別子を返します。<a class="xref" href="ST_ClusterKMeans.html" title="ST_ClusterKMeans">ST_ClusterKMeans</a>と違って、クラスタ数の指定は求められず、所望する<a class="link" href="ST_Distance.html" title="ST_Distance">距離</a> (<code class="varname">eps</code>)と密度(<code class="varname">minpoints</code>)をクラスタを構築するためのパラメータとして使います。 </p><p>入力ジオメトリは次の場合にクラスタに追加されます。 </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>「核」ジオメトリは、入力ジオメトリ (自分を含む)のうち少なくとも<code class="varname">minpoints</code>個が<code class="varname">eps</code>で指定した<a class="link" href="ST_Distance.html" title="ST_Distance">距離</a>の範囲内にあるものです。 </p></li><li class="listitem"><p>「境界」ジオメトリは、核ジオメトリから<code class="varname">eps</code>で指定した<a class="link" href="ST_Distance.html" title="ST_Distance">距離</a>の範囲内にあるものです。 </p></li></ul></div><p>
+		</p><p>境界ジオメトリが<code class="varname">eps</code>以内に複数の核ジオメトリがあるかも知れないことに注意して下さい。この場合には、どちらに割り当てられても正しく、境界ジオメトリは、対象クラスタのうちの一つに任意に割り当てられます。これらの場合には、<code class="varname">minpoints</code>より少ないジオメトリで正しいクラスタを生成できます。境界ジオメトリの割り当てが曖昧な時、ウィンドウの定義にORDER BY句が含まれている場合には、ST_ClusterDBSCANは同じ結果を返しますが、クラスタの割り当ては同じアルゴリズムの他の実装と異なる可能性があります。 </p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>どのクラスタの参加基準にも合わない入力ジオメトリは、番号をNULLとします。 </p></td></tr></table></div><p>Availability: 2.3.0</p></div><div class="refsection"><a name="idp82576968"></a><h2>例</h2><p>50メートル以内にある個々のポリゴンへのクラスタ番号の割り当て。少なくともクラスタには二つのポリゴンが求められます。 </p><div class="informaltable"><table class="informaltable" style="border-collapse: collapse;border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col><col></colgroup><tbody><tr><td style="border-right: 1px solid ; "><div class="informalfigure"><div class="mediaobject"><img src="images/st_clusterdbscan01.png"><div class="caption"><p>少なくともクラスタごとに二つ以上のポリゴンがある50メートル以内のクラスタ。一つだけならcidはNULL。</p></div></div></div><p>
+  </p><pre class="programlisting">SELECT name, ST_ClusterDBSCAN(geom, eps := 50, minpoints := 2) over () AS cid
+FROM boston_polys
+WHERE name 
+&gt; '' AND building 
+&gt; ''
+        AND ST_DWithin(geom,
+        ST_Transform(
+            ST_GeomFromText('POINT(-71.04054 42.35141)', 4326), 26986),
+           500);</pre><p>
+						  </p></td><td style=""><pre class="screen">                name                 | bucket
+-------------------------------------+--------
+ Manulife Tower                      |      0
+ Park Lane Seaport I                 |      0
+ Park Lane Seaport II                |      0
+ Renaissance Boston Waterfront Hotel |      0
+ Seaport Boston Hotel                |      0
+ Seaport Hotel &amp; World Trade Center  |      0
+ Waterside Place                     |      0
+ World Trade Center East             |      0
+ 100 Northern Avenue                 |      1
+ 100 Pier 4                          |      1
+ The Institute of Contemporary Art   |      1
+ 101 Seaport                         |      2
+ District Hall                       |      2
+ One Marina Park Drive               |      2
+ Twenty Two Liberty                  |      2
+ Vertex                              |      2
+ Vertex                              |      2
+ Watermark Seaport                   |      2
+ Blue Hills Bank Pavilion            |   NULL
+ World Trade Center West             |   NULL
+(20 rows)</pre>
+				</td></tr></tbody></table></div><p>同じクラスタ番号の群を一つのジオメトリに統合します。名前付き引数を使用しています。 </p><pre class="programlisting">SELECT cid, ST_Collect(geom) AS cluster_geom, array_agg(parcel_id) AS ids_in_cluster FROM (
+    SELECT parcel_id, ST_ClusterDBSCAN(geom, eps := 0.5, minpoints := 5) over () AS cid, geom
+    FROM parcels) sq
+GROUP BY cid;
+    </pre></div><div class="refsection"><a name="idp82584776"></a><h2>関連情報</h2><p><a class="xref" href="ST_DWithin.html" title="ST_DWithin">ST_DWithin</a>, <a class="xref" href="ST_ClusterKMeans.html" title="ST_ClusterKMeans">ST_ClusterKMeans</a>, <a class="xref" href="ST_ClusterIntersecting.html" title="ST_ClusterIntersecting">ST_ClusterIntersecting</a>, <a class="xref" href="ST_ClusterWithin.html" title="ST_ClusterWithin">ST_ClusterWithin</a> </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_TransScale.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Clustering_Functions">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_ClusterIntersecting.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_TransScale </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_ClusterIntersecting</td></tr></table></div></body></html>

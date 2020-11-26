@@ -1,0 +1,30 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_PixelAsPoints</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.0.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Pixel_Accessors" title="9.6. ラスタピクセルアクセサとセッター"><link rel="prev" href="RT_ST_PixelAsPoint.html" title="ST_PixelAsPoint"><link rel="next" href="RT_ST_PixelAsCentroid.html" title="ST_PixelAsCentroid"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_PixelAsPoints</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_PixelAsPoint.html">戻る</a> </td><th width="60%" align="center">9.6. ラスタピクセルアクセサとセッター</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_PixelAsCentroid.html">次へ</a></td></tr></table></div><div class="refentry"><a name="RT_ST_PixelAsPoints"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_PixelAsPoints — 全てのピクセルについてポイントジオメトリを、ピクセルごとのピクセル値とラスタ座標系のXとYとを付けて返します。ポイントジオメトリの座標はピクセルの左上隅です。 </p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">setof record <b class="fsfunc">ST_PixelAsPoints</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">band=1</var>, boolean  <var class="pdparam">exclude_nodata_value=TRUE</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp94312392"></a><h2>説明</h2><p>全てのピクセルについてポイントジオメトリを、ピクセルごとのピクセル値とラスタ座標系のXとYとを付けて返します。ポイントジオメトリの座標はピクセルの左上隅です。 </p><p>返されるレコードの書式は、<a class="xref" href="geometry.html" title="geometry">geometry</a>型の<em class="parameter"><code>geom</code></em>、倍精度浮動小数点数の<em class="parameter"><code>val</code></em>、整数の<em class="parameter"><code>x</code></em>、整数の<em class="parameter"><code>y</code></em>です。 </p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p><em class="parameter"><code>exclude_nodata_value</code></em>がTRUEの時、値がNODATAでないこれらのピクセルだけをポイントとして返します。 </p></td></tr></table></div><p>Availability: 2.1.0</p><p>Changed: 2.1.1 exclude_nodata_valueの挙動を変更しました。</p></div><div class="refsection"><a name="idp94318280"></a><h2>例</h2><pre class="programlisting">SELECT x, y, val, ST_AsText(geom) FROM (SELECT (ST_PixelAsPoints(rast, 1)).* FROM dummy_rast WHERE rid = 2) foo;
+
+ x | y | val |          st_astext
+---+---+-----+------------------------------
+ 1 | 1 | 253 | POINT(3427927.75 5793244)
+ 2 | 1 | 254 | POINT(3427927.8 5793244)
+ 3 | 1 | 253 | POINT(3427927.85 5793244)
+ 4 | 1 | 254 | POINT(3427927.9 5793244)
+ 5 | 1 | 254 | POINT(3427927.95 5793244)
+ 1 | 2 | 253 | POINT(3427927.75 5793243.95)
+ 2 | 2 | 254 | POINT(3427927.8 5793243.95)
+ 3 | 2 | 254 | POINT(3427927.85 5793243.95)
+ 4 | 2 | 253 | POINT(3427927.9 5793243.95)
+ 5 | 2 | 249 | POINT(3427927.95 5793243.95)
+ 1 | 3 | 250 | POINT(3427927.75 5793243.9)
+ 2 | 3 | 254 | POINT(3427927.8 5793243.9)
+ 3 | 3 | 254 | POINT(3427927.85 5793243.9)
+ 4 | 3 | 252 | POINT(3427927.9 5793243.9)
+ 5 | 3 | 249 | POINT(3427927.95 5793243.9)
+ 1 | 4 | 251 | POINT(3427927.75 5793243.85)
+ 2 | 4 | 253 | POINT(3427927.8 5793243.85)
+ 3 | 4 | 254 | POINT(3427927.85 5793243.85)
+ 4 | 4 | 254 | POINT(3427927.9 5793243.85)
+ 5 | 4 | 253 | POINT(3427927.95 5793243.85)
+ 1 | 5 | 252 | POINT(3427927.75 5793243.8)
+ 2 | 5 | 250 | POINT(3427927.8 5793243.8)
+ 3 | 5 | 254 | POINT(3427927.85 5793243.8)
+ 4 | 5 | 254 | POINT(3427927.9 5793243.8)
+ 5 | 5 | 254 | POINT(3427927.95 5793243.8)
+                                </pre></div><div class="refsection"><a name="idp94319560"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_DumpAsPolygons.html" title="ST_DumpAsPolygons">ST_DumpAsPolygons</a>, <a class="xref" href="RT_ST_PixelAsPolygon.html" title="ST_PixelAsPolygon">ST_PixelAsPolygon</a>, <a class="xref" href="RT_ST_PixelAsPolygons.html" title="ST_PixelAsPolygons">ST_PixelAsPolygons</a>, <a class="xref" href="RT_ST_PixelAsPoint.html" title="ST_PixelAsPoint">ST_PixelAsPoint</a>, <a class="xref" href="RT_ST_PixelAsCentroid.html" title="ST_PixelAsCentroid">ST_PixelAsCentroid</a>, <a class="xref" href="RT_ST_PixelAsCentroids.html" title="ST_PixelAsCentroids">ST_PixelAsCentroids</a> </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_PixelAsPoint.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Pixel_Accessors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_PixelAsCentroid.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_PixelAsPoint </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_PixelAsCentroid</td></tr></table></div></body></html>
