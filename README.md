@@ -4,7 +4,7 @@ PostGIS マニュアル 日本語訳 を掲載しています。
 
 # ウェブページURL
 
-https://boildrorange73.github.io/pgismanja/ です。
+https://boiledorange73.github.io/pgismanja/ です。
 
 # オリジナル
 
