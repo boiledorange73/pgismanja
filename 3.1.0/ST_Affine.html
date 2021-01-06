@@ -1,0 +1,32 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Affine</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.1.0 マニュアル"><link rel="up" href="reference.html#Affine_Transformation" title="5.15. アフィン変換"><link rel="prev" href="ST_VoronoiPolygons.html" title="ST_VoronoiPolygons"><link rel="next" href="ST_Rotate.html" title="ST_Rotate"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Affine</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_VoronoiPolygons.html">戻る</a> </td><th width="60%" align="center">5.15. アフィン変換</th><td width="20%" align="right"> <a accesskey="n" href="ST_Rotate.html">次へ</a></td></tr></table></div><div class="refentry"><a name="ST_Affine"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_Affine — ジオメトリに3次元アフィン変換を適用します。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_Affine</b>(</code>geometry  <var class="pdparam">geomA</var>, float  <var class="pdparam">a</var>, float  <var class="pdparam">b</var>, float  <var class="pdparam">c</var>, float  <var class="pdparam">d</var>, float  <var class="pdparam">e</var>, float  <var class="pdparam">f</var>, float  <var class="pdparam">g</var>, float  <var class="pdparam">h</var>, float  <var class="pdparam">i</var>, float  <var class="pdparam">xoff</var>, float  <var class="pdparam">yoff</var>, float  <var class="pdparam">zoff</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_Affine</b>(</code>geometry  <var class="pdparam">geomA</var>, float  <var class="pdparam">a</var>, float  <var class="pdparam">b</var>, float  <var class="pdparam">d</var>, float  <var class="pdparam">e</var>, float  <var class="pdparam">xoff</var>, float  <var class="pdparam">yoff</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp73790968"></a><h2>説明</h2><p>3次元アフィン変換をジオメトリに適用して移動、回転、拡大縮小を一度に行います。</p><p>一つ目の形式では、次のように関数を呼んでいます。</p><pre class="programlisting">ST_Affine(geom, a, b, c, d, e, f, g, h, i, xoff, yoff, zoff) </pre><p> これは次のような変換行列を表現しています。</p><pre class="programlisting">/ a  b  c  xoff \
+| d  e  f  yoff |
+| g  h  i  zoff |
+\ 0  0  0     1 /</pre><p>次のようにも表現できます。</p><pre class="programlisting">x' = a*x + b*y + c*z + xoff
+y' = d*x + e*y + f*z + yoff
+z' = g*x + h*y + i*z + zoff</pre><p>全ての移動/拡大縮小関数はこのようなアフィン変換を経由しています。</p><p>二つ目の形式では、2次元アフィン変換をジオメトリに適用します。次のように関数を呼んでいます。</p><pre class="programlisting">ST_Affine(geom, a, b, d, e, xoff, yoff)</pre><p>これは次のような変換行列を表現しています。</p><pre class="programlisting">/  a  b  0  xoff  \       /  a  b  xoff  \
+|  d  e  0  yoff  | rsp.  |  d  e  yoff  |
+|  0  0  1     0  |       \  0  0     1  /
+\  0  0  0     1  /</pre><p>頂点は次のように変換されます。</p><pre class="programlisting">x' = a*x + b*y + xoff
+y' = d*x + e*y + yoff
+z' = z </pre><p>このメソッドは上述の3次元メソッドの特異ケースです。</p><p>Enhanced: 2.0.0 多面体サーフェス対応、三角対応、TIN対応が導入されました。</p><p>Availability: 1.1.2 AffineからST_Affineに名称変更しました。</p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>1.3.4より前では、曲線を含むジオメトリで使用すると、この関数はクラッシュします。これは1.3.4以上で訂正されています。</p></td></tr></table></div><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports Polyhedral surfaces.</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports Triangles and Triangulated Irregular Network Surfaces (TIN).</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports 3d and will not drop the z-index.</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This method supports Circular Strings and Curves</p></div><div class="refsection"><a name="idp73802616"></a><h2>例</h2><pre class="programlisting">-- 3次元ラインストリングをZ軸で180度回転させます。
+-- ST_RotateZ()を冗長にしたものです。
+ SELECT ST_AsEWKT(ST_Affine(the_geom,  cos(pi()), -sin(pi()), 0,  sin(pi()), cos(pi()), 0,  0, 0, 1,  0, 0, 0)) As using_affine,
+         ST_AsEWKT(ST_Rotate(the_geom, pi())) As using_rotate
+        FROM (SELECT ST_GeomFromEWKT('LINESTRING(1 2 3, 1 4 3)') As the_geom) As foo;
+        using_affine         |        using_rotate
+-----------------------------+-----------------------------
+ LINESTRING(-1 -2 3,-1 -4 3) | LINESTRING(-1 -2 3,-1 -4 3)
+(1 row)
+
+-- 3次元ラインストリングをX軸とZ軸で180度回転させます。
+SELECT ST_AsEWKT(ST_Affine(the_geom, cos(pi()), -sin(pi()), 0, sin(pi()), cos(pi()), -sin(pi()), 0, sin(pi()), cos(pi()), 0, 0, 0))
+        FROM (SELECT ST_GeomFromEWKT('LINESTRING(1 2 3, 1 4 3)') As the_geom) As foo;
+           st_asewkt
+-------------------------------
+ LINESTRING(-1 -2 -3,-1 -4 -3)
+(1 row)
+                </pre></div><div class="refsection"><a name="idp73804152"></a><h2>関連情報</h2><p><a class="xref" href="ST_Rotate.html" title="ST_Rotate">ST_Rotate</a>, <a class="xref" href="ST_Scale.html" title="ST_Scale">ST_Scale</a>, <a class="xref" href="ST_Translate.html" title="ST_Translate">ST_Translate</a>, <a class="xref" href="ST_TransScale.html" title="ST_TransScale">ST_TransScale</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_VoronoiPolygons.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Affine_Transformation">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_Rotate.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_VoronoiPolygons </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_Rotate</td></tr></table></div></body></html>

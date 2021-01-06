@@ -1,0 +1,22 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Angle</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.1.0 マニュアル"><link rel="up" href="reference.html#Measurement_Functions" title="5.12. 計測関数"><link rel="prev" href="ST_Azimuth.html" title="ST_Azimuth"><link rel="next" href="ST_ClosestPoint.html" title="ST_ClosestPoint"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Angle</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_Azimuth.html">戻る</a> </td><th width="60%" align="center">5.12. 計測関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_ClosestPoint.html">次へ</a></td></tr></table></div><div class="refentry"><a name="ST_Angle"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_Angle — 三つのポイントまたは二つのベクタ (4ポイントまたは2ライン)の間の角度を返します。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">float <b class="fsfunc">ST_Angle</b>(</code>geometry <var class="pdparam">point1</var>, geometry <var class="pdparam">point2</var>, geometry <var class="pdparam">point3</var>, geometry <var class="pdparam">point4</var><code>)</code>;</p><p><code class="funcdef">float <b class="fsfunc">ST_Angle</b>(</code>geometry <var class="pdparam">line1</var>, geometry <var class="pdparam">line2</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp70730360"></a><h2>説明</h2><p>3ポイント入力では、P1P2P3の時計回りの角度を計算します。2ライン入力では、2ラインの最初と最後のポイントから4ポイントを得ます。4ポイント入力では、P1P2, P3P4の時計回りの角度を計算します。返り値は常に非負の数で、0と2πラジアンの間になります。ラインまたはポイントの角度を使います。 </p><p>ST_Angle(P1,P2,P3) = ST_Angle(P2,P1,P2,P3)</p><p>例に示す通り、ラジアンで返るので、度を得るには、PostgreSQLの組み込み関数であるdegrees()を使って変換します。</p><p>Availability: 2.5.0</p></div><div class="refsection"><a name="idp70732664"></a><h2>例</h2><p>度単位のジオメトリの方位 </p><pre class="programlisting">WITH rand AS (
+                SELECT s, random() * 2 * PI() AS rad1
+                        , random() * 2 * PI() AS rad2
+                FROM  generate_series(1,2,2) AS s
+        )
+         , points AS (
+                SELECT s, rad1,rad2, ST_MakePoint(cos1+s,sin1+s) as p1, ST_MakePoint(s,s) AS p2, ST_MakePoint(cos2+s,sin2+s) as p3
+                FROM rand
+                        ,cos(rad1) cos1, sin(rad1) sin1
+                        ,cos(rad2) cos2, sin(rad2) sin2
+        )
+        SELECT s, ST_AsText(ST_SnapToGrid(ST_MakeLine(ARRAY[p1,p2,p3]),0.001)) AS line
+                , degrees(ST_Angle(p1,p2,p3)) as computed_angle
+                , round(degrees(2*PI()-rad2 -2*PI()+rad1+2*PI()))::int%360 AS reference
+                , round(degrees(2*PI()-rad2 -2*PI()+rad1+2*PI()))::int%360 AS reference
+        FROM points ;
+
+1 | line | computed_angle | reference
+------------------+------------------
+1 | LINESTRING(1.511 1.86,1 1,0.896 0.005) | 155.27033848688 | 155
+
+</pre></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_Azimuth.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Measurement_Functions">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_ClosestPoint.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Azimuth </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_ClosestPoint</td></tr></table></div></body></html>

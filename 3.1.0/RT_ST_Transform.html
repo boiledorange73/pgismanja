@@ -1,0 +1,54 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Transform</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.1.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Editors" title="6.7. ラスタエディタ"><link rel="prev" href="RT_ST_Resize.html" title="ST_Resize"><link rel="next" href="RT_ST_SetBandNoDataValue.html" title="ST_SetBandNoDataValue"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Transform</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_Resize.html">戻る</a> </td><th width="60%" align="center">6.7. ラスタエディタ</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_SetBandNoDataValue.html">次へ</a></td></tr></table></div><div class="refentry"><a name="RT_ST_Transform"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_Transform — ラスタを既知の空間参照系から他の既知の空間参照系に、指定したリサンプリングアルゴリズムで投影変換します。新しいピクセル値のリサンプリングアルゴリズムとして最近傍補間 ('NearestNeighbor' (米式綴り方))、双線形補間 ('Bilinear')、3次補間 ('Cubic')、3次スプライン補間 ('CubicSpline')、ランチョス補間 ('Lanczos')を用います。デフォルトは最近傍補間です。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">raster <b class="fsfunc">ST_Transform</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">srid</var>, text  <var class="pdparam">algorithm=NearestNeighbor</var>, double precision  <var class="pdparam">maxerr=0.125</var>, double precision  <var class="pdparam">scalex</var>, double precision  <var class="pdparam">scaley</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_Transform</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">srid</var>, double precision  <var class="pdparam">scalex</var>, double precision  <var class="pdparam">scaley</var>, text  <var class="pdparam">algorithm=NearestNeighbor</var>, double precision  <var class="pdparam">maxerr=0.125</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_Transform</b>(</code>raster  <var class="pdparam">rast</var>, raster  <var class="pdparam">alignto</var>, text  <var class="pdparam">algorithm=NearestNeighbor</var>, double precision  <var class="pdparam">maxerr=0.125</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp85492216"></a><h2>説明</h2><p>ラスタを既知の空間参照系から他の既知の空間参照系に、指定したリサンプリングアルゴリズムで投影変換します。algorithmが指定されていない場合には'NearestNeighbor'とし、maxerrorが指定されていない場合には0.125とします。</p><p>アルゴリズム指定オプションは'NearestNeighbor', 'Bilinear', 'Cubic', 'CubicSpline', 'Lanczos'です。詳細については<a class="ulink" href="http://www.gdal.org/gdalwarp.html" target="_top">GDAL Warp resampling methods</a>をご覧ください。</p><p>ST_TransformはしばしばST_SetSRIDと混同されます。ST_Transformは、ある空間参照系から別の空間参照系に変更する際に、実際にラスタの座標を変更します (かつピクセル値のリサンプリングを行います)が、ST_SetSRIDは単にラスタの空間参照系識別子を変更するだけです。 </p><p>三つ目の形式は、他の形式と違い、<code class="varname">alignto</code>として参照ラスタが求められます。投影変換したラスタは参照ラスタの空間参照系 (SRID)に投影変換して、参照ラスタと同じアラインメントを持つようにします (ST_SameAlignmentがTRUEになるようにします)。 </p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>変換機能が思ったように働かない場合には、環境変数PROJSOをPostGISが使用する投影変換ライブラリの.soまたは.dllに指定する必要があるかも知れません。ファイル名の指定だけ必要です。Windowsでの例として、コントロールパネル-&gt;システム-&gt;システムの詳細設定-&gt;環境変数で、<code class="varname">PROJSO</code>という名前のシステム変数を追加して、<code class="varname">libproj.dll</code> (Proj 4.6.1を使用している場合)を設定します。変更後はPostgreSQLサービス/デーモンを再起動します。 </p></td></tr></table></div><div class="warning"><table border="0" summary="Warning"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[警告]" src="images/warning.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>タイルのカバレッジを変換する時には、ほとんどの場合で、「例: 三つ目の形式」で示す通り、同じアラインメントになり、かつタイル内に隙間がなくなるようにするために、参照ラスタを使用したくなります。 </p></td></tr></table></div><p>Availability: 2.0.0 GDAL 1.6.1以上が必要です。</p><p>Enhanced: 2.1.0 ST_Tranfrorm(rast, alignto)の形式を追加しました。</p></div><div class="refsection"><a name="idp86690424"></a><h2>例</h2><pre class="programlisting">SELECT ST_Width(mass_stm) As w_before, ST_Width(wgs_84) As w_after,
+  ST_Height(mass_stm) As h_before, ST_Height(wgs_84) As h_after
+        FROM
+        ( SELECT rast As mass_stm, ST_Transform(rast,4326) As wgs_84
+  ,  ST_Transform(rast,4326, 'Bilinear') AS wgs_84_bilin
+                FROM aerials.o_2_boston
+                        WHERE ST_Intersects(rast,
+                                ST_Transform(ST_MakeEnvelope(-71.128, 42.2392,-71.1277, 42.2397, 4326),26986) )
+                LIMIT 1) As foo;
+
+ w_before | w_after | h_before | h_after
+----------+---------+----------+---------
+      200 |     228 |      200 |     170
+                                        </pre><div class="informaltable"><table class="informaltable" style="border-collapse: collapse;border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col><col><col></colgroup><tbody><tr><td style="border-right: 1px solid ; "><div class="informalfigure"><div class="mediaobject"><img src="images/rt_st_transform01.png"><div class="caption"><p>元のラスタはメートル単位のマサチューセッツ州平面 (mass_stm)</p></div></div></div>
+		 </td><td style="border-right: 1px solid ; "><div class="informalfigure"><div class="mediaobject"><img src="images/rt_st_transform02.png"><div class="caption"><p>WGS84経度緯度に変換した後 (wgs_84)</p></div></div></div>
+		 </td><td style=""><div class="informalfigure"><div class="mediaobject"><img src="images/rt_st_transform03.png"><div class="caption"><p>最近傍補間の代わりに双線形補間を使ってWGS84経度緯度に変換した後 (wgs_84_bilin)</p></div></div></div>
+		 </td></tr></tbody></table></div></div><div class="refsection"><a name="idp86737912"></a><h2>例: 三つ目の形式</h2><p>次に示す例は、ST_Transform(raster, srid)とST_Transform(raster, alignto)との違いを示しています。</p><pre class="programlisting">WITH foo AS (
+        SELECT 0 AS rid, ST_AddBand(ST_MakeEmptyRaster(2, 2, -500000, 600000, 100, -100, 0, 0, 2163), 1, '16BUI', 1, 0) AS rast UNION ALL
+        SELECT 1, ST_AddBand(ST_MakeEmptyRaster(2, 2, -499800, 600000, 100, -100, 0, 0, 2163), 1, '16BUI', 2, 0) AS rast UNION ALL
+        SELECT 2, ST_AddBand(ST_MakeEmptyRaster(2, 2, -499600, 600000, 100, -100, 0, 0, 2163), 1, '16BUI', 3, 0) AS rast UNION ALL
+
+        SELECT 3, ST_AddBand(ST_MakeEmptyRaster(2, 2, -500000, 599800, 100, -100, 0, 0, 2163), 1, '16BUI', 10, 0) AS rast UNION ALL
+        SELECT 4, ST_AddBand(ST_MakeEmptyRaster(2, 2, -499800, 599800, 100, -100, 0, 0, 2163), 1, '16BUI', 20, 0) AS rast UNION ALL
+        SELECT 5, ST_AddBand(ST_MakeEmptyRaster(2, 2, -499600, 599800, 100, -100, 0, 0, 2163), 1, '16BUI', 30, 0) AS rast UNION ALL
+
+        SELECT 6, ST_AddBand(ST_MakeEmptyRaster(2, 2, -500000, 599600, 100, -100, 0, 0, 2163), 1, '16BUI', 100, 0) AS rast UNION ALL
+        SELECT 7, ST_AddBand(ST_MakeEmptyRaster(2, 2, -499800, 599600, 100, -100, 0, 0, 2163), 1, '16BUI', 200, 0) AS rast UNION ALL
+        SELECT 8, ST_AddBand(ST_MakeEmptyRaster(2, 2, -499600, 599600, 100, -100, 0, 0, 2163), 1, '16BUI', 300, 0) AS rast
+), bar AS (
+        SELECT
+                ST_Transform(rast, 4269) AS alignto
+        FROM foo
+        LIMIT 1
+), baz AS (
+        SELECT
+                rid,
+                rast,
+                ST_Transform(rast, 4269) AS not_aligned,
+                ST_Transform(rast, alignto) AS aligned
+        FROM foo
+        CROSS JOIN bar
+)
+SELECT
+        ST_SameAlignment(rast) AS rast,
+        ST_SameAlignment(not_aligned) AS not_aligned,
+        ST_SameAlignment(aligned) AS aligned
+FROM baz
+
+ rast | not_aligned | aligned
+------+-------------+---------
+ t    | f           | t
+                                </pre><div class="informaltable"><table class="informaltable" style="border-collapse: collapse;border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col><col></colgroup><tbody><tr><td style="border-right: 1px solid ; "><div class="informalfigure"><div class="mediaobject"><img src="images/rt_st_transform04.png"><div class="caption"><p>アラインメントなし</p></div></div></div><p>
+						  </p></td><td style=""><div class="informalfigure"><div class="mediaobject"><img src="images/rt_st_transform05.png"><div class="caption"><p>アラインメントあり</p></div></div></div><p>
+						</p></td></tr></tbody></table></div></div><div class="refsection"><a name="idp85550456"></a><h2>関連情報</h2><p><a class="xref" href="ST_Transform.html" title="ST_Transform">ST_Transform</a>, <a class="xref" href="RT_ST_SetSRID.html" title="ST_SetSRID">ST_SetSRID</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_Resize.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Editors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_SetBandNoDataValue.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Resize </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_SetBandNoDataValue</td></tr></table></div></body></html>

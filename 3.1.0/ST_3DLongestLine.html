@@ -1,0 +1,34 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_3DLongestLine</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.1.0 マニュアル"><link rel="up" href="reference.html#Measurement_Functions" title="5.12. 計測関数"><link rel="prev" href="ST_LongestLine.html" title="ST_LongestLine"><link rel="next" href="ST_MaxDistance.html" title="ST_MaxDistance"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_3DLongestLine</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_LongestLine.html">戻る</a> </td><th width="60%" align="center">5.12. 計測関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_MaxDistance.html">次へ</a></td></tr></table></div><div class="refentry"><a name="ST_3DLongestLine"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_3DLongestLine — 二つのジオメトリ間の3次元最長ラインを返します。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_3DLongestLine</b>(</code>geometry  <var class="pdparam">g1</var>, geometry  <var class="pdparam">g2</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp70987256"></a><h2>説明</h2><p>二つのジオメトリ間の3次元最長ラインを返します。該当が複数ある場合には最初の最長ラインを返します。返されるラインは、g1から始まりg2で終わります。ラインの3次元長は<a class="xref" href="ST_3DMaxDistance.html" title="ST_3DMaxDistance">ST_3DMaxDistance</a>が返す距離と同じです。 </p><p>Availability: 2.0.0</p><p>Changed: 2.2.0 - 二つの2次元ジオメトリが入力である場合には、2次元ポイントが返ります (古い挙動では、存在しないZの値について0を仮定していました)。2次元と3次元の場合には、もはや、存在しないZの値について0を仮定しません。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports 3d and will not drop the z-index.</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports Polyhedral surfaces.</p></div><div class="refsection"><a name="idp70992632"></a><h2>例</h2><div class="informaltable"><table class="informaltable" style="border-collapse: collapse;border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col></colgroup><tbody><tr><td style="border-bottom: 1px solid ; "><p>ラインストリングとポイント -- 3次元と2次元の最長ライン </p><pre class="programlisting">SELECT ST_AsEWKT(ST_3DLongestLine(line,pt)) AS lol3d_line_pt,
+                ST_AsEWKT(ST_LongestLine(line,pt)) As lol2d_line_pt
+        FROM (SELECT 'POINT(100 100 30)'::geometry As pt,
+                        'LINESTRING (20 80 20, 98 190 1, 110 180 3, 50 75 1000)'::geometry As line
+                ) As foo;
+
+
+           lol3d_line_pt           |       lol2d_line_pt
+-----------------------------------+----------------------------
+ LINESTRING(50 75 1000,100 100 30) | LINESTRING(98 190,100 100)
+                                        </pre><p>
+							  </p></td></tr><tr><td style="border-bottom: 1px solid ; "><p>ラインストリングとマルチポイント -- 3次元と2次元の最長ライン </p><pre class="programlisting">SELECT ST_AsEWKT(ST_3DLongestLine(line,pt)) AS lol3d_line_pt,
+                ST_AsEWKT(ST_LongestLine(line,pt)) As lol2d_line_pt
+        FROM (SELECT 'MULTIPOINT(100 100 30, 50 74 1000)'::geometry As pt,
+                        'LINESTRING (20 80 20, 98 190 1, 110 180 3, 50 75 900)'::geometry As line
+                ) As foo;
+
+
+          lol3d_line_pt          |      lol2d_line_pt
+---------------------------------+--------------------------
+ LINESTRING(98 190 1,50 74 1000) | LINESTRING(98 190,50 74)
+                                        </pre><p>
+							  </p></td></tr><tr><td style=""><p>マルチラインストリングとポリゴン -- 3次元と2次元の最長ライン </p><pre class="programlisting">SELECT ST_AsEWKT(ST_3DLongestLine(poly, mline)) As lol3d,
+    ST_AsEWKT(ST_LongestLine(poly, mline)) As lol2d
+        FROM (SELECT  ST_GeomFromEWKT('POLYGON((175 150 5, 20 40 5, 35 45 5, 50 60 5, 100 100 5, 175 150 5))') As poly,
+                ST_GeomFromEWKT('MULTILINESTRING((175 155 2, 20 40 20, 50 60 -2, 125 100 1, 175 155 1),
+                (1 10 2, 5 20 1))') As mline ) As foo;
+            lol3d             |          lol2d
+------------------------------+--------------------------
+ LINESTRING(175 150 5,1 10 2) | LINESTRING(175 150,1 10)
+             </pre><p>
+							  </p></td></tr></tbody></table></div></div><div class="refsection"><a name="idp70998904"></a><h2>関連情報</h2><p><a class="xref" href="ST_3DClosestPoint.html" title="ST_3DClosestPoint">ST_3DClosestPoint</a>, <a class="xref" href="ST_3DDistance.html" title="ST_3DDistance">ST_3DDistance</a>, <a class="xref" href="ST_LongestLine.html" title="ST_LongestLine">ST_LongestLine</a>, <a class="xref" href="ST_3DShortestLine.html" title="ST_3DShortestLine">ST_3DShortestLine</a>, <a class="xref" href="ST_3DMaxDistance.html" title="ST_3DMaxDistance">ST_3DMaxDistance</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_LongestLine.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Measurement_Functions">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_MaxDistance.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_LongestLine </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_MaxDistance</td></tr></table></div></body></html>

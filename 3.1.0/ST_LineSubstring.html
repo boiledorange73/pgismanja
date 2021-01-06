@@ -1,0 +1,33 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_LineSubstring</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.1.0 マニュアル"><link rel="up" href="reference.html#Linear_Referencing" title="5.18. 線型参照"><link rel="prev" href="ST_LineLocatePoint.html" title="ST_LineLocatePoint"><link rel="next" href="ST_LocateAlong.html" title="ST_LocateAlong"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_LineSubstring</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_LineLocatePoint.html">戻る</a> </td><th width="60%" align="center">5.18. 線型参照</th><td width="20%" align="right"> <a accesskey="n" href="ST_LocateAlong.html">次へ</a></td></tr></table></div><div class="refentry"><a name="ST_LineSubstring"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_LineSubstring — 次元長に対する割合で示された開始位置と終了位置で切り取られた部分ラインストリングを返します。第2引数と第3引数は、float8で0から1の区間です。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_LineSubstring</b>(</code>geometry  <var class="pdparam">a_linestring</var>, float8  <var class="pdparam">startfraction</var>, float8  <var class="pdparam">endfraction</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp75110392"></a><h2>説明</h2><p>2次元長に対する割合で示された開始位置と終了位置で切り取られた部分ラインストリングを返します。第2引数と第3引数は、float8で0から1の区間です。この関数はLINESTRINGでのみ動作します。MULTILINESTRINGで使用するには、<a class="xref" href="ST_LineMerge.html" title="ST_LineMerge">ST_LineMerge</a>と併用します。</p><p>startfractionとendfractionが同じ値を持つ場合には、<a class="xref" href="ST_LineInterpolatePoint.html" title="ST_LineInterpolatePoint">ST_LineInterpolatePoint</a>と等価になります。</p><p>ポイントに最も近いライン位置の計算については<a class="xref" href="ST_LineLocatePoint.html" title="ST_LineLocatePoint">ST_LineLocatePoint</a>を参照して下さい。</p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>1.1.1から、この関数はM軸やZ軸の内挿点も (存在するなら)計算するようになりました。それより前の版では不定値となります。</p></td></tr></table></div><p>Availability: 1.1.0 Z軸とM軸のサポートが1.1.1で追加されました。</p><p>Changed: 2.1.0 2.0.xではST_Line_Substringと呼ばれていました。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports 3d and will not drop the z-index.</p></div><div class="refsection"><a name="idp75116536"></a><h2>例</h2><div class="informalfigure"><div class="mediaobject"><img src="images/st_line_substring01.png"><div class="caption"><p>1/3の真ん中 (0.333, 0.666)のラインストリング </p></div></div></div><pre class="programlisting">-- ラインストリングの概ね1/3の真ん中の線を返します
+SELECT ST_AsText(ST_Line_SubString(ST_GeomFromText('LINESTRING(25 50, 100 125, 150 190)'), 0.333, 0.666));
+
+                                                                                   st_astext
+------------------------------------------------------------------------------------------------
+LINESTRING(69.2846934853974 94.2846934853974,100 125,111.700356260683 140.210463138888)
+
+--次に示す例では、PostgreSQLのgenerate_series()を
+--使ったwhileループに似たことを行って、
+--テーブル内の全てのラインストリングを100単位の
+--区分にカットしています。
+--単位はSRIDで決まります。
+--全てのジオメトリがラインストリングまたは
+--隣接するマルチラインストリングで、
+--100単位*10000より長いジオメトリが無いと仮定します。
+--パフォーマンスを良くするために、10000を減らして、
+--期待する最大区分数にあわせることができます。
+
+SELECT field1, field2, ST_LineSubstring(the_geom, 100.00*n/length,
+  CASE
+        WHEN 100.00*(n+1) &lt; length THEN 100.00*(n+1)/length
+        ELSE 1
+  END) As the_geom
+FROM
+  (SELECT sometable.field1, sometable.field2,
+  ST_LineMerge(sometable.the_geom) AS the_geom,
+  ST_Length(sometable.the_geom) As length
+  FROM sometable
+  ) AS t
+CROSS JOIN generate_series(0,10000) AS n
+WHERE n*100.00/length &lt; 1;
+                        </pre></div><div class="refsection"><a name="idp75120376"></a><h2>関連情報</h2><p><a class="xref" href="ST_Length.html" title="ST_Length">ST_Length</a>, <a class="xref" href="ST_LineInterpolatePoint.html" title="ST_LineInterpolatePoint">ST_LineInterpolatePoint</a>, <a class="xref" href="ST_LineMerge.html" title="ST_LineMerge">ST_LineMerge</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_LineLocatePoint.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Linear_Referencing">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_LocateAlong.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_LineLocatePoint </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_LocateAlong</td></tr></table></div></body></html>

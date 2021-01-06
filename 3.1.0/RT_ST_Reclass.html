@@ -1,0 +1,54 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Reclass</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.1.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Processing_MapAlgebra" title="6.12. ラスタ処理: 地図代数"><link rel="prev" href="RT_ST_MapAlgebraFctNgb.html" title="ST_MapAlgebraFctNgb"><link rel="next" href="RT_ST_Union.html" title="ST_Union"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Reclass</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_MapAlgebraFctNgb.html">戻る</a> </td><th width="60%" align="center">6.12. ラスタ処理: 地図代数</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_Union.html">次へ</a></td></tr></table></div><div class="refentry"><a name="RT_ST_Reclass"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_Reclass — 元のラスタから再分類したバンドタイプからなるラスタを生成します。nbandは変更するバンドです。nbandが指定されていない場合には、1と仮定します。他の全てのバンドは変更せずに返します。可視画像の書式としてより単純な描画を行うために、16BUIバンドを8BUIバンドに変換する、等のために使います。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">raster <b class="fsfunc">ST_Reclass</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">nband</var>, text  <var class="pdparam">reclassexpr</var>, text  <var class="pdparam">pixeltype</var>, double precision  <var class="pdparam">nodataval=NULL</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_Reclass</b>(</code>raster  <var class="pdparam">rast</var>, reclassarg[]  <var class="pdparam">VARIADIC reclassargset</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_Reclass</b>(</code>raster  <var class="pdparam">rast</var>, text  <var class="pdparam">reclassexpr</var>, text  <var class="pdparam">pixeltype</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp88283768"></a><h2>説明</h2><p>入力ラスタ (<code class="varname">rast</code>)に<code class="varname">reclassexpr</code>で定義する妥当なPostgreSQL代数演算子を適用して新しいラスタを生成します。<code class="varname">band</code>が指定されていない場合には、1番と仮定します。新しいラスタは、元のラスタと同じ地理参照、幅、高さを持ちます。指示されていないバンドは変更せずに返ります。妥当な再分類の数式の説明については<a class="xref" href="reclassarg.html" title="reclassarg">reclassarg</a>を参照して下さい。</p><p>新しいラスタのバンドは<code class="varname">pixeltype</code>で指定するピクセルタイプになります。<code class="varname">reclassargset</code>を渡した場合は、個々のreclassargが生成されるバンド毎の挙動を定義します。</p><p>Availability: 2.0.0 </p></div><div class="refsection"><a name="idp88287992"></a><h2>基本的な例</h2><p>元ラスタから新しいラスタを生成しますが、2番バンドを8BUIから4BUIに変換して、101-254をNODATA値にします。</p><pre class="programlisting">ALTER TABLE dummy_rast ADD COLUMN reclass_rast raster;
+UPDATE dummy_rast SET reclass_rast = ST_Reclass(rast,2,'0-87:1-10, 88-100:11-15, 101-254:0-0', '4BUI',0) WHERE rid = 2;
+
+SELECT i as col, j as row, ST_Value(rast,2,i,j) As origval,
+    ST_Value(reclass_rast, 2, i, j) As reclassval,
+    ST_Value(reclass_rast, 2, i, j, false) As reclassval_include_nodata
+FROM dummy_rast CROSS JOIN generate_series(1, 3) AS i CROSS JOIN generate_series(1,3) AS j
+WHERE rid = 2;
+
+ col | row | origval | reclassval | reclassval_include_nodata
+-----+-----+---------+------------+---------------------------
+   1 |   1 |      78 |          9 |                         9
+   2 |   1 |      98 |         14 |                        14
+   3 |   1 |     122 |            |                         0
+   1 |   2 |      96 |         14 |                        14
+   2 |   2 |     118 |            |                         0
+   3 |   2 |     180 |            |                         0
+   1 |   3 |      99 |         15 |                        15
+   2 |   3 |     112 |            |                         0
+   3 |   3 |     169 |            |                         0
+                                        </pre></div><div class="refsection"><a name="idp88289656"></a><h2>例: 複数の再分類を使った高度な例</h2><p>元ラスタから新しいラスタを生成しますが、1番、2番、3番バンドを1BB, 4BUI, 4BUIにそれぞれ変換して再分類します。再分類の識別番号 (理論的には元ラスタと同数のバンド)を入力するために取るVARIADIC reclassarg引数を使っています。 </p><pre class="programlisting">UPDATE dummy_rast SET reclass_rast =
+    ST_Reclass(rast,
+        ROW(2,'0-87]:1-10, (87-100]:11-15, (101-254]:0-0', '4BUI',NULL)::reclassarg,
+        ROW(1,'0-253]:1, 254:0', '1BB', NULL)::reclassarg,
+        ROW(3,'0-70]:1, (70-86:2, [86-150):3, [150-255:4', '4BUI', NULL)::reclassarg
+        ) WHERE rid = 2;
+
+SELECT i as col, j as row,ST_Value(rast,1,i,j) As ov1,  ST_Value(reclass_rast, 1, i, j) As rv1,
+    ST_Value(rast,2,i,j) As ov2, ST_Value(reclass_rast, 2, i, j) As rv2,
+    ST_Value(rast,3,i,j) As ov3, ST_Value(reclass_rast, 3, i, j) As rv3
+FROM dummy_rast CROSS JOIN generate_series(1, 3) AS i CROSS JOIN generate_series(1,3) AS j
+WHERE rid = 2;
+
+col | row | ov1 | rv1 | ov2 | rv2 | ov3 | rv3
+----+-----+-----+-----+-----+-----+-----+-----
+  1 |   1 | 253 |   1 |  78 |   9 |  70 |   1
+  2 |   1 | 254 |   0 |  98 |  14 |  86 |   3
+  3 |   1 | 253 |   1 | 122 |   0 | 100 |   3
+  1 |   2 | 253 |   1 |  96 |  14 |  80 |   2
+  2 |   2 | 254 |   0 | 118 |   0 | 108 |   3
+  3 |   2 | 254 |   0 | 180 |   0 | 162 |   4
+  1 |   3 | 250 |   1 |  99 |  15 |  90 |   3
+  2 |   3 | 254 |   0 | 112 |   0 | 108 |   3
+  3 |   3 | 254 |   0 | 169 |   0 | 175 |   4
+                                        </pre></div><div class="refsection"><a name="idp88291320"></a><h2>例: 単一バンドで32BFのラスタをの可視ラスタへの高度な対応付け</h2><p>32BFバンドを一つ持つだけのラスタから三つのバンド (8BUI, 8BUI, 8BUI可視ラスタ)を生成します。 </p><pre class="programlisting">ALTER TABLE wind ADD COLUMN rast_view raster;
+UPDATE wind
+        set rast_view = ST_AddBand( NULL,
+        ARRAY[
+        ST_Reclass(rast, 1,'0.1-10]:1-10,9-10]:11,(11-33:0'::text, '8BUI'::text,0),
+        ST_Reclass(rast,1, '11-33):0-255,[0-32:0,(34-1000:0'::text, '8BUI'::text,0),
+        ST_Reclass(rast,1,'0-32]:0,(32-100:100-255'::text, '8BUI'::text,0)
+        ]
+        );
+                                        </pre></div><div class="refsection"><a name="idp88292984"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_AddBand.html" title="ST_AddBand">ST_AddBand</a>, <a class="xref" href="RT_ST_Band.html" title="ST_Band">ST_Band</a>, <a class="xref" href="RT_ST_BandPixelType.html" title="ST_BandPixelType">ST_BandPixelType</a>, <a class="xref" href="RT_ST_MakeEmptyRaster.html" title="ST_MakeEmptyRaster">ST_MakeEmptyRaster</a>, <a class="xref" href="reclassarg.html" title="reclassarg">reclassarg</a>, <a class="xref" href="RT_ST_Value.html" title="ST_Value">ST_Value</a> </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_MapAlgebraFctNgb.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Processing_MapAlgebra">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_Union.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_MapAlgebraFctNgb </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_Union</td></tr></table></div></body></html>

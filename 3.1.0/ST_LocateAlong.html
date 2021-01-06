@@ -1,0 +1,25 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_LocateAlong</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.1.0 マニュアル"><link rel="up" href="reference.html#Linear_Referencing" title="5.18. 線型参照"><link rel="prev" href="ST_LineSubstring.html" title="ST_LineSubstring"><link rel="next" href="ST_LocateBetween.html" title="ST_LocateBetween"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_LocateAlong</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_LineSubstring.html">戻る</a> </td><th width="60%" align="center">5.18. 線型参照</th><td width="20%" align="right"> <a accesskey="n" href="ST_LocateBetween.html">次へ</a></td></tr></table></div><div class="refentry"><a name="ST_LocateAlong"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_LocateAlong — 指定したM値に一致する要素からなる、派生ジオメトリコレクション値を返します。ポリゴン要素には対応していません。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_LocateAlong</b>(</code>geometry  <var class="pdparam">ageom_with_measure</var>, float8  <var class="pdparam">a_measure</var>, float8  <var class="pdparam">offset</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp75133176"></a><h2>説明</h2><p>指定したM値に一致する要素からなる、派生ジオメトリコレクション値を返します。ポリゴン要素には対応していません。</p><p>offsetを与えた場合には、結果は入力ラインの右または左に、指定した数字分ずれます。正のオフセットでは左に、負のオフセットでは右にずれます。</p><p>意味は ISO/IEC CD 13249-3:200x(E) - Text for Continuation CD Editing Meeting で決められています。</p><p>Availability: 1.1.0 それまではST_Locale_Along_Measureでした。 </p><p>Changed: 2.0.0 以前の版ではST_Locate_Along_Measureと呼ばれていました。</p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>この関数は、M要素を持つジオメトリでのみ使います。</p></td></tr></table></div><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports M coordinates.</p></div><div class="refsection"><a name="idp75137784"></a><h2>例</h2><pre class="programlisting">SELECT ST_AsText(the_geom)
+                FROM
+                (SELECT ST_LocateAlong(
+                        ST_GeomFromText('MULTILINESTRINGM((1 2 3, 3 4 2, 9 4 3),
+                (1 2 3, 5 4 5))'),3) As the_geom) As foo;
+
+                                                 st_asewkt
+-----------------------------------------------------------
+ MULTIPOINT M (1 2 3)
+
+-- ジオメトリコレクションは難しいものですので、
+-- 簡略化するためにダンプしています。
+SELECT ST_AsText((ST_Dump(the_geom)).geom)
+        FROM
+        (SELECT ST_LocateAlong(
+                        ST_GeomFromText('MULTILINESTRINGM((1 2 3, 3 4 2, 9 4 3),
+        (1 2 3, 5 4 5))'),3) As the_geom) As foo;
+
+   st_asewkt
+---------------
+ POINTM(1 2 3)
+ POINTM(9 4 3)
+ POINTM(1 2 3)
+        </pre></div><div class="refsection"><a name="idp75139320"></a><h2>関連情報</h2><p><a class="xref" href="ST_Dump.html" title="ST_Dump">ST_Dump</a>, <a class="xref" href="ST_LocateBetween.html" title="ST_LocateBetween">ST_LocateBetween</a>, <a class="xref" href="ST_LocateBetweenElevations.html" title="ST_LocateBetweenElevations">ST_LocateBetweenElevations</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_LineSubstring.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Linear_Referencing">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_LocateBetween.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_LineSubstring </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_LocateBetween</td></tr></table></div></body></html>

@@ -1,0 +1,109 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_AsGML</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.1.0 マニュアル"><link rel="up" href="reference.html#idp67294456" title="5.9.3. その他の書式"><link rel="prev" href="ST_AsGeoJSON.html" title="ST_AsGeoJSON"><link rel="next" href="ST_AsKML.html" title="ST_AsKML"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_AsGML</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_AsGeoJSON.html">戻る</a> </td><th width="60%" align="center">5.9.3. その他の書式</th><td width="20%" align="right"> <a accesskey="n" href="ST_AsKML.html">次へ</a></td></tr></table></div><div class="refentry"><a name="ST_AsGML"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_AsGML — GML第2版または第3版としてジオメトリを返します。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">text <b class="fsfunc">ST_AsGML</b>(</code>geometry  <var class="pdparam">geom</var>, integer  <var class="pdparam">maxdecimaldigits=15</var>, integer  <var class="pdparam">options=0</var><code>)</code>;</p><p><code class="funcdef">text <b class="fsfunc">ST_AsGML</b>(</code>geography  <var class="pdparam">geog</var>, integer  <var class="pdparam">maxdecimaldigits=15</var>, integer  <var class="pdparam">options=0</var>, text  <var class="pdparam">nprefix=null</var>, text  <var class="pdparam">id=null</var><code>)</code>;</p><p><code class="funcdef">text <b class="fsfunc">ST_AsGML</b>(</code>integer  <var class="pdparam">version</var>, geometry  <var class="pdparam">geom</var>, integer  <var class="pdparam">maxdecimaldigits=15</var>, integer  <var class="pdparam">options=0</var>, text  <var class="pdparam">nprefix=null</var>, text  <var class="pdparam">id=null</var><code>)</code>;</p><p><code class="funcdef">text <b class="fsfunc">ST_AsGML</b>(</code>integer  <var class="pdparam">version</var>, geography  <var class="pdparam">geog</var>, integer  <var class="pdparam">maxdecimaldigits=15</var>, integer  <var class="pdparam">options=0</var>, text  <var class="pdparam">nprefix=null</var>, text  <var class="pdparam">id=null</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp67403000"></a><h2>説明</h2><p>Geography Markup Language (GML)要素としてジオメトリを返します。versionパラメータは、指定する場合には2か3になります。versionパラメータが無い場合には、デフォルトは2です。</p><p>GML2では2.1.2版を参照し、GML3では3.1.1を参照します。</p><p>最後の'options'引数はビットフィールドです。GML出力のCRS出力型を定義するために、また緯度/経度でデータを宣言するために使います。 </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>0: GML Short CRS (たとえば EPSG:4326)、デフォルト値</p></li><li class="listitem"><p>1: GML Long CRS (たとえば urn:ogc:def:crs:EPSG:4326)</p></li><li class="listitem"><p>2: GML 3のみ対応。srsDimension属性を出力から削除します。</p></li><li class="listitem"><p>4: GML 3のみ対応。線について&lt;Curve&gt;でなく&lt;LineString&gt;要素を使います。</p></li><li class="listitem"><p>16: データは緯度/経度 (すなわち SRID=4326)です。デフォルトではデータは平面上にあると仮定します。このオプションはGML 3.1.1による出力でのみ使われ、軸のオーダに関連します。これを設定すると、座標の順序を入れ替えるので、データベースの経度/緯度の順でなく緯度/経度の順になります。</p></li><li class="listitem"><p>32: ジオメトリのボックス (エンベロープ)を出力します。</p></li></ul></div><p>
+						</p><p>'namespace prefix'引数は、カスタム名前空間のプリフィクスを指定したり、名前空間プリフィクスを指定しない (空にした場合)ために使用します。NULLを指定するか省略した場合には、'gml'プレフィクスを使用します。</p><p>Availability: 1.3.2</p><p>Availability: 1.5.0 ジオグラフィが導入されました。</p><p>Enhanced: 2.0.0 プレフィクスが導入されました。 GML 3用であるoptionsの4は、曲線のかわりにラインストリングを使えるようにするためのものです。GML 3の多面体サーフェスとTINが導入されました。optionsの32はボックスを出力するために導入されました。</p><p>Changed: 2.0.0 デフォルトの名前付き引数を使います。</p><p>Enhanced: 2.1.0 GML 3用にidが導入されました。</p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>ST_AsGMLのGML 3版以上では多面体サーフェスとTINに対応しています。</p></td></tr></table></div><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports 3d and will not drop the z-index.</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports Polyhedral surfaces.</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports Triangles and Triangulated Irregular Network Surfaces (TIN).</p></div><div class="refsection"><a name="idp67437816"></a><h2>例: 2版</h2><pre class="programlisting">SELECT ST_AsGML(ST_GeomFromText('POLYGON((0 0,0 1,1 1,1 0,0 0))',4326));
+                st_asgml
+                --------
+                &lt;gml:Polygon srsName="EPSG:4326"
+&gt;&lt;gml:outerBoundaryIs
+&gt;&lt;gml:LinearRing
+&gt;&lt;gml:coordinates
+&gt;0,0 0,1 1,1 1,0 0,0&lt;/gml:coordinates
+&gt;&lt;/gml:LinearRing
+&gt;&lt;/gml:outerBoundaryIs
+&gt;&lt;/gml:Polygon
+&gt;
+                        </pre></div><div class="refsection"><a name="idp67439096"></a><h2>例: 3版</h2><pre class="programlisting">-- 座標を入れ替え、拡張EPSGで出力 (16 | 1)--
+SELECT ST_AsGML(3, ST_GeomFromText('POINT(5.234234233242 6.34534534534)',4326), 5, 17);
+                        st_asgml
+                        --------
+                &lt;gml:Point srsName="urn:ogc:def:crs:EPSG::4326"
+&gt;&lt;gml:pos
+&gt;6.34535 5.23423&lt;/gml:pos
+&gt;&lt;/gml:Point
+&gt;
+                        </pre><pre class="programlisting">-- エンベロープ出力 (32) --
+SELECT ST_AsGML(3, ST_GeomFromText('LINESTRING(1 2, 3 4, 10 20)',4326), 5, 32);
+                st_asgml
+                --------
+        &lt;gml:Envelope srsName="EPSG:4326"&gt;
+                &lt;gml:lowerCorner
+&gt;1 2&lt;/gml:lowerCorner&gt;
+                &lt;gml:upperCorner
+&gt;10 20&lt;/gml:upperCorner&gt;
+        &lt;/gml:Envelope
+&gt;
+                        </pre><pre class="programlisting">-- エンベロープ出力 (32)、座標入れ替え (経度緯度を緯度経度に)、Long CRS(1)
+ = 32 | 16 | 1 = 49 --
+SELECT ST_AsGML(3, ST_GeomFromText('LINESTRING(1 2, 3 4, 10 20)',4326), 5, 49);
+        st_asgml
+        --------
+&lt;gml:Envelope srsName="urn:ogc:def:crs:EPSG::4326"&gt;
+        &lt;gml:lowerCorner
+&gt;2 1&lt;/gml:lowerCorner&gt;
+        &lt;gml:upperCorner
+&gt;20 10&lt;/gml:upperCorner&gt;
+&lt;/gml:Envelope
+&gt;
+                        </pre><pre class="programlisting">-- 多面体サーフェスの例 --
+SELECT ST_AsGML(3, ST_GeomFromEWKT('POLYHEDRALSURFACE( ((0 0 0, 0 0 1, 0 1 1, 0 1 0, 0 0 0)),
+((0 0 0, 0 1 0, 1 1 0, 1 0 0, 0 0 0)), ((0 0 0, 1 0 0, 1 0 1, 0 0 1, 0 0 0)),
+((1 1 0, 1 1 1, 1 0 1, 1 0 0, 1 1 0)),
+((0 1 0, 0 1 1, 1 1 1, 1 1 0, 0 1 0)), ((0 0 1, 1 0 1, 1 1 1, 0 1 1, 0 0 1)) )'));
+        st_asgml
+        --------
+ &lt;gml:PolyhedralSurface&gt;
+&lt;gml:polygonPatches&gt;
+   &lt;gml:PolygonPatch&gt;
+                &lt;gml:exterior&gt;
+                          &lt;gml:LinearRing&gt;
+                                   &lt;gml:posList srsDimension="3"
+&gt;0 0 0 0 0 1 0 1 1 0 1 0 0 0 0&lt;/gml:posList&gt;
+                          &lt;/gml:LinearRing&gt;
+                &lt;/gml:exterior&gt;
+   &lt;/gml:PolygonPatch&gt;
+   &lt;gml:PolygonPatch&gt;
+                &lt;gml:exterior&gt;
+                          &lt;gml:LinearRing&gt;
+                                   &lt;gml:posList srsDimension="3"
+&gt;0 0 0 0 1 0 1 1 0 1 0 0 0 0 0&lt;/gml:posList&gt;
+                          &lt;/gml:LinearRing&gt;
+                &lt;/gml:exterior&gt;
+   &lt;/gml:PolygonPatch&gt;
+   &lt;gml:PolygonPatch&gt;
+                &lt;gml:exterior&gt;
+                          &lt;gml:LinearRing&gt;
+                                   &lt;gml:posList srsDimension="3"
+&gt;0 0 0 1 0 0 1 0 1 0 0 1 0 0 0&lt;/gml:posList&gt;
+                          &lt;/gml:LinearRing&gt;
+                &lt;/gml:exterior&gt;
+   &lt;/gml:PolygonPatch&gt;
+   &lt;gml:PolygonPatch&gt;
+                &lt;gml:exterior&gt;
+                          &lt;gml:LinearRing&gt;
+                                   &lt;gml:posList srsDimension="3"
+&gt;1 1 0 1 1 1 1 0 1 1 0 0 1 1 0&lt;/gml:posList&gt;
+                          &lt;/gml:LinearRing&gt;
+                &lt;/gml:exterior&gt;
+   &lt;/gml:PolygonPatch&gt;
+   &lt;gml:PolygonPatch&gt;
+                &lt;gml:exterior&gt;
+                          &lt;gml:LinearRing&gt;
+                                   &lt;gml:posList srsDimension="3"
+&gt;0 1 0 0 1 1 1 1 1 1 1 0 0 1 0&lt;/gml:posList&gt;
+                          &lt;/gml:LinearRing&gt;
+                &lt;/gml:exterior&gt;
+   &lt;/gml:PolygonPatch&gt;
+   &lt;gml:PolygonPatch&gt;
+                &lt;gml:exterior&gt;
+                          &lt;gml:LinearRing&gt;
+                                   &lt;gml:posList srsDimension="3"
+&gt;0 0 1 1 0 1 1 1 1 0 1 1 0 0 1&lt;/gml:posList&gt;
+                          &lt;/gml:LinearRing&gt;
+                &lt;/gml:exterior&gt;
+   &lt;/gml:PolygonPatch&gt;
+&lt;/gml:polygonPatches&gt;
+&lt;/gml:PolyhedralSurface
+&gt;
+                        </pre></div><div class="refsection"><a name="idp67441912"></a><h2>関連情報</h2><p><a class="xref" href="ST_GeomFromGML.html" title="ST_GeomFromGML">ST_GeomFromGML</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_AsGeoJSON.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#idp67294456">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_AsKML.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_AsGeoJSON </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_AsKML</td></tr></table></div></body></html>

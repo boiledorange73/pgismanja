@@ -1,0 +1,21 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_RasterToWorldCoordY</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.1.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Accessors" title="6.4. ラスタアクセサ"><link rel="prev" href="RT_ST_RasterToWorldCoordX.html" title="ST_RasterToWorldCoordX"><link rel="next" href="RT_ST_Rotation.html" title="ST_Rotation"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_RasterToWorldCoordY</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_RasterToWorldCoordX.html">戻る</a> </td><th width="60%" align="center">6.4. ラスタアクセサ</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_Rotation.html">次へ</a></td></tr></table></div><div class="refentry"><a name="RT_ST_RasterToWorldCoordY"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_RasterToWorldCoordY — ラスタの指定した列と行における左上隅の地理座標のY値を返します。列と行の番号は1始まりです。 </p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">float8 <b class="fsfunc">ST_RasterToWorldCoordY</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">yrow</var><code>)</code>;</p><p><code class="funcdef">float8 <b class="fsfunc">ST_RasterToWorldCoordY</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">xcolumn</var>, integer  <var class="pdparam">yrow</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp85572344"></a><h2>説明</h2><p>ラスタの指定した列と行における左上隅の地理座標のY値を地理参照したラスタの地理単位で返します。列と行の番号は1始まりです。負数またはラスタの列数や行数を超える値を渡した場合には、スキューとピクセルサイズが選択したラスタと同じであるという仮定のもとで、ラスタファイルから左または右にはずれた座標値を返します。 </p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>スキューの無いラスタでは、Y行を与えれば十分です。スキューのあるラスタの場合には、地理参照のとれた座標はST_ScaleYとST_SkewYおよび行と列の関数となります。スキューのあるラスタでY行のみ与えた場合にはエラーが発生します</p></td></tr></table></div><p>Changed: 2.1.0 以前の版ではST_Raster2WorldCoordYと呼ばれていました。</p></div><div class="refsection"><a name="idp85574392"></a><h2>例</h2><pre class="programlisting">-- スキューの無いラスタでは列を与えれば十分です
+SELECT rid, ST_RasterToWorldCoordY(rast,1) As y1coord,
+        ST_RasterToWorldCoordY(rast,3) As y2coord,
+        ST_ScaleY(rast) As pixely
+FROM dummy_rast;
+
+ rid | y1coord |  y2coord  | pixely
+-----+---------+-----------+--------
+   1 |     0.5 |       6.5 |      3
+   2 | 5793244 | 5793243.9 |  -0.05
+                                </pre><pre class="programlisting">-- 面白半分に回転させてみましょう
+SELECT rid, ST_RasterToWorldCoordY(rast,1,1) As y1coord,
+        ST_RasterToWorldCoordY(rast,2,3) As y2coord,
+        ST_ScaleY(rast) As pixely
+FROM (SELECT rid, ST_SetSkew(rast,0,100.5) As rast FROM dummy_rast) As foo;
+
+ rid | y1coord |  y2coord  | pixely
+-----+---------+-----------+--------
+   1 |     0.5 |       107 |      3
+   2 | 5793244 | 5793344.4 |  -0.05
+                                </pre></div><div class="refsection"><a name="idp85576440"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_ScaleY.html" title="ST_ScaleY">ST_ScaleY</a>, <a class="xref" href="RT_ST_RasterToWorldCoordX.html" title="ST_RasterToWorldCoordX">ST_RasterToWorldCoordX</a>, <a class="xref" href="RT_ST_SetSkew.html" title="ST_SetSkew">ST_SetSkew</a>, <a class="xref" href="RT_ST_SkewY.html" title="ST_SkewY">ST_SkewY</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_RasterToWorldCoordX.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Accessors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_Rotation.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_RasterToWorldCoordX </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_Rotation</td></tr></table></div></body></html>

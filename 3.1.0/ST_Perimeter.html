@@ -1,0 +1,48 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Perimeter</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.1.0 マニュアル"><link rel="up" href="reference.html#Measurement_Functions" title="5.12. 計測関数"><link rel="prev" href="ST_MinimumClearanceLine.html" title="ST_MinimumClearanceLine"><link rel="next" href="ST_Perimeter2D.html" title="ST_Perimeter2D"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Perimeter</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_MinimumClearanceLine.html">戻る</a> </td><th width="60%" align="center">5.12. 計測関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_Perimeter2D.html">次へ</a></td></tr></table></div><div class="refentry"><a name="ST_Perimeter"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_Perimeter — ポリゴンジオメトリまたはジオグラフィの境界の長さを返します。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">float <b class="fsfunc">ST_Perimeter</b>(</code>geometry <var class="pdparam">g1</var><code>)</code>;</p><p><code class="funcdef">float <b class="fsfunc">ST_Perimeter</b>(</code>geography <var class="pdparam">geog</var>, boolean <var class="pdparam">use_spheroid=true</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp71071224"></a><h2>説明</h2><p>ジオメトリ/ジオグラフィがST_SrrfaceまたはST_MultiSurface (POLYGONまたはMULTIPOLYGON)の場合に、2次元周囲長を返します。面ジオメトリでない場合には0を返します。ラインストリングについては<a class="xref" href="ST_Length.html" title="ST_Length">ST_Length</a>を使います。ジオメトリに対しては、周囲長の計測単位は空間参照系によります。</p><p>ジオグラフィに対しては、測地線の逆問題を使って計算し、長さの単位はメートルです。PostGISをPROJ 4.8.0以上でコンパイルしているなら、回転楕円体面はSRIDで指定されたものですが、そうでなければ、WGS84に限定されます。<code class="varname">use_spheroid=false</code>とすると、回転楕円体面でなく近似する球面で計算します。</p><p>現在は、この関数はST_Perimeter2Dの別名ですが、高次元対応に変更されるかも知れません。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This method implements the <a class="ulink" href="http://www.opengeospatial.org/standards/sfs" target="_top">OpenGIS Simple Features
+ Implementation Specification for SQL 1.1.</a> s2.1.5.1</p><p><span class="inlinemediaobject"><img src="images/check.png"></span> This method implements the SQL/MM specification. SQL-MM 3: 8.1.3, 9.5.4</p><p>Availability: 2.0.0 ジオグラフィ対応が導入されました。</p></div><div class="refsection"><a name="idp71077496"></a><h2>例: ジオメトリ</h2><p>POLYGONとMULTIPOLYGONに対するフィート単位の周囲長を返します。EPSG:2249はフィート単位のマサチューセッツ平面なので、フィート単位です。</p><pre class="programlisting">SELECT ST_Perimeter(ST_GeomFromText('POLYGON((743238 2967416,743238 2967450,743265 2967450,
+743265.625 2967416,743238 2967416))', 2249));
+st_perimeter
+---------
+ 122.630744000095
+(1 row)
+
+SELECT ST_Perimeter(ST_GeomFromText('MULTIPOLYGON(((763104.471273676 2949418.44119003,
+763104.477769673 2949418.42538203,
+763104.189609677 2949418.22343004,763104.471273676 2949418.44119003)),
+((763104.471273676 2949418.44119003,763095.804579742 2949436.33850239,
+763086.132105649 2949451.46730207,763078.452329651 2949462.11549407,
+763075.354136904 2949466.17407812,763064.362142565 2949477.64291974,
+763059.953961626 2949481.28983009,762994.637609571 2949532.04103014,
+762990.568508415 2949535.06640477,762986.710889563 2949539.61421415,
+763117.237897679 2949709.50493431,763235.236617789 2949617.95619822,
+763287.718121842 2949562.20592617,763111.553321674 2949423.91664605,
+763104.471273676 2949418.44119003)))', 2249));
+st_perimeter
+---------
+ 845.227713366825
+(1 row)
+                        </pre></div><div class="refsection"><a name="idp71079160"></a><h2>例: ジオグラフィ</h2><p>ポリゴンとマルチポリゴンのメートル単位とフィート単位の周囲長を返します。ジオグラフィ (WGS 84経度緯度)であることに注意して下さい。</p><pre class="programlisting">SELECT  ST_Perimeter(geog) As per_meters, ST_Perimeter(geog)/0.3048 As per_ft
+FROM ST_GeogFromText('POLYGON((-71.1776848522251 42.3902896512902,-71.1776843766326 42.3903829478009,
+-71.1775844305465 42.3903826677917,-71.1775825927231 42.3902893647987,-71.1776848522251 42.3902896512902))') As geog;
+
+   per_meters    |      per_ft
+-----------------+------------------
+37.3790462565251 | 122.634666195949
+
+
+-- MultiPolygon example --
+SELECT  ST_Perimeter(geog) As per_meters, ST_Perimeter(geog,false) As per_sphere_meters,  ST_Perimeter(geog)/0.3048 As per_ft
+FROM ST_GeogFromText('MULTIPOLYGON(((-71.1044543107478 42.340674480411,-71.1044542869917 42.3406744369506,
+-71.1044553562977 42.340673886454,-71.1044543107478 42.340674480411)),
+((-71.1044543107478 42.340674480411,-71.1044860600303 42.3407237015564,-71.1045215770124 42.3407653385914,
+-71.1045498002983 42.3407946553165,-71.1045611902745 42.3408058316308,-71.1046016507427 42.340837442371,
+-71.104617893173 42.3408475056957,-71.1048586153981 42.3409875993595,-71.1048736143677 42.3409959528211,
+-71.1048878050242 42.3410084812078,-71.1044020965803 42.3414730072048,
+-71.1039672113619 42.3412202916693,-71.1037740497748 42.3410666421308,
+-71.1044280218456 42.3406894151355,-71.1044543107478 42.340674480411)))') As geog;
+
+    per_meters    | per_sphere_meters |      per_ft
+------------------+-------------------+------------------
+ 257.634283683311 |  257.412311446337 | 845.256836231335
+                        </pre></div><div class="refsection"><a name="idp71080824"></a><h2>関連情報</h2><p><a class="xref" href="ST_GeogFromText.html" title="ST_GeogFromText">ST_GeogFromText</a>, <a class="xref" href="ST_GeomFromText.html" title="ST_GeomFromText">ST_GeomFromText</a>, <a class="xref" href="ST_Length.html" title="ST_Length">ST_Length</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_MinimumClearanceLine.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Measurement_Functions">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_Perimeter2D.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_MinimumClearanceLine </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_Perimeter2D</td></tr></table></div></body></html>

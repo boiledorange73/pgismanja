@@ -1,0 +1,46 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>standardize_address</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.1.0 マニュアル"><link rel="up" href="postgis_usage.html#Address_Standardizer_Functions" title="4.7.4. 住所標準化関数"><link rel="prev" href="parse_address.html" title="parse_address"><link rel="next" href="Drop_Indexes_Generate_Script.html" title="Drop_Indexes_Generate_Script"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">standardize_address</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="parse_address.html">戻る</a> </td><th width="60%" align="center">4.7.4. 住所標準化関数</th><td width="20%" align="right"> <a accesskey="n" href="Drop_Indexes_Generate_Script.html">次へ</a></td></tr></table></div><div class="refentry"><a name="standardize_address"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>standardize_address — lexテーブル、gazテーブルおよび規則テーブルを使って、入力住所をstdaddr形式で返します。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">stdaddr <b class="fsfunc">standardize_address</b>(</code>text  <var class="pdparam">lextab</var>, text  <var class="pdparam">gaztab</var>, text  <var class="pdparam">rultab</var>, text  <var class="pdparam">address</var><code>)</code>;</p><p><code class="funcdef">stdaddr <b class="fsfunc">standardize_address</b>(</code>text  <var class="pdparam">lextab</var>, text  <var class="pdparam">gaztab</var>, text  <var class="pdparam">rultab</var>, text  <var class="pdparam">micro</var>, text  <var class="pdparam">macro</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp57232376"></a><h2>説明</h2><p>指定された<a class="xref" href="lextab.html" title="lexテーブル">lexテーブル</a>、<a class="xref" href="gaztab.html" title="gaz table">gaz table</a>および<a class="xref" href="rulestab.html" title="規則テーブル">規則テーブル</a>のテーブルを使って、入力住所を<a class="xref" href="stdaddr.html" title="stdaddr">stdaddr</a>形式で返します。</p><p>1番目の形式: 単一行で住所を取る形式です。</p><p>2番目の形式: 住所を二つの部分から取ります。<code class="varname">micro</code>は<code class="code">house_num street</code>等のような、標準的な宛先書式の1行目です。<code class="varname">macro</code>は、<code class="code">city, state postal_code country</code>等のような、標準的な宛先書式の2行目です。</p><p>初出: 2.2.0</p><p><span class="inlinemediaobject"><img src="images/check.png"></span> This method needs address_standardizer extension.</p></div><div class="refsection"><a name="idp57239672"></a><h2>例</h2><p>address_standardizer_data_usエクステンションを使います。</p><pre class="programlisting">CREATE EXTENSION address_standardizer_data_us; -- only needs to be done once</pre><p>一つ目の版: 単一行住所。米国でない住所では十分に働きません。</p><pre class="programlisting">SELECT house_num, name, suftype, city, country, state, unit  FROM standardize_address('us_lex',
+                           'us_gaz', 'us_rules', 'One Devonshire Place, PH 301, Boston, MA 02109');</pre><pre class="screen">house_num |    name    | suftype |  city  | country |     state     |      unit
+----------+------------+---------+--------+---------+---------------+-----------------
+1         | DEVONSHIRE | PLACE   | BOSTON | USA     | MASSACHUSETTS | # PENTHOUSE 301</pre><p>Tigerジオコーダに同梱されているテーブルを使います。この例は<code class="varname">postgis_tiger_geocoder</code>をインストールしている場合のみ動作します。</p><pre class="programlisting">SELECT *  FROM standardize_address('tiger.pagc_lex',
+         'tiger.pagc_gaz', 'tiger.pagc_rules', 'One Devonshire Place, PH 301, Boston, MA 02109-1234');</pre><p>読みやすくするために、hstoreエクステンションを使ってダウンぷします。必要なら CREATE EXTENSION hstore; を実行します。</p><pre class="programlisting">SELECT (each(hstore(p))).*
+ FROM standardize_address('tiger.pagc_lex', 'tiger.pagc_gaz',
+   'tiger.pagc_rules', 'One Devonshire Place, PH 301, Boston, MA 02109') As p;</pre><pre class="screen">key     |      value
+------------+-----------------
+ box        |
+ city       | BOSTON
+ name       | DEVONSHIRE
+ qual       |
+ unit       | # PENTHOUSE 301
+ extra      |
+ state      | MA
+ predir     |
+ sufdir     |
+ country    | USA
+ pretype    |
+ suftype    | PL
+ building   |
+ postcode   | 02109
+ house_num  | 1
+ ruralroute |
+(16 rows)
+                        </pre><p>二つ目の形式: 二つの部分からなる住所</p><pre class="programlisting">SELECT (each(hstore(p))).*
+ FROM standardize_address('tiger.pagc_lex', 'tiger.pagc_gaz',
+   'tiger.pagc_rules', 'One Devonshire Place, PH 301', 'Boston, MA 02109, US') As p;</pre><pre class="screen">key     |      value
+------------+-----------------
+ box        |
+ city       | BOSTON
+ name       | DEVONSHIRE
+ qual       |
+ unit       | # PENTHOUSE 301
+ extra      |
+ state      | MA
+ predir     |
+ sufdir     |
+ country    | USA
+ pretype    |
+ suftype    | PL
+ building   |
+ postcode   | 02109
+ house_num  | 1
+ ruralroute |
+(16 rows)</pre></div><div class="refsection"><a name="idp57247096"></a><h2>関連情報</h2><p><a class="xref" href="stdaddr.html" title="stdaddr">stdaddr</a>, <a class="xref" href="rulestab.html" title="規則テーブル">規則テーブル</a>, <a class="xref" href="lextab.html" title="lexテーブル">lexテーブル</a>, <a class="xref" href="gaztab.html" title="gaz table">gaz table</a>, <a class="xref" href="Pagc_Normalize_Address.html" title="Pagc_Normalize_Address文字列のストリート住所を与えると、道路後置辞、前置辞、標準タイプ、番地、ストリート名等を複数フィールドに分解して持つnorm_addy複合型を返します。この関数は、tiger_geocoder同梱のルックアップテーブルだけを使います (Tigerデータは不要です)。住所標準化エクステンションが必要です。">Pagc_Normalize_Address文字列のストリート住所を与えると、道路後置辞、前置辞、標準タイプ、番地、ストリート名等を複数フィールドに分解して持つ<code class="varname">norm_addy</code>複合型を返します。この関数は、tiger_geocoder同梱のルックアップテーブルだけを使います (Tigerデータは不要です)。住所標準化エクステンションが必要です。</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="parse_address.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="postgis_usage.html#Address_Standardizer_Functions">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="Drop_Indexes_Generate_Script.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">parse_address </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> Drop_Indexes_Generate_Script</td></tr></table></div></body></html>
