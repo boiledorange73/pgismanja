@@ -8,5 +8,5 @@ https://boiledorange73.github.io/pgismanja/ です。
 
 # オリジナル
 
-オリジナルは http://aginfo.cgk.affrc.go.jp/pgisman/ です。
+オリジナルは http://aginfo.cgk.affrc.go.jp/docs/pgisman/ です。
 
