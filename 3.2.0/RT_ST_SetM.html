@@ -1,0 +1,50 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_SetM</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.2.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Pixel_Accessors" title="12.6. ラスタピクセルアクセサとセッター"><link rel="prev" href="RT_ST_SetZ.html" title="ST_SetZ"><link rel="next" href="RT_ST_Neighborhood.html" title="ST_Neighborhood"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_SetM</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_SetZ.html">戻る</a> </td><th width="60%" align="center">12.6. ラスタピクセルアクセサとセッター</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_Neighborhood.html">次へ</a></td></tr></table></div><div class="refentry"><a name="RT_ST_SetM"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_SetM — 入力ジオメトリと同じX/y座標値と、指定されたリサンプリングアルゴリズムを使ってラスタから複写されたZ値とを持つジオメトリを返します。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_SetM</b>(</code>raster  <var class="pdparam">rast</var>, geometry  <var class="pdparam">geom</var>, text  <var class="pdparam">resample=nearest</var>, integer  <var class="pdparam">band=1</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp75440640"></a><h2>説明</h2><p>入力ジオメトリと同じX/Y座標値と、指定されたリサンプリングアルゴリズムを使ってラスタから複写されたZ値とを持つジオメトリを返します。</p><p><code class="varname">resample</code>パラメータの取ることができる値は、デフォルトである最近傍探索リサンプリングを行う"nearest"、バイリニア補間 (<a class="ulink" href="https://en.wikipedia.org/wiki/Bilinear_interpolation" target="_top">WikiPedia 英語版</a>)を行う"bilinear"です。近隣セルも考慮に入れた値を計算するためのものです。</p><p>Availability: 3.2.0</p></div><div class="refsection"><a name="idp75443328"></a><h2>例</h2><pre class="programlisting">--
+-- 値を持つ2x2ラスタ
+--
+-- 10 50
+-- 40 20
+--
+WITH test_raster AS (
+SELECT
+ST_SetValues(
+  ST_AddBand(
+    ST_MakeEmptyRaster(width =
+&gt; 2, height =
+&gt; 2,
+      upperleftx =
+&gt; 0, upperlefty =
+&gt; 2,
+      scalex =
+&gt; 1.0, scaley =
+&gt; -1.0,
+      skewx =
+&gt; 0, skewy =
+&gt; 0, srid =
+&gt; 4326),
+    index =
+&gt; 1, pixeltype =
+&gt; '16BSI',
+    initialvalue =
+&gt; 0,
+    nodataval =
+&gt; -999),
+  1,1,1,
+  newvalueset =
+&gt;ARRAY[ARRAY[10.0::float8, 50.0::float8], ARRAY[40.0::float8, 20.0::float8]]) AS rast
+)
+SELECT
+ST_AsText(
+  ST_SetM(
+    rast,
+    band =
+&gt; 1,
+    geom =
+&gt; 'SRID=4326;LINESTRING(1.0 1.9, 1.0 0.2)'::geometry,
+    resample =
+&gt; 'bilinear'
+))
+FROM test_raster
+
+            st_astext
+----------------------------------
+ LINESTRING M (1 1.9 38,1 0.2 27)</pre></div><div class="refsection"><a name="idp75444608"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_Value.html" title="ST_Value">ST_Value</a>, <a class="xref" href="RT_ST_SetZ.html" title="ST_SetZ">ST_SetZ</a> </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_SetZ.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Pixel_Accessors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_Neighborhood.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_SetZ </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_Neighborhood</td></tr></table></div></body></html>

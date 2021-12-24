@@ -1,0 +1,36 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_MinkowskiSum</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.2.0 マニュアル"><link rel="up" href="reference.html#reference_sfcgal" title="8.10. SFCGAL関数"><link rel="prev" href="ST_ForceLHR.html" title="ST_ForceLHR"><link rel="next" href="ST_ConstrainedDelaunayTriangles.html" title="ST_ConstrainedDelaunayTriangles"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_MinkowskiSum</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_ForceLHR.html">戻る</a> </td><th width="60%" align="center">8.10. SFCGAL関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_ConstrainedDelaunayTriangles.html">次へ</a></td></tr></table></div><div class="refentry"><a name="ST_MinkowskiSum"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_MinkowskiSum — ミンコフスキー和を求めます。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_MinkowskiSum</b>(</code>geometry <var class="pdparam">geom1</var>, geometry <var class="pdparam">geom2</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp62827520"></a><h2>説明</h2><p>ポリゴンと、ポイント、ライン、ポリゴンのいずれかとの2次元のミンコフスキー和を計算します。</p><p>二つのジオメトリAとBのミンコフスキー和はAとBのあらゆるポイントの和の集合です。ミンコフスキー和は、しばしば動作計画とCADで使われます。より詳細な情報について<a class="ulink" href="https://en.wikipedia.org/wiki/Minkowski_addition" target="_top">Wikipedia Minkowski addition</a>をご覧ください。</p><p>一つ目の引数は2次元ジオメトリ (ポイント、ラインストリング、ポリゴン)とすることができます。3次元ジオメトリを渡すと、Zを0とした2次元に強制され、この場合は無効と考えられます。二つ目の引数は2次元ポリゴンでなければなりません。</p><p><a class="ulink" href="http://doc.cgal.org/latest/Minkowski_sum_2/" target="_top">CGAL 2D Minkowskisum</a>を利用して実装しています。</p><p>Availability: 2.1.0</p><p><span class="inlinemediaobject"><img src="images/check.png"></span> This method needs SFCGAL backend.</p></div><div class="refsection"><a name="idp62832512"></a><h2>例</h2><p>ラインストリングと円ポリゴンであって、ラインストリングがポリゴンを横切るミンコフスキー和</p><div class="informaltable"><table class="informaltable" style="border-collapse: collapse;border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col><col></colgroup><tbody><tr><td style="border-right: 1px solid ; ">
+                         <p>
+                            </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_minkowskisum01.png"><div class="caption"><p>ミンコフスキー和を実行する前</p></div></div></div><p>
+                                               </p>
+                        </td><td style="">
+                           <p>
+                            </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_minkowskisum02.png"><div class="caption"><p>ミンコフスキー和実行後</p></div></div></div><p>
+                                              </p>
+                        </td></tr></tbody></table></div><pre class="programlisting">SELECT ST_MinkowskiSum(line, circle))
+FROM (SELECT
+    ST_MakeLine(ST_Point(10, 10),ST_Point(100, 100)) As line,
+    ST_Buffer(ST_GeomFromText('POINT(50 50)'), 30) As circle) As foo;
+
+-- wkt --
+MULTIPOLYGON(((30 59.9999999999999,30.5764415879031 54.1472903395161,32.2836140246614 48.5194970290472,35.0559116309237 43.3328930094119,38.7867965644036 38.7867965644035,43.332893009412 35.0559116309236,48.5194970290474 32.2836140246614,54.1472903395162 30.5764415879031,60.0000000000001 30,65.8527096604839 30.5764415879031,71.4805029709527 32.2836140246614,76.6671069905881 35.0559116309237,81.2132034355964 38.7867965644036,171.213203435596 128.786796564404,174.944088369076 133.332893009412,177.716385975339 138.519497029047,179.423558412097 144.147290339516,180 150,179.423558412097 155.852709660484,177.716385975339 161.480502970953,174.944088369076 166.667106990588,171.213203435596 171.213203435596,166.667106990588 174.944088369076,
+161.480502970953 177.716385975339,155.852709660484 179.423558412097,150 180,144.147290339516 179.423558412097,138.519497029047 177.716385975339,133.332893009412 174.944088369076,128.786796564403 171.213203435596,38.7867965644035 81.2132034355963,35.0559116309236 76.667106990588,32.2836140246614 71.4805029709526,30.5764415879031 65.8527096604838,30 59.9999999999999)))
+            </pre><p>ポリゴンとマルチポイントとのミンコフスキー和</p><div class="informaltable"><table class="informaltable" style="border-collapse: collapse;border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col><col></colgroup><tbody><tr><td style="border-right: 1px solid ; ">
+                         <p>
+                            </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_minkowskisum03.png"><div class="caption"><p>ミンコフスキー和を実行する前</p></div></div></div><p>
+                          </p>
+                        </td><td style="">
+                           <p>
+                            </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_minkowskisum04.png"><div class="caption"><p>ミンコフスキー和実行後: ポリゴンが二つになり、ポイントの位置に移動しています。</p></div></div></div><p>
+                           </p>
+                        </td></tr></tbody></table></div><pre class="programlisting">SELECT ST_MinkowskiSum(mp, poly)
+FROM (SELECT 'MULTIPOINT(25 50,70 25)'::geometry As mp,
+   'POLYGON((130 150, 20 40, 50 60, 125 100, 130 150))'::geometry As poly
+    ) As foo
+
+
+-- wkt --
+MULTIPOLYGON(
+    ((70 115,100 135,175 175,225 225,70 115)),
+    ((120 65,150 85,225 125,275 175,120 65))
+    )
+            </pre></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_ForceLHR.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#reference_sfcgal">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_ConstrainedDelaunayTriangles.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_ForceLHR </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_ConstrainedDelaunayTriangles</td></tr></table></div></body></html>

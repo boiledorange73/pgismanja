@@ -1,0 +1,76 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>AsGML</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.2.0 マニュアル"><link rel="up" href="Topology.html#TopoGeometry_Outputs" title="10.12. TopoGeometry出力"><link rel="prev" href="GetTopoGeomElements.html" title="GetTopoGeomElements"><link rel="next" href="AsTopoJSON.html" title="AsTopoJSON"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">AsGML</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="GetTopoGeomElements.html">戻る</a> </td><th width="60%" align="center">10.12. TopoGeometry出力</th><td width="20%" align="right"> <a accesskey="n" href="AsTopoJSON.html">次へ</a></td></tr></table></div><div class="refentry"><a name="AsGML"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>AsGML — TopoGeometryのGML表現を返します。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">text <b class="fsfunc">AsGML</b>(</code>topogeometry  <var class="pdparam">tg</var><code>)</code>;</p><p><code class="funcdef">text <b class="fsfunc">AsGML</b>(</code>topogeometry  <var class="pdparam">tg</var>, text  <var class="pdparam">nsprefix_in</var><code>)</code>;</p><p><code class="funcdef">text <b class="fsfunc">AsGML</b>(</code>topogeometry  <var class="pdparam">tg</var>, regclass  <var class="pdparam">visitedTable</var><code>)</code>;</p><p><code class="funcdef">text <b class="fsfunc">AsGML</b>(</code>topogeometry  <var class="pdparam">tg</var>, regclass  <var class="pdparam">visitedTable</var>, text  <var class="pdparam">nsprefix</var><code>)</code>;</p><p><code class="funcdef">text <b class="fsfunc">AsGML</b>(</code>topogeometry  <var class="pdparam">tg</var>, text  <var class="pdparam">nsprefix_in</var>, integer  <var class="pdparam">precision</var>, integer  <var class="pdparam">options</var><code>)</code>;</p><p><code class="funcdef">text <b class="fsfunc">AsGML</b>(</code>topogeometry  <var class="pdparam">tg</var>, text  <var class="pdparam">nsprefix_in</var>, integer  <var class="pdparam">precision</var>, integer  <var class="pdparam">options</var>, regclass  <var class="pdparam">visitedTable</var><code>)</code>;</p><p><code class="funcdef">text <b class="fsfunc">AsGML</b>(</code>topogeometry  <var class="pdparam">tg</var>, text  <var class="pdparam">nsprefix_in</var>, integer  <var class="pdparam">precision</var>, integer  <var class="pdparam">options</var>, regclass  <var class="pdparam">visitedTable</var>, text  <var class="pdparam">idprefix</var><code>)</code>;</p><p><code class="funcdef">text <b class="fsfunc">AsGML</b>(</code>topogeometry  <var class="pdparam">tg</var>, text  <var class="pdparam">nsprefix_in</var>, integer  <var class="pdparam">precision</var>, integer  <var class="pdparam">options</var>, regclass  <var class="pdparam">visitedTable</var>, text  <var class="pdparam">idprefix</var>, int  <var class="pdparam">gmlversion</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp72044160"></a><h2>説明</h2><p>GML3の書式でTopoGeometryのGML表現を返します。<code class="varname">nsprefix_in</code>が指定されていない場合には、<code class="varname">gml</code>が使われます。非修飾名前空間を得るにはnsprefixに空文字列を渡します。精度 (デフォルトは15)とoptions (デフォルトは1)パラメタは、与えられた場合には、裏で呼んでいるST_AsGMLにそのまま渡します。</p><p><code class="varname">visitedTable</code>パラメタは、与えられた場合には、訪問したノード要素とエッジ要素のトラックを保持するために使われ、重複定義になるところで相互参照 (xlink:xref)を使います。テーブルは 整数カラムである'element_type'と'element_id'とを持つことを期待されます。この関数を呼び出したユーザは、このテーブルへの読み込み権限と書き込み権限とが必要です。効率よくするには、element_typeとelement_idに、この順序でインデクスを定義します。インデクスは一意制約をカラムに追加すると自動的に生成されます。例を示します。 </p><pre class="programlisting">CREATE TABLE visited (
+  element_type integer, element_id integer,
+  unique(element_type, element_id)
+);
+</pre><p>
+		</p><p><code class="varname">idprefix</code>パラメタは、指定された場合には、Edgeタグ識別子とNodeタグ識別子の前に付きます。</p><p><code class="varname">gmlver</code>パラメタは、指定された場合には、裏で呼んでいるST_AsGMLに渡されます。デフォルトは3です。</p><p>Availability: 2.0.0 </p></div><div class="refsection"><a name="idp72049536"></a><h2>例</h2><p>ここでは<a class="xref" href="CreateTopoGeom.html" title="CreateTopoGeom">CreateTopoGeom</a>で生成したTopoGeometryを使用しています。</p><pre class="programlisting">SELECT topology.AsGML(topo) As rdgml
+  FROM ri.roads
+  WHERE road_name = 'Unknown';
+
+-- rdgml--
+&lt;gml:TopoCurve&gt;
+    &lt;gml:directedEdge&gt;
+        &lt;gml:Edge gml:id="E1"&gt;
+            &lt;gml:directedNode orientation="-"&gt;
+                &lt;gml:Node gml:id="N1"/&gt;
+            &lt;/gml:directedNode&gt;
+            &lt;gml:directedNode
+&gt;&lt;/gml:directedNode&gt;
+            &lt;gml:curveProperty&gt;
+                &lt;gml:Curve srsName="urn:ogc:def:crs:EPSG::3438"&gt;
+                    &lt;gml:segments&gt;
+                        &lt;gml:LineStringSegment&gt;
+                            &lt;gml:posList srsDimension="2"
+&gt;384744 236928 384750 236923 384769 236911 384799 236895 384811 236890
+                            384833 236884 384844 236882 384866 236881 384879 236883 384954 236898 385087 236932 385117 236938
+                            385167 236938 385203 236941 385224 236946 385233 236950 385241 236956 385254 236971
+                            385260 236979 385268 236999 385273 237018 385273 237037 385271 237047 385267 237057 385225 237125
+                            385210 237144 385192 237161 385167 237192 385162 237202 385159 237214 385159 237227 385162 237241
+                            385166 237256 385196 237324 385209 237345 385234 237375 385237 237383 385238 237399 385236 237407
+                            385227 237419 385213 237430 385193 237439 385174 237451 385170 237455 385169 237460 385171 237475
+                            385181 237503 385190 237521 385200 237533 385206 237538 385213 237541 385221 237542 385235 237540 385242 237541
+                            385249 237544 385260 237555 385270 237570 385289 237584 385292 237589 385291 237596 385284 237630&lt;/gml:posList&gt;
+                        &lt;/gml:LineStringSegment&gt;
+                    &lt;/gml:segments&gt;
+                &lt;/gml:Curve&gt;
+            &lt;/gml:curveProperty&gt;
+        &lt;/gml:Edge&gt;
+    &lt;/gml:directedEdge&gt;
+&lt;/gml:TopoCurve
+&gt;
+</pre><p>上の例から名前空間を取った例です。</p><pre class="programlisting">SELECT topology.AsGML(topo,'') As rdgml
+  FROM ri.roads
+  WHERE road_name = 'Unknown';
+
+-- rdgml--
+&lt;TopoCurve&gt;
+    &lt;directedEdge&gt;
+        &lt;Edge id="E1"&gt;
+            &lt;directedNode orientation="-"&gt;
+                &lt;Node id="N1"/&gt;
+            &lt;/directedNode&gt;
+            &lt;directedNode
+&gt;&lt;/directedNode&gt;
+            &lt;curveProperty&gt;
+                &lt;Curve srsName="urn:ogc:def:crs:EPSG::3438"&gt;
+                    &lt;segments&gt;
+                        &lt;LineStringSegment&gt;
+                            &lt;posList srsDimension="2"
+&gt;384744 236928 384750 236923 384769 236911 384799 236895 384811 236890
+                            384833 236884 384844 236882 384866 236881 384879 236883 384954 236898 385087 236932 385117 236938
+                            385167 236938 385203 236941 385224 236946 385233 236950 385241 236956 385254 236971
+                            385260 236979 385268 236999 385273 237018 385273 237037 385271 237047 385267 237057 385225 237125
+                            385210 237144 385192 237161 385167 237192 385162 237202 385159 237214 385159 237227 385162 237241
+                            385166 237256 385196 237324 385209 237345 385234 237375 385237 237383 385238 237399 385236 237407
+                            385227 237419 385213 237430 385193 237439 385174 237451 385170 237455 385169 237460 385171 237475
+                            385181 237503 385190 237521 385200 237533 385206 237538 385213 237541 385221 237542 385235 237540 385242 237541
+                            385249 237544 385260 237555 385270 237570 385289 237584 385292 237589 385291 237596 385284 237630&lt;/posList&gt;
+                         &lt;/LineStringSegment&gt;
+                    &lt;/segments&gt;
+                &lt;/Curve&gt;
+            &lt;/curveProperty&gt;
+        &lt;/Edge&gt;
+    &lt;/directedEdge&gt;
+&lt;/TopoCurve
+&gt;
+</pre></div><div class="refsection"><a name="idp72052736"></a><h2>関連情報</h2><p><a class="xref" href="CreateTopoGeom.html" title="CreateTopoGeom">CreateTopoGeom</a>, <a class="xref" href="ST_CreateTopoGeo.html" title="ST_CreateTopoGeo">ST_CreateTopoGeo</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="GetTopoGeomElements.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="Topology.html#TopoGeometry_Outputs">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="AsTopoJSON.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">GetTopoGeomElements </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> AsTopoJSON</td></tr></table></div></body></html>

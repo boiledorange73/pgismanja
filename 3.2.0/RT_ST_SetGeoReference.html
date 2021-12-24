@@ -1,0 +1,26 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_SetGeoReference</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.2.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Editors" title="12.7. ラスタエディタ"><link rel="prev" href="RT_ST_PixelOfValue.html" title="ST_PixelOfValue"><link rel="next" href="RT_ST_SetRotation.html" title="ST_SetRotation"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_SetGeoReference</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_PixelOfValue.html">戻る</a> </td><th width="60%" align="center">12.7. ラスタエディタ</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_SetRotation.html">次へ</a></td></tr></table></div><div class="refentry"><a name="RT_ST_SetGeoReference"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_SetGeoReference — 地理参照6パラメタを一度に設定します。数値は空白で区切ります。GDALまたはESRI書式の入力を受け付けます。デフォルトはGDALです。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">raster <b class="fsfunc">ST_SetGeoReference</b>(</code>raster  <var class="pdparam">rast</var>, text  <var class="pdparam">georefcoords</var>, text  <var class="pdparam">format=GDAL</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_SetGeoReference</b>(</code>raster  <var class="pdparam">rast</var>, double precision  <var class="pdparam">upperleftx</var>, double precision  <var class="pdparam">upperlefty</var>, double precision  <var class="pdparam">scalex</var>, double precision  <var class="pdparam">scaley</var>, double precision  <var class="pdparam">skewx</var>, double precision  <var class="pdparam">skewy</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp75668608"></a><h2>説明</h2><p>地理参照6パラメタを一度に設定します。'GDAL'または'ESRI'書式の入力を受け付けます。デフォルトはGDALです。6パラメタが与えられない場合には、NULLを返します。</p><p>書式の表現の違いは次の通りです。</p><p><code class="varname">GDAL</code>: </p><pre class="programlisting">scalex skewy skewx scaley upperleftx upperlefty</pre><p><code class="varname">ESRI</code>: </p><pre class="programlisting">scalex skewy skewx scaley upperleftx + scalex*0.5 upperlefty + scaley*0.5</pre><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>ラスタがデータベース外のバンドを持っている場合には、地理参照の変更によって、バンドの外部保存されているデータに正しくアクセスできなくなることがあります。 </p></td></tr></table></div><p>Enhanced: 2.1.0 ST_SetGeoReference(raster, double precision, ...)形式を追加しました。</p></div><div class="refsection"><a name="idp75673344"></a><h2>例</h2><pre class="programlisting">WITH foo AS (
+    SELECT ST_MakeEmptyRaster(5, 5, 0, 0, 1, -1, 0, 0, 0) AS rast
+)
+SELECT
+    0 AS rid, (ST_Metadata(rast)).*
+FROM foo
+UNION ALL
+SELECT
+    1, (ST_Metadata(ST_SetGeoReference(rast, '10 0 0 -10 0.1 0.1', 'GDAL'))).*
+FROM foo
+UNION ALL
+SELECT
+    2, (ST_Metadata(ST_SetGeoReference(rast, '10 0 0 -10 5.1 -4.9', 'ESRI'))).*
+FROM foo
+UNION ALL
+SELECT
+    3, (ST_Metadata(ST_SetGeoReference(rast, 1, 1, 10, -10, 0.001, 0.001))).*
+FROM foo
+
+ rid |     upperleftx     |     upperlefty     | width | height | scalex | scaley | skewx | skewy | srid | numbands
+-----+--------------------+--------------------+-------+--------+--------+--------+-------+-------+------+----------
+   0 |                  0 |                  0 |     5 |      5 |      1 |     -1 |     0 |     0 |    0 |        0
+   1 |                0.1 |                0.1 |     5 |      5 |     10 |    -10 |     0 |     0 |    0 |        0
+   2 | 0.0999999999999996 | 0.0999999999999996 |     5 |      5 |     10 |    -10 |     0 |     0 |    0 |        0
+   3 |                  1 |                  1 |     5 |      5 |     10 |    -10 | 0.001 | 0.001 |    0 |        0
+                </pre></div><div class="refsection"><a name="idp75674624"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_GeoReference.html" title="ST_GeoReference">ST_GeoReference</a>, <a class="xref" href="RT_ST_ScaleX.html" title="ST_ScaleX">ST_ScaleX</a>, <a class="xref" href="RT_ST_ScaleY.html" title="ST_ScaleY">ST_ScaleY</a>, <a class="xref" href="RT_ST_UpperLeftX.html" title="ST_UpperLeftX">ST_UpperLeftX</a>, <a class="xref" href="RT_ST_UpperLeftY.html" title="ST_UpperLeftY">ST_UpperLeftY</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_PixelOfValue.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Editors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_SetRotation.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_PixelOfValue </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_SetRotation</td></tr></table></div></body></html>

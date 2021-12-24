@@ -1,0 +1,26 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_3DDistance</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.2.0 マニュアル"><link rel="up" href="reference.html#Measurement_Functions" title="8.9. 計測関数"><link rel="prev" href="ST_Distance.html" title="ST_Distance"><link rel="next" href="ST_DistanceSphere.html" title="ST_DistanceSphere"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_3DDistance</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_Distance.html">戻る</a> </td><th width="60%" align="center">8.9. 計測関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_DistanceSphere.html">次へ</a></td></tr></table></div><div class="refentry"><a name="ST_3DDistance"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_3DDistance — 投影座標系の単位で、二つのジオメトリ間の3次元デカルト距離の最小値を返します (空間参照系に基づきます)。 </p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">float <b class="fsfunc">ST_3DDistance</b>(</code>geometry  <var class="pdparam">g1</var>, geometry  <var class="pdparam">g2</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp61705600"></a><h2>説明</h2><p>投影座標系の単位で、二つのジオメトリ間の3次元デカルト距離の最小値を返します (空間参照系に基づきます)。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports 3d and will not drop the z-index.</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports Polyhedral surfaces.</p><p><span class="inlinemediaobject"><img src="images/check.png"></span> This method implements the SQL/MM specification. SQL-MM ?</p><p>Availability: 2.0.0</p><p>Changed: 2.2.0 - 2次元と3次元の場合には、もはや、存在しないZの値について0を仮定しません。</p><p>Changed: 3.0.0 - SFCGAL版は削除されました</p></div><div class="refsection"><a name="idp60356608"></a><h2>例</h2><pre class="programlisting">-- ジオメトリの例 - メートル単位 (SRID: 2163, 米国ナショナルアトラス正積図法) (2次元のポイントとラインと比較される3次元のポイントとライン)
+-- ご注意: 現在は鉛直基準面に対応していません。Z値は変換されずに、最終の単位と同じ単位と推定されます。
+SELECT ST_3DDistance(
+                        ST_Transform('SRID=4326;POINT(-72.1235 42.3521 4)'::geometry,2163),
+                        ST_Transform('SRID=4326;LINESTRING(-72.1260 42.45 15, -72.123 42.1546 20)'::geometry,2163)
+                ) As dist_3d,
+                ST_Distance(
+                        ST_Transform('SRID=4326;POINT(-72.1235 42.3521)'::geometry,2163),
+                        ST_Transform('SRID=4326;LINESTRING(-72.1260 42.45, -72.123 42.1546)'::geometry,2163)
+                ) As dist_2d;
+
+     dist_3d      |     dist_2d
+------------------+-----------------
+ 127.295059324629 | 126.66425605671
+</pre><pre class="programlisting">-- マルチラインストリングとポリゴンの3次元距離と2次元距離
+-- 3次元最近点の例と同じです
+SELECT ST_3DDistance(poly, mline) As dist3d,
+    ST_Distance(poly, mline) As dist2d
+        FROM (SELECT  'POLYGON((175 150 5, 20 40 5, 35 45 5, 50 60 5, 100 100 5, 175 150 5))'::geometry as poly,
+               'MULTILINESTRING((175 155 2, 20 40 20, 50 60 -2, 125 100 1, 175 155 1), (1 10 2, 5 20 1))'::geometry as mline) as foo;
+      dist3d       | dist2d
+-------------------+--------
+ 0.716635696066337 |      0
+</pre></div><div class="refsection"><a name="idp60358400"></a><h2>関連情報</h2><p><a class="xref" href="ST_Distance.html" title="ST_Distance">ST_Distance</a>, <a class="xref" href="ST_3DClosestPoint.html" title="ST_3DClosestPoint">ST_3DClosestPoint</a>, <a class="xref" href="">???</a>, <a class="xref" href="ST_3DMaxDistance.html" title="ST_3DMaxDistance">ST_3DMaxDistance</a>, <a class="xref" href="ST_3DShortestLine.html" title="ST_3DShortestLine">ST_3DShortestLine</a>, <a class="xref" href="">???</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_Distance.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Measurement_Functions">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_DistanceSphere.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Distance </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_DistanceSphere</td></tr></table></div></body></html>
