@@ -30,12 +30,12 @@ the_geom    | geometry          | Location Geometry (Linestring)</pre><p><code c
 gid        | integer           | Unique ID
 code       | integer           | Unique ID
 name       | character varying | City / Town Name
-the_geom   | geometry          | Location Geometry (Polygon)</pre><div class="qandaset"><a name="idp54301568"></a><dl><dt>5.3.1. <a href="using_postgis_query.html#qa_total_length_roads">道路の総延長はkm表記でいくらになるでしょう?</a></dt><dt>5.3.2. <a href="using_postgis_query.html#idp54304512">プリンスジョージ市の大きさはha表記でいくらになるでしょう?</a></dt><dt>5.3.3. <a href="using_postgis_query.html#idp54307072">県内で最も大きな面積となる自治体はどこでしょう?</a></dt><dt>5.3.4. <a href="using_postgis_query.html#idp54309888">各自治体内に含まれる道路の総延長はいくらでしょう?</a></dt><dt>5.3.5. <a href="using_postgis_query.html#idp54312704">プリンスジョージ市内の全ての道路からなるテーブルを作る</a></dt><dt>5.3.6. <a href="using_postgis_query.html#idp54315136">ビクトリア州の「ダグラス通り」の長さはkm表記でいくらになるでしょう?</a></dt><dt>5.3.7. <a href="using_postgis_query.html#idp54321280">穴を持つ自治体ポリゴンのうち最も大きいのはどれでしょう?</a></dt></dl><table border="0" style="width: 100%;"><colgroup><col align="left" width="1%"><col></colgroup><tbody><tr class="question"><td align="left" valign="top"><a name="qa_total_length_roads"></a><a name="idp54302208"></a><p><b>5.3.1.</b></p></td><td align="left" valign="top"><p>道路の総延長はkm表記でいくらになるでしょう?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>この問題は、次のようなとても単純なSQLで答えを得ることができます。</p><pre class="programlisting">SELECT sum(ST_Length(the_geom))/1000 AS km_roads FROM bc_roads;
+the_geom   | geometry          | Location Geometry (Polygon)</pre><div class="qandaset"><a name="idp54313856"></a><dl><dt>5.3.1. <a href="using_postgis_query.html#qa_total_length_roads">道路の総延長はkm表記でいくらになるでしょう?</a></dt><dt>5.3.2. <a href="using_postgis_query.html#idp54316800">プリンスジョージ市の大きさはha表記でいくらになるでしょう?</a></dt><dt>5.3.3. <a href="using_postgis_query.html#idp54319360">県内で最も大きな面積となる自治体はどこでしょう?</a></dt><dt>5.3.4. <a href="using_postgis_query.html#idp54322176">各自治体内に含まれる道路の総延長はいくらでしょう?</a></dt><dt>5.3.5. <a href="using_postgis_query.html#idp54324992">プリンスジョージ市内の全ての道路からなるテーブルを作る</a></dt><dt>5.3.6. <a href="using_postgis_query.html#idp54327424">ビクトリア州の「ダグラス通り」の長さはkm表記でいくらになるでしょう?</a></dt><dt>5.3.7. <a href="using_postgis_query.html#idp54333568">穴を持つ自治体ポリゴンのうち最も大きいのはどれでしょう?</a></dt></dl><table border="0" style="width: 100%;"><colgroup><col align="left" width="1%"><col></colgroup><tbody><tr class="question"><td align="left" valign="top"><a name="qa_total_length_roads"></a><a name="idp54314496"></a><p><b>5.3.1.</b></p></td><td align="left" valign="top"><p>道路の総延長はkm表記でいくらになるでしょう?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>この問題は、次のようなとても単純なSQLで答えを得ることができます。</p><pre class="programlisting">SELECT sum(ST_Length(the_geom))/1000 AS km_roads FROM bc_roads;
 
 km_roads
 ------------------
 70842.1243039643
-(1 row)</pre></td></tr><tr class="question"><td align="left" valign="top"><a name="idp54304512"></a><a name="idp54304768"></a><p><b>5.3.2.</b></p></td><td align="left" valign="top"><p>プリンスジョージ市の大きさはha表記でいくらになるでしょう?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>このクエリでは、属性条件 (municipality name, 自治体名)に空間計算 (面積)を併用しています。</p><pre class="programlisting">SELECT
+(1 row)</pre></td></tr><tr class="question"><td align="left" valign="top"><a name="idp54316800"></a><a name="idp54317056"></a><p><b>5.3.2.</b></p></td><td align="left" valign="top"><p>プリンスジョージ市の大きさはha表記でいくらになるでしょう?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>このクエリでは、属性条件 (municipality name, 自治体名)に空間計算 (面積)を併用しています。</p><pre class="programlisting">SELECT
   ST_Area(the_geom)/10000 AS hectares
 FROM bc_municipality
 WHERE name = 'PRINCE GEORGE';
@@ -43,7 +43,7 @@ WHERE name = 'PRINCE GEORGE';
 hectares
 ------------------
 32657.9103824927
-(1 row)</pre></td></tr><tr class="question"><td align="left" valign="top"><a name="idp54307072"></a><a name="idp54307328"></a><p><b>5.3.3.</b></p></td><td align="left" valign="top"><p>県内で最も大きな面積となる自治体はどこでしょう?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>このクエリは、空間計測をクエリ条件に持ってきています。この問題へのアプローチの方法はいくつかありますが、最も効率的なのは次の通りです。</p><pre class="programlisting">SELECT
+(1 row)</pre></td></tr><tr class="question"><td align="left" valign="top"><a name="idp54319360"></a><a name="idp54319616"></a><p><b>5.3.3.</b></p></td><td align="left" valign="top"><p>県内で最も大きな面積となる自治体はどこでしょう?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>このクエリは、空間計測をクエリ条件に持ってきています。この問題へのアプローチの方法はいくつかありますが、最も効率的なのは次の通りです。</p><pre class="programlisting">SELECT
   name,
   ST_Area(the_geom)/10000 AS hectares
 FROM
@@ -54,7 +54,7 @@ LIMIT 1;
 name           | hectares
 ---------------+-----------------
 TUMBLER RIDGE  | 155020.02556131
-(1 row)</pre><p>このクエリの答えを出すためには、全てのポリゴンの面積を求める必要があることに注意して下さい。このクエリを多く実行する場合、性能向上のためにテーブルにareaカラムを追加して、別のインデックスを追加することができるようにするのは、意義のあることです。結果を距離について降順に並べ替え、PostgreSQLの"LIMIT"コマンドを用いることで、max()のような集約関数を使わずに、簡単に最も大きい値を集約関数を得ることができます。</p></td></tr><tr class="question"><td align="left" valign="top"><a name="idp54309888"></a><a name="idp54310144"></a><p><b>5.3.4.</b></p></td><td align="left" valign="top"><p>各自治体内に含まれる道路の総延長はいくらでしょう?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>これは、二つのテーブルからデータを持ち込んで (結合して)いるので「空間結合」の例です。しかし、結合の条件として共通キーの上で接続するという普通のリレーションのやり方でなく空間インタラクション条件 (「含む」)を使っています。</p><pre class="programlisting">SELECT
+(1 row)</pre><p>このクエリの答えを出すためには、全てのポリゴンの面積を求める必要があることに注意して下さい。このクエリを多く実行する場合、性能向上のためにテーブルにareaカラムを追加して、別のインデックスを追加することができるようにするのは、意義のあることです。結果を距離について降順に並べ替え、PostgreSQLの"LIMIT"コマンドを用いることで、max()のような集約関数を使わずに、簡単に最も大きい値を集約関数を得ることができます。</p></td></tr><tr class="question"><td align="left" valign="top"><a name="idp54322176"></a><a name="idp54322432"></a><p><b>5.3.4.</b></p></td><td align="left" valign="top"><p>各自治体内に含まれる道路の総延長はいくらでしょう?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>これは、二つのテーブルからデータを持ち込んで (結合して)いるので「空間結合」の例です。しかし、結合の条件として共通キーの上で接続するという普通のリレーションのやり方でなく空間インタラクション条件 (「含む」)を使っています。</p><pre class="programlisting">SELECT
   m.name,
   sum(ST_Length(r.the_geom))/1000 as roads_km
 FROM
@@ -72,7 +72,7 @@ VANCOUVER                   | 1450.33093486576
 LANGLEY DISTRICT            | 833.793392535662
 BURNABY                     | 773.769091404338
 PRINCE GEORGE               | 694.37554369147
-...</pre><p>このクエリは、テーブル内の全ての道路の合計を最終結果 (この例での話ですが約250Kmの道です)にまとめられるので、少し時間がかかります。より小さいオーバレイ (数百の道路で数千のレコード)の場合、応答はもっと早くなりえます。</p></td></tr><tr class="question"><td align="left" valign="top"><a name="idp54312704"></a><a name="idp54312960"></a><p><b>5.3.5.</b></p></td><td align="left" valign="top"><p>プリンスジョージ市内の全ての道路からなるテーブルを作る</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>これは「オーバレイ」の例です。つまり、二つのテーブルを取得して、空間的に切り取られた結果からなる新しいテーブルを出力します。上で示した「空間結合」と違い、このクエリは実際に新しいジオメトリを生成します。生成されたオーバレイはターボのかかった空間結合みたいなもので、より確かな解析作業に便利です。</p><pre class="programlisting">CREATE TABLE pg_roads as
+...</pre><p>このクエリは、テーブル内の全ての道路の合計を最終結果 (この例での話ですが約250Kmの道です)にまとめられるので、少し時間がかかります。より小さいオーバレイ (数百の道路で数千のレコード)の場合、応答はもっと早くなりえます。</p></td></tr><tr class="question"><td align="left" valign="top"><a name="idp54324992"></a><a name="idp54325248"></a><p><b>5.3.5.</b></p></td><td align="left" valign="top"><p>プリンスジョージ市内の全ての道路からなるテーブルを作る</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>これは「オーバレイ」の例です。つまり、二つのテーブルを取得して、空間的に切り取られた結果からなる新しいテーブルを出力します。上で示した「空間結合」と違い、このクエリは実際に新しいジオメトリを生成します。生成されたオーバレイはターボのかかった空間結合みたいなもので、より確かな解析作業に便利です。</p><pre class="programlisting">CREATE TABLE pg_roads as
 SELECT
   ST_Intersection(r.the_geom, m.the_geom) AS intersection_geom,
   ST_Length(r.the_geom) AS rd_orig_length,
@@ -82,7 +82,7 @@ FROM
   bc_municipality AS m
 WHERE
   m.name = 'PRINCE GEORGE'
-        AND ST_Intersects(r.the_geom, m.the_geom);</pre></td></tr><tr class="question"><td align="left" valign="top"><a name="idp54315136"></a><a name="idp54315392"></a><p><b>5.3.6.</b></p></td><td align="left" valign="top"><p>ビクトリア州の「ダグラス通り」の長さはkm表記でいくらになるでしょう?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><pre class="programlisting">SELECT
+        AND ST_Intersects(r.the_geom, m.the_geom);</pre></td></tr><tr class="question"><td align="left" valign="top"><a name="idp54327424"></a><a name="idp54327680"></a><p><b>5.3.6.</b></p></td><td align="left" valign="top"><p>ビクトリア州の「ダグラス通り」の長さはkm表記でいくらになるでしょう?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><pre class="programlisting">SELECT
   sum(ST_Length(r.the_geom))/1000 AS kilometers
 FROM
   bc_roads r,
@@ -95,7 +95,7 @@ WHERE
 kilometers
 ------------------
 4.89151904172838
-(1 row)</pre></td></tr><tr class="question"><td align="left" valign="top"><a name="idp54321280"></a><a name="idp54321536"></a><p><b>5.3.7.</b></p></td><td align="left" valign="top"><p>穴を持つ自治体ポリゴンのうち最も大きいのはどれでしょう?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><pre class="programlisting">SELECT gid, name, ST_Area(the_geom) AS area
+(1 row)</pre></td></tr><tr class="question"><td align="left" valign="top"><a name="idp54333568"></a><a name="idp54333824"></a><p><b>5.3.7.</b></p></td><td align="left" valign="top"><p>穴を持つ自治体ポリゴンのうち最も大きいのはどれでしょう?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><pre class="programlisting">SELECT gid, name, ST_Area(the_geom) AS area
 FROM bc_municipality
 WHERE ST_NRings(the_geom) &gt; 1
 ORDER BY area DESC LIMIT 1;

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PostGIS\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2021-12-18 00:06+0000\n"
-"PO-Revision-Date: 2021-12-24 08:34+0900\n"
+"PO-Revision-Date: 2022-01-11 11:09+0900\n"
 "Last-Translator: TERAMOTO Ikuhiro <yellow@affrc.go.jp>\n"
 "Language-Team: Japanese (http://www.transifex.com/postgis/postgis/language/"
 "ja/)\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #. Tag: title
 #: release_notes.xml:3
@@ -242,7 +242,7 @@ msgid ""
 "Santilli)"
 msgstr ""
 "3248, TopoGeometryで使われている孤立エッジを削除できないようにしました "
-"(Sandro Santilli)"
+"(Sandro Santilliさん)"
 
 #. Tag: para
 #: release_notes.xml:51
@@ -252,7 +252,7 @@ msgid ""
 "Santilli)"
 msgstr ""
 "3231, TopoGeometryで使われている孤立ノードを削除できないようにしました "
-"(Sandro Santilli)"
+"(Sandro Santilliさん)"
 
 #. Tag: para
 #: release_notes.xml:53
@@ -339,7 +339,7 @@ msgstr ""
 #: release_notes.xml:66
 #, no-c-format
 msgid "4827, Allow NaN coordinates in WKT input (Paul Ramsey)"
-msgstr "4827, WKT入力でNaN座標値を許すようになりました (Paul Ramsey)"
+msgstr "4827, WKT入力でNaN座標値を許すようになりました (Paul Ramseyさん)"
 
 #. Tag: para
 #: release_notes.xml:67
@@ -477,7 +477,7 @@ msgid ""
 "- GH647, ST_PixelAsCentroids, ST_PixelAsCentroid reimplemented on top of a C "
 "function (Sergei Shoulbakov)"
 msgstr ""
-"- GH648, ST_PixelAsCentroids, ST_PixelAsCentroidをC関数の上に再実装 (Sergei "
+"- GH647, ST_PixelAsCentroids, ST_PixelAsCentroidをC関数の上に再実装 (Sergei "
 "Shoulbakovさん)"
 
 #. Tag: para
@@ -485,7 +485,7 @@ msgstr ""
 #, no-c-format
 msgid "- GH648, ST_AsMVTGeom now uses faster clipping (Aliaksandr Kalenik)"
 msgstr ""
-"- GH647, ST_AsMVTGeomは現在より早いクリッピングを使っています (Aliaksandr "
+"- GH648, ST_AsMVTGeomは現在より早いクリッピングを使っています (Aliaksandr "
 "Kalenikさん)"
 
 #. Tag: para
@@ -535,7 +535,7 @@ msgstr "4841, トポロジ行を早く取得するFindTopology (Sandro Santilli�
 #: release_notes.xml:98
 #, no-c-format
 msgid "4869, FindLayer to quickly get a layer record (Sandro Santilli)"
-msgstr "4869, レイヤ行を早く取得するFindLayer (Sandro Santilli)"
+msgstr "4869, レイヤ行を早く取得するFindLayer (Sandro Santilliさん)"
 
 #. Tag: para
 #: release_notes.xml:99
@@ -947,7 +947,7 @@ msgid ""
 "Santilli)"
 msgstr ""
 "#3248, TopoGeometryで使われている孤立エッジを削除できないようにしました "
-"(Sandro Santilli)"
+"(Sandro Santilliさん)"
 
 #. Tag: para
 #: release_notes.xml:232
@@ -957,7 +957,7 @@ msgid ""
 "Santilli)"
 msgstr ""
 "#3231, TopoGeometryで使われている孤立ノードを削除できないようにしました "
-"(Sandro Santilli)"
+"(Sandro Santilliさん)"
 
 #. Tag: para
 #: release_notes.xml:234
@@ -1045,7 +1045,7 @@ msgstr ""
 #: release_notes.xml:247
 #, no-c-format
 msgid "#4827, Allow NaN coordinates in WKT input (Paul Ramsey)"
-msgstr "#4827, WKT入力でNaN座標値を許すようになりました (Paul Ramsey)"
+msgstr "#4827, WKT入力でNaN座標値を許すようになりました (Paul Ramseyさん)"
 
 #. Tag: para
 #: release_notes.xml:248
@@ -1203,7 +1203,7 @@ msgstr "#4841, トポロジ行を早く取得するFindTopology (Sandro Santilli
 #: release_notes.xml:274
 #, no-c-format
 msgid "#4869, FindLayer to quickly get a layer record (Sandro Santilli)"
-msgstr "#4869, レイヤ行を早く取得するFindLayer (Sandro Santilli)"
+msgstr "#4869, レイヤ行を早く取得するFindLayer (Sandro Santilliさん)"
 
 #. Tag: para
 #: release_notes.xml:275
@@ -1365,7 +1365,8 @@ msgstr ""
 msgid ""
 "4258, Untangle postgis_sfcgal from postgis into its own lib file (Regina Obe)"
 msgstr ""
-"4258, postgis_sfcgalのPostGISから独自ライブラリファイルへの分離 (Regina Obe)"
+"4258, postgis_sfcgalのPostGISから独自ライブラリファイルへの分離 (Regina Obeさ"
+"ん)"
 
 #. Tag: para
 #: release_notes.xml:348
@@ -1393,7 +1394,7 @@ msgid ""
 "(Sandro Santilli)"
 msgstr ""
 "4789, 多数の穴を持つ面TopoGeometryをTopoJSONで出力する際の速度向上 (Sandro "
-"Santilli)"
+"Santilliさん)"
 
 #. Tag: para
 #: release_notes.xml:358
@@ -1466,7 +1467,7 @@ msgid ""
 "instead. Documentation adjusted (Darafei Praliaskouski)"
 msgstr ""
 "4741, インデックスを使う必要がある場合にはST_PointInsideCircleは使わず、"
-"ST_DWithinを代わりに使ってください。文書を調整 (Darafei Praliaskouski)"
+"ST_DWithinを代わりに使ってください。文書を調整 (Darafei Praliaskouskiさん)"
 
 #. Tag: para
 #: release_notes.xml:377
@@ -1535,7 +1536,7 @@ msgid ""
 "WKB. Remove memory leaks in malformed WKB cases. (Paul Ramsey)"
 msgstr ""
 "悪いWKB入力 (Oracleタイプ)と不正なWKBのユニットテストの処理を修正。不正なWKB"
-"の処理ではメモリリークを除きました。 (Paul Ramsey)"
+"の処理ではメモリリークを除きました。 (Paul Ramseyさん)"
 
 #. Tag: para
 #: release_notes.xml:393
@@ -1545,7 +1546,7 @@ msgid ""
 "(Raúl Marín, Paul Ramsey, Regina Obe)"
 msgstr ""
 "4740, geography_distance_treeでの値の丸めをgeography_distance上での実行と同じ"
-"に変更 (Raúl Marínさん, Paul Ramsey, Regina Obeさん)"
+"に変更 (Raúl Marínさん, Paul Ramseyさん, Regina Obeさん)"
 
 #. Tag: para
 #: release_notes.xml:396
@@ -1555,7 +1556,7 @@ msgid ""
 "(Raúl Marín)"
 msgstr ""
 "4739, postgis_oidを使う全ての関数について内部キャッシュの初期化を確実に実行す"
-"るよう更新 (Raúl Marín)"
+"るよう更新 (Raúl Marínさん)"
 
 #. Tag: para
 #: release_notes.xml:398
@@ -2119,7 +2120,7 @@ msgid ""
 msgstr ""
 "4258, ST_Area, ST_Distance, ST_Intersection, ST_Difference, ST_Union, "
 "ST_Intersects, ST_3DIntersects, ST_3DDistanceのSFCGAL対応を削除し、postgis."
-"backendスイッチを削除しました (Darafei Praliaskouski)"
+"backendスイッチを削除しました (Darafei Praliaskouskiさん)"
 
 #. Tag: para
 #: release_notes.xml:530
@@ -2168,7 +2169,7 @@ msgstr ""
 msgid "4414, Include version number in address_standardizer lib (Raúl Marín)"
 msgstr ""
 "4414, address_standardizerライブラリにバージョン番号が入るよう変更 (Raúl "
-"Marín)"
+"Marínさん)"
 
 #. Tag: para
 #: release_notes.xml:536
@@ -2187,7 +2188,7 @@ msgid ""
 "them in database for some reason. (Darafei Praliaskouski)"
 msgstr ""
 "4442, raster2pgsqlはNODATAタイルを飛ばす。何らかの理由でデータベースに保存す"
-"る場合には-kオプションを使います。 (Darafei Praliaskouski)"
+"る場合には-kオプションを使います。 (Darafei Praliaskouskiさん)"
 
 #. Tag: para
 #: release_notes.xml:539 release_notes.xml:689
@@ -2197,7 +2198,7 @@ msgid ""
 "Marín)"
 msgstr ""
 "4433, 32ビットのハッシュの修正 (インデックスの再インデックスが必要) (Raúl "
-"Marín)"
+"Marínさん)"
 
 #. Tag: para
 #: release_notes.xml:540
@@ -2245,7 +2246,8 @@ msgid ""
 "4153, ST_Segmentize now splits segments proportionally (Darafei "
 "Praliaskouski)."
 msgstr ""
-"4153, ST_Segmentizeは現在は線分を比例して分割します (Darafei Praliaskouski)"
+"4153, ST_Segmentizeは現在は線分を比例して分割します (Darafei Praliaskouskiさ"
+"ん)"
 
 #. Tag: para
 #: release_notes.xml:555
@@ -2512,7 +2514,7 @@ msgstr "4422, Python 3の準備のためPython 2コードの訂正 (Christian Cl
 msgid "4352, Use CREATE OR REPLACE AGGREGATE for PG12+ (Raúl Marín)"
 msgstr ""
 "4352, PostgreSQL 12以上でCREATE OR REPLACE AGGREGATEを使用するよう変更 (Raúl "
-"Marín)"
+"Marínさん)"
 
 #. Tag: para
 #: release_notes.xml:599
@@ -2903,7 +2905,8 @@ msgstr "4209, pgsql2shpでのNULLジオメトリ値の取り扱い (Paul Ramsey�
 #: release_notes.xml:702
 #, no-c-format
 msgid "4419, Use protobuf version to enable/disable mvt/geobuf (Paul Ramsey)"
-msgstr "4419, mvt/geobufの有効化/無効化のためのprotobuf版の使用 (Paul Ramsey)"
+msgstr ""
+"4419, mvt/geobufの有効化/無効化のためのprotobuf版の使用 (Paul Ramseyさん)"
 
 #. Tag: para
 #: release_notes.xml:703
@@ -2958,7 +2961,7 @@ msgstr ""
 #, no-c-format
 msgid "4334, Fix upgrade issues related to renamed parameters (Raúl Marín)"
 msgstr ""
-"4334, パラメータ名変更に関連するアップグレードの問題を修正 (Raúl Marín)"
+"4334, パラメータ名変更に関連するアップグレードの問題を修正 (Raúl Marínさん)"
 
 #. Tag: para
 #: release_notes.xml:721
@@ -2968,13 +2971,13 @@ msgid ""
 "Marín)"
 msgstr ""
 "4388, AddRasterConstraints: 制約を生成する時にNULLを無視するように変更 (Raúl "
-"Marín)"
+"Marínさん)"
 
 #. Tag: para
 #: release_notes.xml:722
 #, no-c-format
 msgid "4327, Avoid pfree'ing the result of getenv (Raúl Marín)"
-msgstr "4327, getenvの結果をpfreeに与えるのを回避 (Raúl Marín)"
+msgstr "4327, getenvの結果をpfreeに与えるのを回避 (Raúl Marínさん)"
 
 #. Tag: para
 #: release_notes.xml:723
@@ -2988,19 +2991,20 @@ msgstr ""
 #: release_notes.xml:724
 #, no-c-format
 msgid "4429, Avoid resource leaks with PROJ6 (Raúl Marín)"
-msgstr "4429, PROJ6を使うとリソースにリークが発生する問題の回避 (Raúl Marín)"
+msgstr ""
+"4429, PROJ6を使うとリソースにリークが発生する問題の回避 (Raúl Marínさん)"
 
 #. Tag: para
 #: release_notes.xml:725
 #, no-c-format
 msgid "4372, PROJ6: Speed improvements (Raúl Marín)"
-msgstr "4372, PROJ6 速度向上 (Raúl Marín)"
+msgstr "4372, PROJ6 速度向上 (Raúl Marínさん)"
 
 #. Tag: para
 #: release_notes.xml:726
 #, no-c-format
 msgid "3437, Speed up ST_Intersects with Points (Raúl Marín)"
-msgstr "3437, ポイントを引数にとるST_Intersectsの速度向上 (Raúl Marín)"
+msgstr "3437, ポイントを引数にとるST_Intersectsの速度向上 (Raúl Marínさん)"
 
 #. Tag: para
 #: release_notes.xml:727
@@ -3580,7 +3584,8 @@ msgstr "#4090, PostgreSQL 11への対応 (Paul Ramseyさん, Raúl Marínさん)
 msgid ""
 "#4077, Serialization failure for particular empty geometry cases (Paul "
 "Ramsey)"
-msgstr "#4077, 特定の空ジオメトリの場合にシリアル化が失敗する (Paul Ramsey)"
+msgstr ""
+"#4077, 特定の空ジオメトリの場合にシリアル化が失敗する (Paul Ramseyさん)"
 
 #. Tag: para
 #: release_notes.xml:867
@@ -4053,7 +4058,7 @@ msgstr ""
 #: release_notes.xml:983
 #, no-c-format
 msgid "#2249, ST_MakeEmptyCoverage for raster (David Zwarg, ainomieli)"
-msgstr "#2249, ラスタのST_MakeEmptyCoverage (David Zwarg, ainomieliさん)"
+msgstr "#2249, ラスタのST_MakeEmptyCoverage (David Zwargさん, ainomieliさん)"
 
 #. Tag: para
 #: release_notes.xml:984
@@ -4070,7 +4075,7 @@ msgid ""
 "geography (Danny Götte)"
 msgstr ""
 "#524, ジオグラフィのポリゴン上のポリゴン、ライン上のライン、ライン上のポイン"
-"トに対するCoversの対応 (Danny Götte)"
+"トに対するCoversの対応 (Danny Götteさん)"
 
 #. Tag: title
 #: release_notes.xml:989
@@ -4687,7 +4692,8 @@ msgstr ""
 #, no-c-format
 msgid "#3557, Geometry function costs based on query stats (Paul Norman)"
 msgstr ""
-"#3557, ジオメトリ関数に対してクエリ統計情報に基づくコストを設定 (Paul Norman)"
+"#3557, ジオメトリ関数に対してクエリ統計情報に基づくコストを設定 (Paul Norman"
+"さん)"
 
 #. Tag: para
 #: release_notes.xml:1138
@@ -4750,7 +4756,7 @@ msgid ""
 "liblwgeom.h (Greg Troxel)"
 msgstr ""
 "#3604, pgcommon/Makefile.inによるCFLAGS指定が不正で、liblwgeom.hが誤ったもの"
-"になる (Greg Troxel)"
+"になる (Greg Troxelさん)"
 
 #. Tag: title
 #: release_notes.xml:1159 release_notes.xml:2427
@@ -10254,7 +10260,7 @@ msgid ""
 "ST_AsSVG kills whole postgres server when fails (Paul Ramsey)"
 msgstr ""
 "<ulink url=\"http://trac.osgeo.org/postgis/ticket/1028\">#1028</ulink>, "
-"ST_AsSVGが失敗するとPostgreSQLサーバプロセス全体を落とす (Paul Ramsey)"
+"ST_AsSVGが失敗するとPostgreSQLサーバプロセス全体を落とす (Paul Ramseyさん)"
 
 #. Tag: para
 #: release_notes.xml:2099
@@ -10305,7 +10311,7 @@ msgid ""
 "North Pole intersection fails (Paul Ramsey)"
 msgstr ""
 "<ulink url=\"http://trac.osgeo.org/postgis/ticket/1170\">#1170</ulink>, 北極"
-"のインタセクションが失敗する (Paul Ramsey)"
+"のインタセクションが失敗する (Paul Ramseyさん)"
 
 #. Tag: para
 #: release_notes.xml:2104
@@ -10325,7 +10331,7 @@ msgid ""
 "honour DESTDIR in documentation Makefile (Bryce L Nordgren)"
 msgstr ""
 "<ulink url=\"http://trac.osgeo.org/postgis/ticket/1184\">#1184</ulink>, "
-"honour DESTDIR in documentation Makefile (Bryce L Nordgren)"
+"honour DESTDIR in documentation Makefile (Bryce L Nordgrenさん)"
 
 #. Tag: para
 #: release_notes.xml:2106
@@ -10769,7 +10775,7 @@ msgid ""
 "spatial_ref_sys.sql Add datum conversion for projection SRID 3021 (Paul "
 "Ramsey)"
 msgstr ""
-"spatial_ref_sys.sql SRID 3021投影のための測地系変換を追加 (Paul Ramsey)"
+"spatial_ref_sys.sql SRID 3021投影のための測地系変換を追加 (Paul Ramseyさん)"
 
 #. Tag: para
 #: release_notes.xml:2175
@@ -10809,7 +10815,7 @@ msgid ""
 "ST_Dwithin errors for large geographies (Paul Ramsey)"
 msgstr ""
 "<ulink url=\"http://trac.osgeo.org/postgis/ticket/562\">#562</ulink>, 大きな"
-"ジオグラフィを引数に取った際のST_Dwithinでエラー (Paul Ramsey)"
+"ジオグラフィを引数に取った際のST_Dwithinでエラー (Paul Ramseyさん)"
 
 #. Tag: para
 #: release_notes.xml:2179
@@ -11239,7 +11245,7 @@ msgstr "選択度の実装 (Mark Cave-Aylandさん)"
 #: release_notes.xml:2255
 #, no-c-format
 msgid "Serializations to KML, GML and JSON (Olivier Courtin)"
-msgstr "KML, GMLおよびJSONへのシリアライズ (Olivier Courtin)"
+msgstr "KML, GMLおよびJSONへのシリアライズ (Olivier Courtinさん)"
 
 #. Tag: para
 #: release_notes.xml:2256
@@ -11267,7 +11273,7 @@ msgstr "文書の更新と改善 (Regina Obeさん、Kevin Neufeldさん)"
 #: release_notes.xml:2264
 #, no-c-format
 msgid "Testing and quality control (Regina Obe)"
-msgstr "テストと品質管理 (Regina Obe)"
+msgstr "テストと品質管理 (Regina Obeさん)"
 
 #. Tag: para
 #: release_notes.xml:2265
@@ -11533,13 +11539,13 @@ msgstr "OpenSolarisビルドへの対応改善 (Paul Ramseyさん)"
 #: release_notes.xml:2324
 #, no-c-format
 msgid "Improved support for MSVC builds (Mateusz Loskot)"
-msgstr "MSVCビルドの対応改善 (Mateusz Loskot)"
+msgstr "MSVCビルドの対応改善 (Mateusz Loskotさん)"
 
 #. Tag: para
 #: release_notes.xml:2325
 #, no-c-format
 msgid "Updated KML support (Olivier Courtin)"
-msgstr "KML対応の更新 (Olivier Courtin)"
+msgstr "KML対応の更新 (Olivier Courtinさん)"
 
 #. Tag: para
 #: release_notes.xml:2326
