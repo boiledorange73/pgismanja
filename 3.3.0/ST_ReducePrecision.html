@@ -1,0 +1,24 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_ReducePrecision</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.3.0 マニュアル"><link rel="up" href="reference.html#Geometry_Processing" title="8.14. ジオメトリ処理関数"><link rel="prev" href="ST_Polygonize.html" title="ST_Polygonize"><link rel="next" href="ST_SharedPaths.html" title="ST_SharedPaths"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_ReducePrecision</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_Polygonize.html">Prev</a> </td><th width="60%" align="center">8.14. ジオメトリ処理関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_SharedPaths.html">Next</a></td></tr></table></div><div class="refentry"><a name="ST_ReducePrecision"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_ReducePrecision — 全ての与えられたグリッド許容値に丸められたポイントからなる妥当なジオメトリを返します。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_ReducePrecision</b>(</code>geometry  <var class="pdparam">g</var>, float8  <var class="pdparam">gridsize</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp66522704"></a><h2>説明</h2><p>全ての与えられたグリッド許容値に丸められたポイントからなる妥当なジオメトリを返します。許容値より下の地物は削除されます。</p><p><a class="xref" href="ST_SnapToGrid.html" title="ST_SnapToGrid">ST_SnapToGrid</a>と違い、返されるジオメトリは妥当で、自己交差の環や崩壊した要素を伴いません。</p><p>精度提言は次の場合に使います。 </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>座標精度をデータ精度に合わせる </p></li><li class="listitem"><p>ジオメトリを表現するのに必要な座標の数を減らす </p></li><li class="listitem"><p>低精度書式 (出力桁数が制限されるWKT, GeoJSON, KML等のテキスト書式)への出力ジオメトリの妥当性の確保。 </p></li><li class="listitem"><p>妥当なジオメトリの低精度や制度制限のあるシステム (SDE, Oracle許容値等)へのエクスポート </p></li></ul></div><p>
+		</p><p>Availability: 3.1.0 - GEOS 3.9.0以上が必要です。 </p></div><div class="refsection"><a name="idp66528080"></a><h2>例</h2><pre class="programlisting">SELECT ST_AsText(ST_ReducePrecision('POINT(1.412 19.323)', 0.1));
+    st_astext
+-----------------
+ POINT(1.4 19.3)
+
+SELECT ST_AsText(ST_ReducePrecision('POINT(1.412 19.323)', 1.0));
+  st_astext
+-------------
+ POINT(1 19)
+
+SELECT ST_AsText(ST_ReducePrecision('POINT(1.412 19.323)', 10));
+  st_astext
+-------------
+ POINT(0 20)
+</pre><p>精度を落とすことで頂点数を減らすことができます。</p><pre class="programlisting">SELECT ST_AsText(ST_ReducePrecision('LINESTRING (10 10, 19.6 30.1, 20 30, 20.3 30, 40 40)', 1));
+  st_astext
+-------------
+ LINESTRING (10 10, 20 30, 40 40)
+</pre><p>妥当性を確保するために必要な場合には、精度を落とす際にポリゴンを分割します。</p><pre class="programlisting">SELECT ST_AsText(ST_ReducePrecision('POLYGON ((10 10, 60 60.1, 70 30, 40 40, 50 10, 10 10))', 10));
+  st_astext
+-------------
+ MULTIPOLYGON (((60 60, 70 30, 40 40, 60 60)), ((40 40, 50 10, 10 10, 40 40)))
+</pre></div><div class="refsection"><a name="idp66531280"></a><h2>関連情報</h2><p><a class="xref" href="ST_SnapToGrid.html" title="ST_SnapToGrid">ST_SnapToGrid</a>, <a class="xref" href="ST_Simplify.html" title="ST_Simplify">ST_Simplify</a>, <a class="xref" href="ST_SimplifyVW.html" title="ST_SimplifyVW">ST_SimplifyVW</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_Polygonize.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Geometry_Processing">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_SharedPaths.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Polygonize </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_SharedPaths</td></tr></table></div></body></html>

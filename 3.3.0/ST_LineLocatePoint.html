@@ -1,0 +1,34 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_LineLocatePoint</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.3.0 マニュアル"><link rel="up" href="reference.html#Linear_Referencing" title="8.18. 線型参照"><link rel="prev" href="ST_LineInterpolatePoints.html" title="ST_LineInterpolatePoints"><link rel="next" href="ST_LineSubstring.html" title="ST_LineSubstring"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_LineLocatePoint</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_LineInterpolatePoints.html">Prev</a> </td><th width="60%" align="center">8.18. 線型参照</th><td width="20%" align="right"> <a accesskey="n" href="ST_LineSubstring.html">Next</a></td></tr></table></div><div class="refentry"><a name="ST_LineLocatePoint"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_LineLocatePoint — ポイントに最も近いライン上のポイントの位置を割合で返します。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">float8 <b class="fsfunc">ST_LineLocatePoint</b>(</code>geometry  <var class="pdparam">a_linestring</var>, geometry  <var class="pdparam">a_point</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp68844752"></a><h2>説明</h2><p>ラインストリング上の、与えたポイントへの最短点を、<a class="link" href="ST_Length2D.html" title="ST_Length2D">2次元ラインストリング</a>の総延長に対する割合として0から1の区間で返します。</p><p>返された位置は、ポイント(<a class="xref" href="ST_LineInterpolatePoint.html" title="ST_LineInterpolatePoint">ST_LineInterpolatePoint</a>)または、部分ラインストリング(<a class="xref" href="ST_LineSubstring.html" title="ST_LineSubstring">ST_LineSubstring</a>)の抽出に使用することができます。</p><p>この関数は、住所番号に近づくのに使えます (訳注: 道路方式の住居表示の場合)。</p><p>Availability: 1.1.0</p><p>Changed: 2.1.0 2.0.xまでではST_Line_Locate_Pointと呼んでいました。</p></div><div class="refsection"><a name="idp68852816"></a><h2>例</h2><pre class="programlisting">-- ストリートに沿った、ストリート番号の点の、粗い探索です。
+-- なお、foo全体は住居の重心とストリートのように見えるダミーデータです。
+-- ST_DWithInで対象とする通りから大きく外れる住居を除外しています。
+--Rough approximation of finding the street number of a point along the street
+--Note the whole foo thing is just to generate dummy data that looks
+--like house centroids and street
+--We use ST_DWithin to exclude
+--houses too far away from the street to be considered on the street
+SELECT ST_AsText(house_loc) As as_text_house_loc,
+        startstreet_num +
+                CAST( (endstreet_num - startstreet_num)
+                        * ST_LineLocatePoint(street_line, house_loc) As integer) As street_num
+FROM
+(SELECT ST_GeomFromText('LINESTRING(1 2, 3 4)') As street_line,
+        ST_Point(x*1.01,y*1.03) As house_loc, 10 As startstreet_num,
+                20 As endstreet_num
+FROM generate_series(1,3) x CROSS JOIN generate_series(2,4) As y)
+As foo
+WHERE ST_DWithin(street_line, house_loc, 0.2);
+
+ as_text_house_loc | street_num
+-------------------+------------
+ POINT(1.01 2.06)  |         10
+ POINT(2.02 3.09)  |         15
+ POINT(3.03 4.12)  |         20
+
+ -- ポイントまたは他のジオメトリへのライン上の最短点の探索
+ SELECT ST_AsText(ST_LineInterpolatePoint(foo.the_line, ST_LineLocatePoint(foo.the_line, ST_GeomFromText('POINT(4 3)'))))
+FROM (SELECT ST_GeomFromText('LINESTRING(1 2, 4 5, 6 7)') As the_line) As foo;
+   st_astext
+----------------
+ POINT(3 4)
+
+</pre></div><div class="refsection"><a name="idp68858448"></a><h2>関連情報</h2><p><a class="xref" href="ST_DWithin.html" title="ST_DWithin">ST_DWithin</a>, <a class="xref" href="ST_Length2D.html" title="ST_Length2D">ST_Length2D</a>, <a class="xref" href="ST_LineInterpolatePoint.html" title="ST_LineInterpolatePoint">ST_LineInterpolatePoint</a>, <a class="xref" href="ST_LineSubstring.html" title="ST_LineSubstring">ST_LineSubstring</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_LineInterpolatePoints.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Linear_Referencing">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_LineSubstring.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_LineInterpolatePoints </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_LineSubstring</td></tr></table></div></body></html>

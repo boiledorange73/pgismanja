@@ -1,0 +1,52 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Slope</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.3.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Processing_DEM" title="12.14. ラスタ処理: DEM (標高)"><link rel="prev" href="RT_ST_Roughness.html" title="ST_Roughness"><link rel="next" href="RT_ST_TPI.html" title="ST_TPI"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Slope</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_Roughness.html">Prev</a> </td><th width="60%" align="center">12.14. ラスタ処理: DEM (標高)</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_TPI.html">Next</a></td></tr></table></div><div class="refentry"><a name="RT_ST_Slope"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_Slope — 標高ラスタバンドの傾斜角 (デフォルトでは度単位)を返します。地形解析に使えます。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">raster <b class="fsfunc">ST_Slope</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">nband=1</var>, text  <var class="pdparam">pixeltype=32BF</var>, text  <var class="pdparam">units=DEGREES</var>, double precision  <var class="pdparam">scale=1.0</var>, boolean  <var class="pdparam">interpolate_nodata=FALSE</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_Slope</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">nband</var>, raster  <var class="pdparam">customextent</var>, text  <var class="pdparam">pixeltype=32BF</var>, text  <var class="pdparam">units=DEGREES</var>, double precision  <var class="pdparam">scale=1.0</var>, boolean  <var class="pdparam">interpolate_nodata=FALSE</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp86627536"></a><h2>説明</h2><p>標高ラスタバンドの傾斜角 (デフォルトでは度単位)を返します。地図代数を使って、傾斜角方程式を隣接ピクセルに適用します。</p><p><code class="varname">units</code>は傾斜角の単位を示します。取りえる値はRADIANS, DEGREES (デフォルト), PERCENTです。 </p><p><code class="varname">scale</code>は鉛直単位と水平単位との比です。フィート:経度緯度ではscale=370400となり、メートル:経度緯度ではscale=111120となります。 </p><p><code class="varname">interpolate_nodata</code>がTRUEの場合には、入力ラスタのNODATAピクセルの値は表面傾斜角を計算する前に<a class="xref" href="RT_ST_InvDistWeight4ma.html" title="ST_InvDistWeight4ma">ST_InvDistWeight4ma</a>を使って内挿を行います。 </p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>傾斜角、傾斜方および陰影起伏に関する詳細情報については、<a class="ulink" href="http://webhelp.esri.com/arcgisdesktop/9.3/index.cfm?TopicName=How%20Hillshade%20works" target="_top">ESRI - How hillshade works</a>および<a class="ulink" href="http://e2b.erdas.com/fieldguide/wwhelp/wwhimpl/common/html/wwhelp.htm?context=FieldGuide&amp;file=Slope_Images.html" target="_top">ERDAS Field Guide - Slope Images</a>を参照して下さい。 </p></td></tr></table></div><p>Availability: 2.0.0 </p><p>Enhanced: 2.1.0 ST_MapAlgebra()を使用するようにし、<code class="varname">units</code>, <code class="varname">scale</code>, <code class="varname">interpolate_nodata</code>任意引数を追加しました。</p><p>Changed: 2.1.0 以前の版では、返り値はラジアン単位でした。現在は、デフォルトでは度で返します。</p></div><div class="refsection"><a name="idp86635216"></a><h2>例: 一つ目の形式</h2><pre class="programlisting">WITH foo AS (
+    SELECT ST_SetValues(
+        ST_AddBand(ST_MakeEmptyRaster(5, 5, 0, 0, 1, -1, 0, 0, 0), 1, '32BF', 0, -9999),
+        1, 1, 1, ARRAY[
+            [1, 1, 1, 1, 1],
+            [1, 2, 2, 2, 1],
+            [1, 2, 3, 2, 1],
+            [1, 2, 2, 2, 1],
+            [1, 1, 1, 1, 1]
+        ]::double precision[][]
+    ) AS rast
+)
+SELECT
+    ST_DumpValues(ST_Slope(rast, 1, '32BF'))
+FROM foo
+
+                            st_dumpvalues
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------
+ (1,"{{10.0249881744385,21.5681285858154,26.5650520324707,21.5681285858154,10.0249881744385},{21.5681285858154,35.2643890380859,36.8698959350586,35.2643890380859,21.5681285858154},
+{26.5650520324707,36.8698959350586,0,36.8698959350586,26.5650520324707},{21.5681285858154,35.2643890380859,36.8698959350586,35.2643890380859,21.5681285858154},{10.0249881744385,21.
+5681285858154,26.5650520324707,21.5681285858154,10.0249881744385}}")
+(1 row)
+                    </pre></div><div class="refsection"><a name="idp86636496"></a><h2>例: 二つ目の形式</h2><p>カバレッジのタイルの完全な例です。このクエリはPostgreSQL 9.1以上でのみ動作します。</p><pre class="programlisting">WITH foo AS (
+    SELECT ST_Tile(
+        ST_SetValues(
+            ST_AddBand(
+                ST_MakeEmptyRaster(6, 6, 0, 0, 1, -1, 0, 0, 0),
+                1, '32BF', 0, -9999
+            ),
+            1, 1, 1, ARRAY[
+                [1, 1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 2, 1],
+                [1, 2, 2, 3, 3, 1],
+                [1, 1, 3, 2, 1, 1],
+                [1, 2, 2, 1, 2, 1],
+                [1, 1, 1, 1, 1, 1]
+            ]::double precision[]
+        ),
+        2, 2
+    ) AS rast
+)
+SELECT
+    t1.rast,
+    ST_Slope(ST_Union(t2.rast), 1, t1.rast)
+FROM foo t1
+CROSS JOIN foo t2
+WHERE ST_Intersects(t1.rast, t2.rast)
+GROUP BY t1.rast;
+                    </pre></div><div class="refsection"><a name="idp86638288"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_MapAlgebra.html" title="ST_MapAlgebra (コールバック関数版)">ST_MapAlgebra (コールバック関数版)</a>, <a class="xref" href="RT_ST_TRI.html" title="ST_TRI">ST_TRI</a>, <a class="xref" href="RT_ST_TPI.html" title="ST_TPI">ST_TPI</a>, <a class="xref" href="RT_ST_Roughness.html" title="ST_Roughness">ST_Roughness</a>, <a class="xref" href="RT_ST_HillShade.html" title="ST_HillShade">ST_HillShade</a>, <a class="xref" href="RT_ST_Aspect.html" title="ST_Aspect">ST_Aspect</a> </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_Roughness.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Processing_DEM">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_TPI.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Roughness </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_TPI</td></tr></table></div></body></html>

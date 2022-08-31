@@ -1,0 +1,45 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_MakeValid</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.3.0 マニュアル"><link rel="up" href="reference.html#Geometry_Validation" title="8.6. ジオメトリ検証"><link rel="prev" href="ST_IsValidReason.html" title="ST_IsValidReason"><link rel="next" href="ST_SetSRID.html" title="ST_SetSRID"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_MakeValid</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_IsValidReason.html">Prev</a> </td><th width="60%" align="center">8.6. ジオメトリ検証</th><td width="20%" align="right"> <a accesskey="n" href="ST_SetSRID.html">Next</a></td></tr></table></div><div class="refentry"><a name="ST_MakeValid"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_MakeValid — 頂点を失うことなしに不正なジオメトリを妥当なジオメトリにしようと試みます。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_MakeValid</b>(</code>geometry <var class="pdparam">input</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_MakeValid</b>(</code>geometry <var class="pdparam">input</var>, text <var class="pdparam">params</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp58994128"></a><h2>説明</h2><p>与えられた不正なジオメトリを、入力ジオメトリの頂点を捨てずに、妥当な表現で生成しようとします。妥当なジオメトリは変更せずに返します。 </p><p>対応する入力はPOINTS, MULTIPOINTS, LINESTRING, MULTILINESTRING, POLYGON, MULTIPOLYGON, GEOMETRYCOLLECTIONおよびそれらの混交したものです。 </p><p>完全または部分的な次元崩壊の場合には、出力ジオメトリは、同次元まはた低い次元のジオメトリのコレクションか、低い次元のジオメトリコレクションになります。 </p><p>単一ポリゴンは、自己インタセクトがある場合には、マルチポリゴンになります。 </p><p><code class="varname">params</code>引数は、妥当なジオメトリの構築に使用する手法を選択するための追加文字列を与えるために使われます。追加文字列は"method=linework|structure keepcollapsed=true|false"の書式です。 </p><p>"method"キーに対して取り得る値は二つあります。</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>"linework"は従来のアルゴリズムです。はじめに全てのラインを抽出し、線画からノードを生成して、そこから妥当なジオメトリを構築します。</p></li><li class="listitem"><p>"structure"は、リングの内と外の間を識別して、外リングを結合し、全ての内リングとの差を取ることで新しいジオメトリを構築します。</p></li></ul></div><p>"keepcollapsed"キーは"structure"アルゴリズムでのみ有効です。"true"または"false"を取ります。"false"が指定された場合には、1点のLINESTRING等のような低い次元に崩壊したジオメトリ要素が出てきます。 </p><p>GEOSモジュールで実現しています。</p><p>Availability: 2.0.0</p><p>Enhanced: 2.0.1 速度の改善</p><p>Enhanced: 2.1.0 GEOMETRYCOLLECTIONとMULTIPOINTの対応の追加</p><p>Enhanced: 3.1.0 NaN値を持つ座標の削除が追加されました。</p><p>Enhanced: 3.2.0, added algorithm options, 'linework' and 'structure' which requires GEOS &gt;= 3.10.0. </p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports 3d and will not drop the z-index.</p></div><div class="refsection"><a name="idp59019984"></a><h2>例</h2><div class="informaltable"><table class="informaltable" style="border-collapse: collapse;border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col></colgroup><tbody><tr><td style="border-bottom: 1px solid ; "><div class="informalfigure"><div class="mediaobject"><img src="images/st_makevalid01.png"><div class="caption"><p>before_geom: 二つのオーバラップしているポリゴンからなるマルチポリゴン</p></div></div></div><p>
+                          </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_makevalid02.png"><div class="caption"><p>after_geom: 4 つのオーバーラップしないポリゴンのマルチポリゴン</p></div></div></div><p>
+                          </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_makevalid05.png"><div class="caption"><p>after_geom_structure: 一つのオーバラップしないポリゴンからなるマルチポリゴン</p></div></div></div><p>
+                </p><pre class="programlisting">SELECT f.geom AS before_geom, ST_MakeValid(f.geom) AS after_geom, ST_MakeValid(f.geom, 'method=structure') AS after_geom_structure
+FROM (SELECT 'MULTIPOLYGON(((186 194,187 194,188 195,189 195,190 195,
+191 195,192 195,193 194,194 194,194 193,195 192,195 191,
+195 190,195 189,195 188,194 187,194 186,14 6,13 6,12 5,11 5,
+10 5,9 5,8 5,7 6,6 6,6 7,5 8,5 9,5 10,5 11,5 12,6 13,6 14,186 194)),
+((150 90,149 80,146 71,142 62,135 55,128 48,119 44,110 41,100 40,
+90 41,81 44,72 48,65 55,58 62,54 71,51 80,50 90,51 100,
+54 109,58 118,65 125,72 132,81 136,90 139,100 140,110 139,
+119 136,128 132,135 125,142 118,146 109,149 100,150 90)))'::geometry AS geom) AS f;</pre><p>
+            </p>
+            </td></tr><tr><td style=""><p>
+                </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_makevalid03.png"><div class="caption"><p>before_geom: 六つのオーバラップしているポリゴンからなるマルチポリゴン</p></div></div></div><p>
+                </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_makevalid04.png"><div class="caption"><p>after_geom: 14個のオーバラップしていないポリゴンからなるマルチポリゴン</p></div></div></div><p>
+                </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_makevalid06.png"><div class="caption"><p>after_geom_structure: 一つのオーバラップしないポリゴンからなるマルチポリゴン</p></div></div></div><p>
+                </p><pre class="programlisting">SELECT c.geom AS before_geom,
+                    ST_MakeValid(c.geom) AS after_geom,
+                    ST_MakeValid(c.geom, 'method=structure') AS after_geom_structure
+        FROM (SELECT 'MULTIPOLYGON(((91 50,79 22,51 10,23 22,11 50,23 78,51 90,79 78,91 50)),
+                  ((91 100,79 72,51 60,23 72,11 100,23 128,51 140,79 128,91 100)),
+                  ((91 150,79 122,51 110,23 122,11 150,23 178,51 190,79 178,91 150)),
+                  ((141 50,129 22,101 10,73 22,61 50,73 78,101 90,129 78,141 50)),
+                  ((141 100,129 72,101 60,73 72,61 100,73 128,101 140,129 128,141 100)),
+                  ((141 150,129 122,101 110,73 122,61 150,73 178,101 190,129 178,141 150)))'::geometry AS geom) AS c;</pre><p>
+            </p></td></tr></tbody></table></div></div><div class="refsection"><a name="idp59037392"></a><h2>例</h2><pre class="programlisting">SELECT ST_AsText(ST_MakeValid(
+    'LINESTRING(0 0, 0 0)',
+    'method=structure keepcollapsed=true'
+    ));
+
+ st_astext
+------------
+ POINT(0 0)
+
+
+SELECT ST_AsText(ST_MakeValid(
+    'LINESTRING(0 0, 0 0)',
+    'method=structure keepcollapsed=false'
+    ));
+
+    st_astext
+------------------
+ LINESTRING EMPTY</pre></div><div class="refsection"><a name="idp59038672"></a><h2>関連情報</h2><p><a class="xref" href="ST_IsValid.html" title="ST_IsValid">ST_IsValid</a>, <a class="xref" href="ST_Collect.html" title="ST_Collect">ST_Collect</a>, <a class="xref" href="ST_CollectionExtract.html" title="ST_CollectionExtract">ST_CollectionExtract</a> </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_IsValidReason.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Geometry_Validation">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_SetSRID.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_IsValidReason </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_SetSRID</td></tr></table></div></body></html>

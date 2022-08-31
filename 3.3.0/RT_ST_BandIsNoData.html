@@ -1,0 +1,53 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_BandIsNoData</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.3.0 マニュアル"><link rel="up" href="RT_reference.html#RasterBand_Accessors" title="12.5. ラスタバンドアクセサ"><link rel="prev" href="RT_ST_BandNoDataValue.html" title="ST_BandNoDataValue"><link rel="next" href="RT_ST_BandPath.html" title="ST_BandPath"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_BandIsNoData</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_BandNoDataValue.html">Prev</a> </td><th width="60%" align="center">12.5. ラスタバンドアクセサ</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_BandPath.html">Next</a></td></tr></table></div><div class="refentry"><a name="RT_ST_BandIsNoData"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_BandIsNoData — 指定したバンドがNODATA値だけで満たされている場合には、TRUEを返します。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">boolean <b class="fsfunc">ST_BandIsNoData</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">band</var>, boolean  <var class="pdparam">forceChecking=true</var><code>)</code>;</p><p><code class="funcdef">boolean <b class="fsfunc">ST_BandIsNoData</b>(</code>raster  <var class="pdparam">rast</var>, boolean  <var class="pdparam">forceChecking=true</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp83749584"></a><h2>説明</h2><p>指定したバンドがNODATA値だけで満たされている場合には、TRUEを返します。バンド番号を指定しない場合には、1番と仮定します。最後の引数がTRUEの場合には、全バンドについてピクセル毎に調べます。他の場合には、isnodataフラグの値を返すだけです。この引数を指定しない場合のデフォルト値はFALSEです。</p><p>Availability: 2.0.0</p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>フラグが汚れている (最後の引数をTRUEにした場合としない場合とで結果が違う)場合には、ST_SetBandIsNodata関数、または最後の引数をTRUEにしたST_BandNodataValue関数を使って、フラグにTRUEを設定するためにラスタを更新するべきです。<a class="xref" href="RT_ST_SetBandIsNoData.html" title="ST_SetBandIsNoData">ST_SetBandIsNoData</a>を参照して下さい。</p></td></tr></table></div></div><div class="refsection"><a name="idp83752272"></a><h2>例</h2><pre class="programlisting">-- 一つのラスタカラムを持つダミーテーブルの生成
+create table dummy_rast (rid integer, rast raster);
+
+-- 2バンドでバンドごとに1ピクセルを持つラスタを追加します。
+-- 一つ目のバンドにはnodatavalueとピクセル値をともに3とし、
+-- 二つ目のバンドにはnodatavalue=13とピクセル値=4とします。
+insert into dummy_rast values(1,
+(
+'01' -- little endian - リトルエンディアン (uint8 ndr)
+||
+'0000' -- version - 版 (uint16 0)
+||
+'0200' -- nBands - バンド数 (uint16 0)
+||
+'17263529ED684A3F' -- scaleX - X方向セルサイズ (float64 0.000805965234044584)
+||
+'F9253529ED684ABF' -- scaleY - Y方向セルサイズ (float64 -0.00080596523404458)
+||
+'1C9F33CE69E352C0' -- ipX - 左上隅X値 (float64 -75.5533328537098)
+||
+'718F0E9A27A44840' -- ipY - 左上隅Y値 (float64 49.2824585505576)
+||
+'ED50EB853EC32B3F' -- skewX - スキューX (float64 0.000211812383858707)
+||
+'7550EB853EC32B3F' -- skewY - スキューY (float64 0.000211812383858704)
+||
+'E6100000' -- SRID (int32 4326)
+||
+'0100' -- width - 横セル数 (uint16 1)
+||
+'0100' -- height - 縦セル数 (uint16 1)
+||
+'6' -- hasnodatavalueとisnodataの値をtrueにする。
+||
+'2' -- 1番バンドのタイプ (4BUI)
+||
+'03' -- NODATA値==3
+||
+'03' -- 0列0行ピクセルの値==3 (NODATA値と同じ)
+||
+'0' -- hasnodatavalueをFALSEにする。
+||
+'5' -- 2番バンドのタイプ (16BSI)
+||
+'0D00' -- NODATA値==13
+||
+'0400' -- 0列0行ピクセルの値==4
+)::raster
+);
+
+select st_bandisnodata(rast, 1) from dummy_rast where rid = 1; -- Expected true
+select st_bandisnodata(rast, 2) from dummy_rast where rid = 1; -- Expected false
+            </pre></div><div class="refsection"><a name="idp83753552"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_BandNoDataValue.html" title="ST_BandNoDataValue">ST_BandNoDataValue</a>, <a class="xref" href="RT_ST_NumBands.html" title="ST_NumBands">ST_NumBands</a>, <a class="xref" href="RT_ST_SetBandNoDataValue.html" title="ST_SetBandNoDataValue">ST_SetBandNoDataValue</a>, <a class="xref" href="RT_ST_SetBandIsNoData.html" title="ST_SetBandIsNoData">ST_SetBandIsNoData</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_BandNoDataValue.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#RasterBand_Accessors">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_BandPath.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_BandNoDataValue </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_BandPath</td></tr></table></div></body></html>

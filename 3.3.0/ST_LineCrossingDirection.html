@@ -1,0 +1,47 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_LineCrossingDirection</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.3.0 マニュアル"><link rel="up" href="reference.html#idp62897488" title="8.11.1. トポロジ関係関数"><link rel="prev" href="ST_Intersects.html" title="ST_Intersects"><link rel="next" href="ST_OrderingEquals.html" title="ST_OrderingEquals"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_LineCrossingDirection</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_Intersects.html">Prev</a> </td><th width="60%" align="center">8.11.1. トポロジ関係関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_OrderingEquals.html">Next</a></td></tr></table></div><div class="refentry"><a name="ST_LineCrossingDirection"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_LineCrossingDirection — 二つのラインストリングがどのように交差しているかを示す数字を返します。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">integer <b class="fsfunc">ST_LineCrossingDirection</b>(</code>geometry  <var class="pdparam">linestringA</var>, geometry  <var class="pdparam">linestringB</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp63265872"></a><h2>説明</h2><p>二つのラインストリングを与えると、-3から3までの整数が返ります。この整数は、どのようにクロスしているかを示すもので、0は交差無しを意味します。この関数は<code class="varname">LINESTRING</code>にのみ対応しています。 </p><p>交差の番号は次の通りです。 </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>0: クロスが無い</p></li><li class="listitem"><p>-1: 左クロス</p></li><li class="listitem"><p>1: 右クロス</p></li><li class="listitem"><p>-2: 複数クロスで最後が左</p></li><li class="listitem"><p>2: 複数クロスで最後が右</p></li><li class="listitem"><p>-3: 複数クロスで開始終了ともに左</p></li><li class="listitem"><p>3: 複数クロスで開始終了ともに右</p></li></ul></div><p>
+    </p><p>Availability: 1.4</p></div><div class="refsection"><a name="idp63273936"></a><h2>例</h2><p><span class="bold"><strong>例:</strong></span> 左クロスと右クロス </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_linecrossingdirection03.png"><div class="caption"><p>青: ライン A、緑: ライン B</p></div></div></div><pre class="programlisting">SELECT ST_LineCrossingDirection(lineA, lineB) As A_cross_B,
+       ST_LineCrossingDirection(lineB, lineA) As B_cross_A
+FROM (SELECT
+  ST_GeomFromText('LINESTRING(25 169,89 114,40 70,86 43)') As lineA,
+  ST_GeomFromText('LINESTRING (20 140, 71 74, 161 53)') As lineB
+  ) As foo;
+
+ A_cross_B | B_cross_A
+-----------+-----------
+        -1 |         1
+</pre><p><span class="bold"><strong>例:</strong></span> 複数回クロスで開始終了ともに左と、複数回クロスで開始終了ともに右 </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_linecrossingdirection01.png"><div class="caption"><p>青: ライン A、緑: ライン B</p></div></div></div><pre class="programlisting">SELECT ST_LineCrossingDirection(lineA, lineB) As A_cross_B,
+       ST_LineCrossingDirection(lineB, lineA) As B_cross_A
+FROM (SELECT
+ ST_GeomFromText('LINESTRING(25 169,89 114,40 70,86 43)') As lineA,
+ ST_GeomFromText('LINESTRING(171 154,20 140,71 74,161 53)') As lineB
+  ) As foo;
+
+ A_cross_B | B_cross_A
+-----------+-----------
+         3 |        -3
+</pre><p><span class="bold"><strong>例:</strong></span> 複数回クロスで最後が左と複数回クロスで最後が右 </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_linecrossingdirection04.png"><div class="caption"><p>青: ライン A、緑: ライン B</p></div></div></div><pre class="programlisting">SELECT ST_LineCrossingDirection(lineA, lineB) As A_cross_B,
+       ST_LineCrossingDirection(lineB, lineA) As B_cross_A
+FROM (SELECT
+  ST_GeomFromText('LINESTRING(25 169,89 114,40 70,86 43)') As lineA,
+  ST_GeomFromText('LINESTRING(5 90, 71 74, 20 140, 171 154)') As lineB
+  ) As foo;
+
+ A_cross_B | B_cross_A
+-----------+-----------
+        -2 |         2
+</pre><p><span class="bold"><strong>例:</strong></span> 複数回クロスで最後が左と複数回クロスで最後が右 </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_linecrossingdirection02.png"><div class="caption"><p>青: ライン A、緑: ライン B</p></div></div></div><pre class="programlisting">SELECT ST_LineCrossingDirection(lineA, lineB) As A_cross_B,
+       ST_LineCrossingDirection(lineB, lineA) As B_cross_A
+FROM (SELECT
+  ST_GeomFromText('LINESTRING(25 169,89 114,40 70,86 43)') As lineA,
+  ST_GeomFromText('LINESTRING (171 154, 20 140, 71 74, 2.99 90.16)') As lineB
+) As foo;
+
+ A_cross_B | B_cross_A
+-----------+-----------
+         2 |        -2
+</pre><pre class="programlisting">SELECT s1.gid, s2.gid, ST_LineCrossingDirection(s1.geom, s2.geom)
+  FROM streets s1 CROSS JOIN streets s2
+         ON (s1.gid != s2.gid AND s1.geom &amp;&amp; s2.geom )
+WHERE ST_LineCrossingDirection(s1.geom, s2.geom) 
+&gt; 0;
+</pre></div><div class="refsection"><a name="idp63325904"></a><h2>関連情報</h2><p><a class="xref" href="ST_Crosses.html" title="ST_Crosses">ST_Crosses</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_Intersects.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#idp62897488">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_OrderingEquals.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Intersects </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_OrderingEquals</td></tr></table></div></body></html>

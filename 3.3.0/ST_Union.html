@@ -1,0 +1,56 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Union</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.3.0 マニュアル"><link rel="up" href="reference.html#Overlay_Functions" title="8.13. 重ね合わせ関数"><link rel="prev" href="ST_UnaryUnion.html" title="ST_UnaryUnion"><link rel="next" href="ST_Buffer.html" title="ST_Buffer"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Union</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_UnaryUnion.html">Prev</a> </td><th width="60%" align="center">8.13. 重ね合わせ関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_Buffer.html">Next</a></td></tr></table></div><div class="refentry"><a name="ST_Union"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_Union — 入力ジオメトリのポイント集合の結合を表現するジオメトリを返します。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_Union</b>(</code>geometry <var class="pdparam">g1</var>, geometry <var class="pdparam">g2</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_Union</b>(</code>geometry <var class="pdparam">g1</var>, geometry <var class="pdparam">g2</var>, float8 <var class="pdparam">gridSize</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_Union</b>(</code>geometry[] <var class="pdparam">g1_array</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_Union</b>(</code>geometry set <var class="pdparam">g1field</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_Union</b>(</code>geometry set <var class="pdparam">g1field</var>, float8 <var class="pdparam">gridSize</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp65665872"></a><h2>説明</h2><p>入力ジオメトリを結合してオーバラップをしない結果ジオメトリを生成します。出力は単一ジオメトリ、マルチ系ジオメトリ、ジオメトリコレクションのいずれにかなる可能性があります。次の通り複数の形式があります。</p><p><span class="bold"><strong>二入力形式:</strong></span> 二つの入力ジオメトリの結合のジオメトリを返します。いずれかの入力がNULLの場合にはNULLを返します。 </p><p><span class="bold"><strong>配列形式:</strong></span> ジオメトリ配列を結合したジオメトリを返します。 </p><p><span class="bold"><strong>集約関数形式:</strong></span> ジオメトリの集合を結合したジオメトリを返します。ST_Union()関数は、PostgreSQL用語で言うところの「集約関数」です。つまり、SUM()やMEAN()と同じ方法で複数のデータ行の操作を行い、他の集約関数と同じようにNULLジオメトリを無視します。</p><p>非集約関数で入力が一つの形式である<a class="xref" href="ST_UnaryUnion.html" title="ST_UnaryUnion">ST_UnaryUnion</a>も参照して下さい。</p><p>ST_Unionの配列形式と集合形式では、<a class="ulink" href="http://blog.cleverelephant.ca/2009/01/must-faster-unions-in-postgis-14.html" target="_top">http://blog.cleverelephant.ca/2009/01/must-faster-unions-in-postgis-14.html</a>で紹介されている早いカスケード結合アルゴリズムを使っています。 </p><p>固定精度空間で動作するよう<code class="code">gridSize</code>を指定できます。入力は与えられたグリッドにスナップされ、結果の頂点は同じグリッド上で計算されます (GEOS-3.9.0以上が必要です)。 </p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p><a class="xref" href="ST_Collect.html" title="ST_Collect">ST_Collect</a> は、結果に重ね合わせが無いことを求めていない場合には、時々ST_Unionの代わりに用いられます。ST_Collectは、集めレれたジオメトリに処理を実行しないため、通常はST_Unionより早い動作速度になります。 </p></td></tr></table></div><p>GEOSモジュールで実現しています。</p><p>ST_UnionはMULTILINESTRINGを生成し、新しいLINESTRINGを単一のLINESTRINGに縫い付けません。LINESTRINGに縫い付けるには<a class="xref" href="ST_LineMerge.html" title="ST_LineMerge">ST_LineMerge</a>を使用します。</p><p>ご注意: この関数は以前は、"Union"から名称変更してGeomUnion()と呼ばれていました。UNIONはSQLの予約語であるためです。</p><p>Enhanced: 3.1.0 gridSizeパラメータを受け付けます - GEOS 3.9.0以上が必要です。</p><p>Changed: 3.0.0 SFCGAL非依存になりました。</p><p>Availability: 1.4.0 - ST_Unionが機能強化されました。ST_Union(geomarray)が導入され、PostgreSQLの高速なコレクションの集約が導入されました。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This method implements the <a class="ulink" href="http://www.opengeospatial.org/standards/sfs" target="_top">OGC Simple Features
+ Implementation Specification for SQL 1.1.</a> s2.1.1.3</p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>集約関数版は、OGC仕様に明示的に定義されていません。</p></td></tr></table></div><p><span class="inlinemediaobject"><img src="images/check.png"></span> This method implements the SQL/MM specification. SQL-MM 3: 5.1.19 ポリゴンが含まれる時、Z値 (標高)を持ちます。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports 3d and will not drop the z-index. ただし、結果はXYのみを使用して計算されます。結果のZ値は複写するか、平均値になるか、補間されます。</p></div><div class="refsection"><a name="idp65680208"></a><h2>例</h2><p>集約関数版の例</p><pre class="programlisting">SELECT id,
+       ST_Union(geom) as singlegeom
+FROM sometable f
+GROUP BY id;
+              </pre><p>非集約関数の例</p><pre class="programlisting">select ST_AsText(ST_Union('POINT(1 2)' :: geometry, 'POINT(-2 3)' :: geometry))
+
+st_astext
+----------
+MULTIPOINT(-2 3,1 2)
+
+select ST_AsText(ST_Union('POINT(1 2)' :: geometry, 'POINT(1 2)' :: geometry))
+
+st_astext
+----------
+POINT(1 2)</pre><p>3次元の例 - 3次元 (かつ混合次元)の種類</p><pre class="programlisting">select ST_AsEWKT(ST_Union(geom))
+from (
+         select 'POLYGON((-7 4.2,-7.1 4.2,-7.1 4.3, -7 4.2))'::geometry geom
+         union all
+         select 'POINT(5 5 5)'::geometry geom
+         union all
+         select 'POINT(-2 3 1)'::geometry geom
+         union all
+         select 'LINESTRING(5 5 5, 10 10 10)'::geometry geom
+     ) as foo;
+
+st_asewkt
+---------
+GEOMETRYCOLLECTION(POINT(-2 3 1),LINESTRING(5 5 5,10 10 10),POLYGON((-7 4.2 5,-7.1 4.2 5,-7.1 4.3 5,-7 4.2 5)));
+</pre><p>3次元の例 - 混合次元なし</p><pre class="programlisting">select ST_AsEWKT(ST_Union(geom))
+from (
+         select 'POLYGON((-7 4.2 2,-7.1 4.2 3,-7.1 4.3 2, -7 4.2 2))'::geometry geom
+         union all
+         select 'POINT(5 5 5)'::geometry geom
+         union all
+         select 'POINT(-2 3 1)'::geometry geom
+         union all
+         select 'LINESTRING(5 5 5, 10 10 10)'::geometry geom
+     ) as foo;
+
+st_asewkt
+---------
+GEOMETRYCOLLECTION(POINT(-2 3 1),LINESTRING(5 5 5,10 10 10),POLYGON((-7 4.2 2,-7.1 4.2 3,-7.1 4.3 2,-7 4.2 2)))
+
+-- 新しい配列コンストラクタを使った例 --
+SELECT ST_Union(ARRAY(SELECT the_geom FROM sometable));
+
+SELECT ST_AsText(ST_Union(ARRAY[ST_GeomFromText('LINESTRING(1 2, 3 4)'),
+            ST_GeomFromText('LINESTRING(3 4, 4 5)')])) As wktunion;
+
+--wktunion---
+MULTILINESTRING((3 4,4 5),(1 2,3 4))
+
+              </pre></div><div class="refsection"><a name="idp65684560"></a><h2>関連情報</h2><p><a class="xref" href="ST_Collect.html" title="ST_Collect">ST_Collect</a>, <a class="xref" href="ST_UnaryUnion.html" title="ST_UnaryUnion">ST_UnaryUnion</a>, <a class="xref" href="ST_MemUnion.html" title="ST_MemUnion">ST_MemUnion</a>, <a class="xref" href="ST_Intersection.html" title="ST_Intersection">ST_Intersection</a>, <a class="xref" href="ST_Difference.html" title="ST_Difference">ST_Difference</a>, <a class="xref" href="ST_SymDifference.html" title="ST_SymDifference">ST_SymDifference</a> </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_UnaryUnion.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Overlay_Functions">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_Buffer.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_UnaryUnion </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_Buffer</td></tr></table></div></body></html>

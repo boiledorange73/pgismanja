@@ -1,0 +1,105 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_MapAlgebraFct</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.3.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Processing_MapAlgebra" title="12.12. ラスタ処理: 地図代数"><link rel="prev" href="RT_ST_MapAlgebraFct.html" title="ST_MapAlgebraFct"><link rel="next" href="RT_ST_MapAlgebraFctNgb.html" title="ST_MapAlgebraFctNgb"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_MapAlgebraFct</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_MapAlgebraFct.html">Prev</a> </td><th width="60%" align="center">12.12. ラスタ処理: 地図代数</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_MapAlgebraFctNgb.html">Next</a></td></tr></table></div><div class="refentry"><a name="RT_ST_MapAlgebraFct2"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_MapAlgebraFct — 2バンド版 - 二つの入力バンドに対する妥当なPostgreSQL関数で形成された、指定したピクセルタイプとなる1バンドラスタを生成します。バンドを指定しない場合には、1番と仮定します。"extenttype"のデフォルトはINTERSECTIONです。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">raster <b class="fsfunc">ST_MapAlgebraFct</b>(</code>raster <var class="pdparam">rast1</var>, raster <var class="pdparam">rast2</var>, regprocedure <var class="pdparam">tworastuserfunc</var>, text <var class="pdparam">pixeltype=same_as_rast1</var>, text <var class="pdparam">extenttype=INTERSECTION</var>, text[] <var class="pdparam">VARIADIC userargs</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_MapAlgebraFct</b>(</code>raster <var class="pdparam">rast1</var>, integer <var class="pdparam">band1</var>, raster <var class="pdparam">rast2</var>, integer <var class="pdparam">band2</var>, regprocedure <var class="pdparam">tworastuserfunc</var>, text <var class="pdparam">pixeltype=same_as_rast1</var>, text <var class="pdparam">extenttype=INTERSECTION</var>, text[] <var class="pdparam">VARIADIC userargs</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp86055504"></a><h2>説明</h2><div class="warning"><table border="0" summary="Warning"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="images/warning.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p><a class="xref" href="RT_ST_MapAlgebraFct2.html" title="ST_MapAlgebraFct">ST_MapAlgebraFct</a> は2.1.0で非推奨になりました。代わりに<a class="xref" href="RT_ST_MapAlgebra.html" title="ST_MapAlgebra (コールバック関数版)">ST_MapAlgebra (コールバック関数版)</a>を使います。 </p></td></tr></table></div><p>二つの入力ラスタ (<code class="varname">rast1</code>, <code class="varname">rast2</code>)に対して<code class="varname">tworastuserfunc</code>で指定される妥当なPostgreSQL関数で形成されるラスタを返します。<code class="varname">band1</code>または<code class="varname">band2</code>が指定されていない場合には、1番と仮定します。新しいラスタは、元のラスタと同じ地理参照、幅、高さを持ちますが、一つのバンドしか持ちません。 </p><p><code class="varname">pixeltype</code>が渡された場合には、新しいラスタはそのピクセルタイプのバンドを持ちます。pixelteypeとしてNULLが渡されたりピクセルタイプを指定しない場合には、新しいラスタは<code class="varname">rast1</code>の入力バンドと同じピクセルタイプになります。 </p><p><code class="varname">tworastuserfunc</code>引数はSQL関数またはPL/pgSQL関数のシグネチャで、regprocedureにキャストします。大変単純で本当に使えないPL/pgSQL関数の例を挙げます。</p><pre class="programlisting">CREATE OR REPLACE FUNCTION simple_function_for_two_rasters(pixel1 FLOAT, pixel2 FLOAT, pos INTEGER[], VARIADIC args TEXT[])
+    RETURNS FLOAT
+    AS $$ BEGIN
+        RETURN 0.0;
+    END; $$
+    LANGUAGE 'plpgsql' IMMUTABLE;</pre><p> <code class="varname">tworastuserfunc</code>は、3または4の引数を受け付けます。すなわち、倍精度浮動小数点数、倍精度浮動小数点数、任意の整数配列、VARIADIC文字列配列です。第1引数は<code class="varname">rast1</code>のラスタセルごとの値です (ラスタのデータ型に関係なく)。第2引数は<code class="varname">rast2</code>のラスタセルごとの値です。第3引数は現在の処理セルの位置で、'{x,y}'であらわされます。第4引数は、<a class="xref" href="RT_ST_MapAlgebraFct2.html" title="ST_MapAlgebraFct">ST_MapAlgebraFct</a>へのパラメータの残っているもの全てが<code class="varname">tworastuserfunc</code>に渡されることを示します。 </p><p><span class="type">regprodedure</span>引数をSQL関数に渡す際は完全な関数シグネチャと<span class="type">regprocedure</span>型へのキャストが求められます。上のPL/pgSQL関数を引数に取るには、引数のSQLは次のようにします。</p><pre class="programlisting">'simple_function(double precision, double precision, integer[], text[])'::regprocedure</pre><p> 引数は関数名と引数の型を含み、関数名と引数を引用符で括り、かつ<span class="type">regprocedure</span>にキャストする点に注意が必要です。 </p><p><code class="varname">tworastuserfunc</code>引数は <span class="type">variadic text</span>配列です。どの<a class="xref" href="RT_ST_MapAlgebraFct2.html" title="ST_MapAlgebraFct">ST_MapAlgebraFct</a>にもついてくる全ての文字列引数は、指定された<code class="varname">tworastuserfunc</code>に、そのまま渡されて、<code class="varname">userargs</code>引数内に入ります。 </p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>VARIADICキーワードに関する詳細情報については、PostgreSQL文書と<a class="ulink" href="http://www.postgresql.org/docs/current/static/xfunc-sql.html" target="_top">Query Language (SQL) Functions</a> (訳注: 日本語版は「<a class="ulink" href="http://www.postgresql.jp/document/current/html/xfunc-sql.html" target="_top">問い合わせ言語 （SQL）関数</a>」です)の"SQL Functions with Variable Numbers of Arguments" (訳注: 日本語版は「可変長引数を取るSQL関数」)節を参照して下さい。</p></td></tr></table></div><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p><code class="varname">tworastuserfunc</code>への<span class="type">text[]</span>引数は、あらゆる引数を処理のためにユーザ関数に渡すかどうかの選択にかかわらず求められます。</p></td></tr></table></div><p>Availability: 2.0.0</p></div><div class="refsection"><a name="idp84261328"></a><h2>例: 別個のバンドとしてキャンバス上にラスタをオーバレイする</h2><pre class="programlisting">-- ユーザ関数の定義 --
+CREATE OR REPLACE FUNCTION raster_mapalgebra_union(
+    rast1 double precision,
+    rast2 double precision,
+    pos integer[],
+    VARIADIC userargs text[]
+)
+    RETURNS double precision
+    AS $$
+    DECLARE
+    BEGIN
+        CASE
+            WHEN rast1 IS NOT NULL AND rast2 IS NOT NULL THEN
+                RETURN ((rast1 + rast2)/2.);
+            WHEN rast1 IS NULL AND rast2 IS NULL THEN
+                RETURN NULL;
+            WHEN rast1 IS NULL THEN
+                RETURN rast2;
+            ELSE
+                RETURN rast1;
+        END CASE;
+
+        RETURN NULL;
+    END;
+    $$ LANGUAGE 'plpgsql' IMMUTABLE COST 1000;
+
+-- ラスタの試験テーブルの用意
+DROP TABLE IF EXISTS map_shapes;
+CREATE TABLE map_shapes(rid serial PRIMARY KEY, rast raster, bnum integer, descrip text);
+INSERT INTO map_shapes(rast,bnum, descrip)
+WITH mygeoms
+    AS ( SELECT 2 As bnum, ST_Buffer(ST_Point(90,90),30) As geom, 'circle' As descrip
+            UNION ALL
+            SELECT 3 AS bnum,
+                ST_Buffer(ST_GeomFromText('LINESTRING(50 50,150 150,150 50)'), 15) As geom, 'big road' As descrip
+            UNION ALL
+            SELECT 1 As bnum,
+                ST_Translate(ST_Buffer(ST_GeomFromText('LINESTRING(60 50,150 150,150 50)'), 8,'join=bevel'), 10,-6) As geom, 'small road' As descrip
+            ),
+   -- ジオメトリと1対1に対応するキャンバスを定義
+   canvas
+    AS ( SELECT ST_AddBand(ST_MakeEmptyRaster(250,
+        250,
+        ST_XMin(e)::integer, ST_YMax(e)::integer, 1, -1, 0, 0 ) , '8BUI'::text,0) As rast
+        FROM (SELECT ST_Extent(geom) As e,
+                    Max(ST_SRID(geom)) As srid
+                    from mygeoms
+                    ) As foo
+            )
+-- キャンバスとアラインメントの合ったラスタを返します
+SELECT ST_AsRaster(m.geom, canvas.rast, '8BUI', 240) As rast, bnum, descrip
+                FROM mygeoms AS m CROSS JOIN canvas
+UNION ALL
+SELECT canvas.rast, 4, 'canvas'
+FROM canvas;
+
+-- 1バンド版の地図代数関数を実行し、あとでST_AddBandで集めます
+INSERT INTO map_shapes(rast,bnum,descrip)
+SELECT ST_AddBand(ST_AddBand(rasts[1], rasts[2]),rasts[3]), 4, 'map bands overlay fct union (canvas)'
+    FROM (SELECT ARRAY(SELECT ST_MapAlgebraFct(m1.rast, m2.rast,
+            'raster_mapalgebra_union(double precision, double precision, integer[], text[])'::regprocedure, '8BUI', 'FIRST')
+                FROM map_shapes As m1 CROSS JOIN map_shapes As m2
+    WHERE m1.descrip = 'canvas' AND m2.descrip &lt;&gt; 'canvas' ORDER BY m2.bnum) As rasts) As foo;
+                    </pre><div class="informaltable"><table class="informaltable" style="border-collapse: collapse;border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col></colgroup><tbody><tr><td style="">
+                                        <p>
+                                            </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_mapalgebrafct2_01.png"><div class="caption"><p>バンドオーバレイ (キャンバス)の図 (赤:小さい道 緑:円、青:大きな道)</p></div></div></div><p>
+                                        </p>
+                                    </td></tr></tbody></table></div></div><div class="refsection"><a name="idp84267216"></a><h2>追加引数を取るユーザ定義関数</h2><pre class="programlisting">CREATE OR REPLACE FUNCTION raster_mapalgebra_userargs(
+    rast1 double precision,
+    rast2 double precision,
+    pos integer[],
+    VARIADIC userargs text[]
+)
+    RETURNS double precision
+    AS $$
+    DECLARE
+    BEGIN
+        CASE
+            WHEN rast1 IS NOT NULL AND rast2 IS NOT NULL THEN
+                RETURN least(userargs[1]::integer,(rast1 + rast2)/2.);
+            WHEN rast1 IS NULL AND rast2 IS NULL THEN
+                RETURN userargs[2]::integer;
+            WHEN rast1 IS NULL THEN
+                RETURN greatest(rast2,random()*userargs[3]::integer)::integer;
+            ELSE
+                RETURN greatest(rast1, random()*userargs[4]::integer)::integer;
+        END CASE;
+
+        RETURN NULL;
+    END;
+    $$ LANGUAGE 'plpgsql' VOLATILE COST 1000;
+
+SELECT ST_MapAlgebraFct(m1.rast, 1, m1.rast, 3,
+            'raster_mapalgebra_userargs(double precision, double precision, integer[], text[])'::regprocedure,
+                '8BUI', 'INTERSECT', '100','200','200','0')
+                FROM map_shapes As m1
+    WHERE m1.descrip = 'map bands overlay fct union (canvas)';
+                    </pre><p>
+                        </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_mapalgebrafct2_02.png"><div class="caption"><p>追加引数を持つユーザ定義関数と同じラスタからの異なるバンド</p></div></div></div><p>
+                    </p></div><div class="refsection"><a name="idp84778960"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_MapAlgebraExpr2.html" title="ST_MapAlgebraExpr">ST_MapAlgebraExpr</a>, <a class="xref" href="RT_ST_BandPixelType.html" title="ST_BandPixelType">ST_BandPixelType</a>, <a class="xref" href="RT_ST_GeoReference.html" title="ST_GeoReference">ST_GeoReference</a>, <a class="xref" href="RT_ST_SetValue.html" title="ST_SetValue">ST_SetValue</a> </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_MapAlgebraFct.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Processing_MapAlgebra">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_MapAlgebraFctNgb.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_MapAlgebraFct </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_MapAlgebraFctNgb</td></tr></table></div></body></html>

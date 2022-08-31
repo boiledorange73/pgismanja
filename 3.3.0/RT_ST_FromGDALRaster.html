@@ -1,0 +1,25 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_FromGDALRaster</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.3.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Constructors" title="12.3. ラスタコンストラクタ"><link rel="prev" href="RT_Retile.html" title="ST_Retile"><link rel="next" href="RT_ST_GeoReference.html" title="ST_GeoReference"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_FromGDALRaster</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_Retile.html">Prev</a> </td><th width="60%" align="center">12.3. ラスタコンストラクタ</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_GeoReference.html">Next</a></td></tr></table></div><div class="refentry"><a name="RT_ST_FromGDALRaster"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_FromGDALRaster — 対応するGDALラスタファイルからラスタを返します。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">raster <b class="fsfunc">ST_FromGDALRaster</b>(</code>bytea  <var class="pdparam">gdaldata</var>, integer  <var class="pdparam">srid=NULL</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp83348304"></a><h2>説明</h2><p>対応するGDALラスタファイルからラスタを返します。<code class="varname">gdaldata</code>はbytea型で、GDALラスタファイルの中身です。 </p><p><code class="varname">srid</code>がNULLの場合には、この関数は、GDALラスタから自動的にSRIDを設定しようとします。<code class="varname">srid</code>が与えられている場合には、与えられた値が自動的に設定したSRIDを上書きします。 </p><p>Availability: 2.1.0</p></div><div class="refsection"><a name="idp83351376"></a><h2>例</h2><pre class="programlisting">WITH foo AS (
+    SELECT ST_AsPNG(ST_AddBand(ST_AddBand(ST_AddBand(ST_MakeEmptyRaster(2, 2, 0, 0, 0.1, -0.1, 0, 0, 4326), 1, '8BUI', 1, 0), 2, '8BUI', 2, 0), 3, '8BUI', 3, 0)) AS png
+),
+bar AS (
+    SELECT 1 AS rid, ST_FromGDALRaster(png) AS rast FROM foo
+    UNION ALL
+    SELECT 2 AS rid, ST_FromGDALRaster(png, 3310) AS rast FROM foo
+)
+SELECT
+    rid,
+    ST_Metadata(rast) AS metadata,
+    ST_SummaryStats(rast, 1) AS stats1,
+    ST_SummaryStats(rast, 2) AS stats2,
+    ST_SummaryStats(rast, 3) AS stats3
+FROM bar
+ORDER BY rid;
+
+ rid |         metadata          |    stats1     |    stats2     |     stats3
+-----+---------------------------+---------------+---------------+----------------
+   1 | (0,0,2,2,1,-1,0,0,0,3)    | (4,4,1,0,1,1) | (4,8,2,0,2,2) | (4,12,3,0,3,3)
+   2 | (0,0,2,2,1,-1,0,0,3310,3) | (4,4,1,0,1,1) | (4,8,2,0,2,2) | (4,12,3,0,3,3)
+(2 rows)
+                </pre></div><div class="refsection"><a name="idp83352656"></a><h2>関連情報</h2><p>
+                    <a class="xref" href="RT_ST_AsGDALRaster.html" title="ST_AsGDALRaster">ST_AsGDALRaster</a>
+                </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_Retile.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Constructors">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_GeoReference.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Retile </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_GeoReference</td></tr></table></div></body></html>

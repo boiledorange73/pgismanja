@@ -1,0 +1,32 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_CountAgg</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.3.0 マニュアル"><link rel="up" href="RT_reference.html#RasterBand_Stats" title="12.9. ラスタバンド統計情報と解析"><link rel="prev" href="RT_ST_Count.html" title="ST_Count"><link rel="next" href="RT_ST_Histogram.html" title="ST_Histogram"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_CountAgg</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_Count.html">Prev</a> </td><th width="60%" align="center">12.9. ラスタバンド統計情報と解析</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_Histogram.html">Next</a></td></tr></table></div><div class="refentry"><a name="RT_ST_CountAgg"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_CountAgg — 集約関数です。ラスタ集合の与えられたバンドのピクセル数を返します。バンドが指定されていない場合には、1番と仮定します。exclude_nodata_valueをTRUEに設定している場合には、NODATA値と等しくないピクセルのみを数えます。 </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">bigint <b class="fsfunc">ST_CountAgg</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">nband</var>, boolean  <var class="pdparam">exclude_nodata_value</var>, double precision  <var class="pdparam">sample_percent</var><code>)</code>;</p><p><code class="funcdef">bigint <b class="fsfunc">ST_CountAgg</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">nband</var>, boolean  <var class="pdparam">exclude_nodata_value</var><code>)</code>;</p><p><code class="funcdef">bigint <b class="fsfunc">ST_CountAgg</b>(</code>raster  <var class="pdparam">rast</var>, boolean  <var class="pdparam">exclude_nodata_value</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp84883408"></a><h2>説明</h2><p>ラスタ集合の与えられたバンドのピクセル数を返します。<code class="varname">nband</code>でバンドを指定しない場合には、1番と仮定します。</p><p><code class="varname">exclude_nodata_value</code>をTRUEに設定している場合には、<code class="varname">NODATA</code>値と等しくないピクセルのみを数えます。<code class="varname">exclude_nodata_value</code>をFALSEに設定している場合には、全てのピクセルを数えます。 </p><p>デフォルトでは、全てのピクセルを見ます。より早い応答を得るには、<code class="varname">sample_percent</code>値を0から1の間で設定します。</p><p>Availability: 2.2.0 </p></div><div class="refsection"><a name="idp84887504"></a><h2>例</h2><pre class="programlisting">WITH foo AS (
+    SELECT
+        rast.rast
+    FROM (
+        SELECT ST_SetValue(
+            ST_SetValue(
+                ST_SetValue(
+                    ST_AddBand(
+                        ST_MakeEmptyRaster(10, 10, 10, 10, 2, 2, 0, 0,0)
+                        , 1, '64BF', 0, 0
+                    )
+                    , 1, 1, 1, -10
+                )
+                , 1, 5, 4, 0
+            )
+            , 1, 5, 5, 3.14159
+        ) AS rast
+    ) AS rast
+    FULL JOIN (
+        SELECT generate_series(1, 10) AS id
+    ) AS id
+        ON 1 = 1
+)
+SELECT
+    ST_CountAgg(rast, 1, TRUE)
+FROM foo;
+
+ st_countagg
+-------------
+          20
+(1 row)
+                </pre></div><div class="refsection"><a name="idp84888784"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_Count.html" title="ST_Count">ST_Count</a>, <a class="xref" href="RT_ST_SummaryStats.html" title="ST_SummaryStats">ST_SummaryStats</a>, <a class="xref" href="RT_ST_SetBandNoDataValue.html" title="ST_SetBandNoDataValue">ST_SetBandNoDataValue</a> </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_Count.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#RasterBand_Stats">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_Histogram.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Count </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_Histogram</td></tr></table></div></body></html>

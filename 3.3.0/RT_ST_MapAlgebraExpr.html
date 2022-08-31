@@ -1,0 +1,74 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_MapAlgebraExpr</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.3.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Processing_MapAlgebra" title="12.12. ラスタ処理: 地図代数"><link rel="prev" href="RT_ST_MapAlgebra_expr.html" title="ST_MapAlgebra (数式版)"><link rel="next" href="RT_ST_MapAlgebraExpr2.html" title="ST_MapAlgebraExpr"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_MapAlgebraExpr</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_MapAlgebra_expr.html">Prev</a> </td><th width="60%" align="center">12.12. ラスタ処理: 地図代数</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_MapAlgebraExpr2.html">Next</a></td></tr></table></div><div class="refentry"><a name="RT_ST_MapAlgebraExpr"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_MapAlgebraExpr — 1バンド版: 入力バンドに対する妥当なPostgreSQL代数演算で形成された、指定したピクセルタイプとなる1バンドラスタを生成します。バンドを指定しない場合には、1番を仮定します。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">raster <b class="fsfunc">ST_MapAlgebraExpr</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">band</var>, text  <var class="pdparam">pixeltype</var>, text  <var class="pdparam">expression</var>, double precision  <var class="pdparam">nodataval=NULL</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_MapAlgebraExpr</b>(</code>raster  <var class="pdparam">rast</var>, text  <var class="pdparam">pixeltype</var>, text  <var class="pdparam">expression</var>, double precision  <var class="pdparam">nodataval=NULL</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp85868112"></a><h2>説明</h2><div class="warning"><table border="0" summary="Warning"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="images/warning.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p><a class="xref" href="RT_ST_MapAlgebraExpr.html" title="ST_MapAlgebraExpr">ST_MapAlgebraExpr</a> は2.1.0で非推奨になりました。代わりに<a class="xref" href="RT_ST_MapAlgebra_expr.html" title="ST_MapAlgebra (数式版)">ST_MapAlgebra (数式版)</a> を使います。 </p></td></tr></table></div><p>入力ラスタ (<code class="varname">rast</code>)に対して<code class="varname">expression</code>で定義される妥当なPostgreSQL代数演算で形成されるラスタを返します。生成されるラスタは指定したピクセルタイプとなる1バンドラスタです。<code class="varname">band</code>を指定しない場合には、1番と仮定します。新しいラスタは、元のラスタと同じ地理参照、幅、高さを持ちますが、一つのバンドしか持ちません。 </p><p><code class="varname">pixeltype</code>が渡された場合には、新しいラスタのバンドは、そのピクセルタイプになります。pixeltypeにNULLが渡された場合には、新しいラスタは入力<code class="varname">rast</code>のバンドのピクセルタイプと同じになります。 </p><p>数式の中では、<code class="varname">[rast]</code>で元のバンドのピクセル値を、<code class="varname">[rast.x]</code>で1始まりの列番号、<code class="varname">[rast.y]</code>で1始まりの行番号を、それぞれ参照することができます。 </p><p>Availability: 2.0.0 </p></div><div class="refsection"><a name="idp85874768"></a><h2>例</h2><p>元のラスタから1バンドラスタを生成します。元のラスタバンドの値について2で割った余りが入ります。</p><pre class="programlisting">ALTER TABLE dummy_rast ADD COLUMN map_rast raster;
+UPDATE dummy_rast SET map_rast = ST_MapAlgebraExpr(rast,NULL,'mod([rast]::numeric,2)') WHERE rid = 2;
+
+SELECT
+    ST_Value(rast,1,i,j) As origval,
+    ST_Value(map_rast, 1, i, j) As mapval
+FROM dummy_rast
+CROSS JOIN generate_series(1, 3) AS i
+CROSS JOIN generate_series(1,3) AS j
+WHERE rid = 2;
+
+ origval | mapval
+---------+--------
+     253 |      1
+     254 |      0
+     253 |      1
+     253 |      1
+     254 |      0
+     254 |      0
+     250 |      0
+     254 |      0
+     254 |      0
+                    </pre><p>ピクセルタイプが2BUIの1バンドラスタを生成します。元のラスタに対して再分類を行った値が入り、NODATA値を0に設定します。</p><pre class="programlisting">ALTER TABLE dummy_rast ADD COLUMN map_rast2 raster;
+UPDATE dummy_rast SET
+    map_rast2 = ST_MapAlgebraExpr(rast,'2BUI'::text,'CASE WHEN [rast] BETWEEN 100 and 250 THEN 1 WHEN [rast] = 252 THEN 2 WHEN [rast] BETWEEN 253 and 254 THEN 3 ELSE 0 END'::text, '0')
+WHERE rid = 2;
+
+SELECT DISTINCT
+    ST_Value(rast,1,i,j) As origval,
+    ST_Value(map_rast2, 1, i, j) As mapval
+FROM dummy_rast
+CROSS JOIN generate_series(1, 5) AS i
+CROSS JOIN generate_series(1,5) AS j
+WHERE rid = 2;
+
+ origval | mapval
+---------+--------
+     249 |      1
+     250 |      1
+     251 |
+     252 |      2
+     253 |      3
+     254 |      3
+
+SELECT
+    ST_BandPixelType(map_rast2) As b1pixtyp
+FROM dummy_rast
+WHERE rid = 2;
+
+ b1pixtyp
+----------
+ 2BUI
+                    </pre><div class="informaltable"><table class="informaltable" style="border-collapse: collapse;border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col><col></colgroup><tbody><tr><td style="border-right: 1px solid ; ">
+                                        <p>
+                                            </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_mapalgebraexpr01.png"><div class="caption"><p>元のラスタ (rast_viewカラム)</p></div></div></div><p>
+                                        </p>
+                                    </td><td style="">
+                                        <p>
+                                            </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_mapalgebraexpr02.png"><div class="caption"><p>rast_view_ma</p></div></div></div><p>
+                                        </p>
+                                    </td></tr></tbody></table></div><p>新しいバンドを三つ持つラスタを生成します。元のバンドを三つ持つラスタと同じピクセルタイプです。1番バンドは地図代数関数によって変更され、残りの二つのバンドは値が代わりません。</p><pre class="programlisting">SELECT
+    ST_AddBand(
+        ST_AddBand(
+            ST_AddBand(
+                ST_MakeEmptyRaster(rast_view),
+                ST_MapAlgebraExpr(rast_view,1,NULL,'tan([rast])*[rast]')
+            ),
+            ST_Band(rast_view,2)
+        ),
+        ST_Band(rast_view, 3)
+    )  As rast_view_ma
+FROM wind
+WHERE rid=167;
+                    </pre></div><div class="refsection"><a name="idp85898576"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_MapAlgebraExpr2.html" title="ST_MapAlgebraExpr">ST_MapAlgebraExpr</a>, <a class="xref" href="RT_ST_MapAlgebraFct.html" title="ST_MapAlgebraFct">ST_MapAlgebraFct</a>, <a class="xref" href="RT_ST_BandPixelType.html" title="ST_BandPixelType">ST_BandPixelType</a>, <a class="xref" href="RT_ST_GeoReference.html" title="ST_GeoReference">ST_GeoReference</a>, <a class="xref" href="RT_ST_Value.html" title="ST_Value">ST_Value</a> </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_MapAlgebra_expr.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Processing_MapAlgebra">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_MapAlgebraExpr2.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_MapAlgebra (数式版) </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_MapAlgebraExpr</td></tr></table></div></body></html>

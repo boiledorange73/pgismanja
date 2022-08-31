@@ -1,0 +1,90 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_ColorMap</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.3.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Processing_MapAlgebra" title="12.12. ラスタ処理: 地図代数"><link rel="prev" href="RT_ST_Clip.html" title="ST_Clip"><link rel="next" href="RT_ST_Grayscale.html" title="ST_Grayscale"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_ColorMap</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_Clip.html">Prev</a> </td><th width="60%" align="center">12.12. ラスタ処理: 地図代数</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_Grayscale.html">Next</a></td></tr></table></div><div class="refentry"><a name="RT_ST_ColorMap"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_ColorMap — 元のラスタと指定したバンドから4個までの8BUIバンド (grayscale, RGB, RGBA)からなる新しいラスタを生成します。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">raster <b class="fsfunc">ST_ColorMap</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">nband=1</var>, text  <var class="pdparam">colormap=grayscale</var>, text  <var class="pdparam">method=INTERPOLATE</var><code>)</code>;</p></div><div class="funcsynopsis"><p><code class="funcdef">raster <b class="fsfunc">ST_ColorMap</b>(</code>raster  <var class="pdparam">rast</var>, text  <var class="pdparam">colormap</var>, text  <var class="pdparam">method=INTERPOLATE</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp85451088"></a><h2>説明</h2><p><code class="varname">rast</code>の<code class="varname">nband</code>で示されるバンドに<code class="varname">colormap</code>を適用し、4個までの8BUIバンドからなる新しいラスタを返します。新しいラスタの8BUIバンドの数は<code class="varname">colormap</code>で定義された色要素の数で決まります。 </p><p><code class="varname">nband</code>が指定されていない場合には、1番と仮定します。</p><p><code class="varname">colormap</code>は事前定義された色マップまたは値を定義する行の集合と色要素のキーワードです。 </p><p>妥当な事前定義された<code class="varname">colormap</code>キーワードは次の通りです。 </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">grayscale</code>または<code class="varname">greyscale</code> 1個の8BUIバンドからなるラスタで、グレーの陰影です。 </p></li><li class="listitem"><p><code class="varname">pseudocolor</code> 4個の8BUIバンド (RGBA)からなるラスタで、青から緑、赤に移るものです。 </p></li><li class="listitem"><p><code class="varname">fire</code> 4個の8BUIバンド (RGBA)からなるラスタで、黒から赤、淡黄色に移るものです。 </p></li><li class="listitem"><p><code class="varname">bluered</code>  4個の8BUIバンド (RGBA)からなるラスタで、青からペールホワイト、赤に移るものです。 </p></li></ul></div><p>カスタムカラーマップを指定するためにエントリ (1行1エントリ)の集合を<code class="varname">colormap</code>に渡すことができます。それぞれのエントリは一般的に、ピクセル値、ピクセル値と対応する赤、緑、青、アルファ要素(0から255の間の色要素)からなる5個の値を持ちます。ピクセル値の替わりに百分率値を使うことができ、0%がラスタバンドでの最小値、100%が最大値になります。値はコンマ('.')、タブ、コロン(':')、空白で区切られます。NODATA値に対しては、ピクセル値を<span class="emphasis"><em>nv</em></span>, <span class="emphasis"><em>null</em></span>, <span class="emphasis"><em>nodata</em></span>のいずれかに設定できます。例を次に示します。 </p><pre class="programlisting">5 0 0 0 255
+4 100:50 55 255
+1 150,100 150 255
+0% 255 255 255 255
+nv 0 0 0 0
+                    </pre><p><code class="varname">colormap</code>の構文は、GDALツールの<a class="ulink" href="http://www.gdal.org/gdaldem.html#gdaldem_color_relief" target="_top">gdaldem</a>の起伏モードに似ています。 </p><p><code class="varname">method</code>の妥当なキーワードは次の通りです。 </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">INTERPOLATE</code> 与えられたピクセル値の間での滑らかな色合成のための線形補間に使います。 </p></li><li class="listitem"><p><code class="varname">EXACT</code> カラーマップで見つかったピクセル値だけを厳格に一致させます。カラーマップエントリに一致しないピクセルに対しては0 0 0 0 (RGBA)が設定されます。 </p></li><li class="listitem"><p><code class="varname">NEAREST</code> ピクセル値に最も近い値にあうカラーマップエントリを使います。 </p></li></ul></div><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>カラーマップの偉大な参考情報は<a class="ulink" href="http://www.colorbrewer2.org" target="_top">ColorBrewer</a>にあります。 </p></td></tr></table></div><div class="warning"><table border="0" summary="Warning"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="images/warning.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>新しいラスタの結果バンドにはNODATA値が入りません。NODATA値が必要な場合には、 <a class="xref" href="RT_ST_SetBandNoDataValue.html" title="ST_SetBandNoDataValue">ST_SetBandNoDataValue</a>を使ってNODATA値をセットします。 </p></td></tr></table></div><p>Availability: 2.1.0 </p></div><div class="refsection"><a name="idp85487568"></a><h2>例</h2><p>これは試行のためのがらくたテーブルです。</p><pre class="programlisting">-- 試験ラスタテーブルの作成 --
+DROP TABLE IF EXISTS funky_shapes;
+CREATE TABLE funky_shapes(rast raster);
+
+INSERT INTO funky_shapes(rast)
+WITH ref AS (
+    SELECT ST_MakeEmptyRaster( 200, 200, 0, 200, 1, -1, 0, 0) AS rast
+)
+SELECT
+    ST_Union(rast)
+FROM (
+    SELECT
+        ST_AsRaster(
+            ST_Rotate(
+                ST_Buffer(
+                    ST_GeomFromText('LINESTRING(0 2,50 50,150 150,125 50)'),
+                    i*2
+                ),
+                pi() * i * 0.125, ST_Point(50,50)
+            ),
+            ref.rast, '8BUI'::text, i * 5
+        ) AS rast
+    FROM ref
+    CROSS JOIN generate_series(1, 10, 3) AS i
+) AS shapes;
+                    </pre><pre class="programlisting">SELECT
+    ST_NumBands(rast) As n_orig,
+    ST_NumBands(ST_ColorMap(rast,1, 'greyscale')) As ngrey,
+    ST_NumBands(ST_ColorMap(rast,1, 'pseudocolor')) As npseudo,
+    ST_NumBands(ST_ColorMap(rast,1, 'fire')) As nfire,
+    ST_NumBands(ST_ColorMap(rast,1, 'bluered')) As nbluered,
+    ST_NumBands(ST_ColorMap(rast,1, '
+100% 255   0   0
+ 80% 160   0   0
+ 50% 130   0   0
+ 30%  30   0   0
+ 20%  60   0   0
+  0%   0   0   0
+  nv 255 255 255
+    ')) As nred
+FROM funky_shapes;
+                    </pre><pre class="screen">n_orig | ngrey | npseudo | nfire | nbluered | nred
+--------+-------+---------+-------+----------+------
+      1 |     1 |       4 |     4 |        4 |    3
+                    </pre></div><div class="refsection"><a name="idp85490256"></a><h2>例: ST_AsPNGを使用して異なるカラーマップを比較する</h2><pre class="programlisting">SELECT
+    ST_AsPNG(rast) As orig_png,
+    ST_AsPNG(ST_ColorMap(rast,1,'greyscale')) As grey_png,
+    ST_AsPNG(ST_ColorMap(rast,1, 'pseudocolor')) As pseudo_png,
+    ST_AsPNG(ST_ColorMap(rast,1, 'nfire')) As fire_png,
+    ST_AsPNG(ST_ColorMap(rast,1, 'bluered')) As bluered_png,
+    ST_AsPNG(ST_ColorMap(rast,1, '
+100% 255   0   0
+ 80% 160   0   0
+ 50% 130   0   0
+ 30%  30   0   0
+ 20%  60   0   0
+  0%   0   0   0
+  nv 255 255 255
+    ')) As red_png
+FROM funky_shapes;
+                    </pre><div class="informaltable"><table class="informaltable" style="border-collapse: collapse;border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col><col><col></colgroup><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+                                        <p>
+                                            </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_colormap_orig.png"><div class="caption"><p>orig_png</p></div></div></div><p>
+                                        </p>
+                                    </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+                                        <p>
+                                            </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_colormap_grey.png"><div class="caption"><p>grey_png</p></div></div></div><p>
+                                        </p>
+                                    </td><td style="border-bottom: 1px solid ; ">
+                                        <p>
+                                            </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_colormap_pseudo.png"><div class="caption"><p>pseudo_png</p></div></div></div><p>
+                                        </p>
+                                    </td></tr><tr><td style="border-right: 1px solid ; ">
+                                        <p>
+                                            </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_colormap_fire.png"><div class="caption"><p>fire_png</p></div></div></div><p>
+                                        </p>
+                                    </td><td style="border-right: 1px solid ; ">
+                                        <p>
+                                            </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_colormap_bluered.png"><div class="caption"><p>bluered_png</p></div></div></div><p>
+                                        </p>
+                                    </td><td style="">
+                                        <p>
+                                            </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_colormap_red.png"><div class="caption"><p>red_png</p></div></div></div><p>
+                                        </p>
+                                    </td></tr></tbody></table></div></div><div class="refsection"><a name="idp85537360"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_AsPNG.html" title="ST_AsPNG">ST_AsPNG</a>, <a class="xref" href="RT_ST_AsRaster.html" title="ST_AsRaster">ST_AsRaster</a> <a class="xref" href="RT_ST_MapAlgebra.html" title="ST_MapAlgebra (コールバック関数版)">ST_MapAlgebra (コールバック関数版)</a>, <a class="xref" href="RT_ST_Grayscale.html" title="ST_Grayscale">ST_Grayscale</a> <a class="xref" href="RT_ST_NumBands.html" title="ST_NumBands">ST_NumBands</a>, <a class="xref" href="RT_ST_Reclass.html" title="ST_Reclass">ST_Reclass</a>, <a class="xref" href="RT_ST_SetBandNoDataValue.html" title="ST_SetBandNoDataValue">ST_SetBandNoDataValue</a>, <a class="xref" href="RT_ST_Union.html" title="ST_Union">ST_Union</a> </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_Clip.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Processing_MapAlgebra">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_Grayscale.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Clip </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_Grayscale</td></tr></table></div></body></html>

@@ -1,0 +1,41 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_IsValidReason</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.3.0 マニュアル"><link rel="up" href="reference.html#Geometry_Validation" title="8.6. ジオメトリ検証"><link rel="prev" href="ST_IsValidDetail.html" title="ST_IsValidDetail"><link rel="next" href="ST_MakeValid.html" title="ST_MakeValid"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_IsValidReason</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_IsValidDetail.html">Prev</a> </td><th width="60%" align="center">8.6. ジオメトリ検証</th><td width="20%" align="right"> <a accesskey="n" href="ST_MakeValid.html">Next</a></td></tr></table></div><div class="refentry"><a name="ST_IsValidReason"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_IsValidReason — ジオメトリが妥当か否かを示す文字列を返し、不正な場合は理由を返します。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">text <b class="fsfunc">ST_IsValidReason</b>(</code>geometry  <var class="pdparam">geomA</var><code>)</code>;</p><p><code class="funcdef">text <b class="fsfunc">ST_IsValidReason</b>(</code>geometry  <var class="pdparam">geomA</var>, integer  <var class="pdparam">flags</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp58978384"></a><h2>説明</h2><p>ジオメトリが妥当かどうか、不正な場合はその理由を示す文字列を返します。</p><p>不正なジオメトリと理由の詳細報告を生成するのに、<a class="xref" href="ST_IsValid.html" title="ST_IsValid">ST_IsValid</a>と併用します。</p><p>許される<code class="varname">flags</code>は、 <a class="xref" href="ST_IsValidDetail.html" title="ST_IsValidDetail">ST_IsValidDetail</a>にあります。 </p><p>GEOSモジュールで実現しています。</p><p>Availability: 1.4</p><p>Availability: 2.0 フラグを取る形式。</p></div><div class="refsection"><a name="idp58982608"></a><h2>例</h2><pre class="programlisting">-- 不正な蝶ネクタイのポリゴン
+SELECT ST_IsValidReason(
+    'POLYGON ((100 200, 100 100, 200 200,
+     200 100, 100 200))'::geometry) as validity_info;
+validity_info
+--------------------------
+Self-intersection[150 150]
+        </pre><pre class="programlisting">-- 成功のする個組の試験から最初の3個が拒否
+SELECT gid, ST_IsValidReason(geom) as validity_info
+FROM
+(SELECT ST_MakePolygon(ST_ExteriorRing(e.buff), array_agg(f.line)) As geom, gid
+FROM (SELECT ST_Buffer(ST_Point(x1*10,y1), z1) As buff, x1*10 + y1*100 + z1*1000 As gid
+        FROM generate_series(-4,6) x1
+        CROSS JOIN generate_series(2,5) y1
+        CROSS JOIN generate_series(1,8) z1
+        WHERE x1 &gt; y1*0.5 AND z1 &lt; x1*y1) As e
+        INNER JOIN (SELECT ST_Translate(ST_ExteriorRing(ST_Buffer(ST_Point(x1*10,y1), z1)),y1*1, z1*2) As line
+        FROM generate_series(-3,6) x1
+        CROSS JOIN generate_series(2,5) y1
+        CROSS JOIN generate_series(1,10) z1
+        WHERE x1 &gt; y1*0.75 AND z1 &lt; x1*y1) As f
+ON (ST_Area(e.buff) &gt; 78 AND ST_Contains(e.buff, f.line))
+GROUP BY gid, e.buff) As quintuplet_experiment
+WHERE ST_IsValid(geom) = false
+ORDER BY gid
+LIMIT 3;
+
+ gid  |      validity_info
+------+--------------------------
+ 5330 | Self-intersection [32 5]
+ 5340 | Self-intersection [42 5]
+ 5350 | Self-intersection [52 5]
+
+ -- 単純な例
+SELECT ST_IsValidReason('LINESTRING(220227 150406,2220227 150407,222020 150410)');
+
+ st_isvalidreason
+------------------
+ Valid Geometry
+
+                </pre></div><div class="refsection"><a name="idp58984656"></a><h2>関連情報</h2><p><a class="xref" href="ST_IsValid.html" title="ST_IsValid">ST_IsValid</a>, <a class="xref" href="ST_Summary.html" title="ST_Summary">ST_Summary</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_IsValidDetail.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Geometry_Validation">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_MakeValid.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_IsValidDetail </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_MakeValid</td></tr></table></div></body></html>
