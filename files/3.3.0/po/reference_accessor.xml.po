@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PostGIS\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-07-14 02:04+0000\n"
-"PO-Revision-Date: 2022-08-30 11:15+0900\n"
+"PO-Revision-Date: 2022-08-31 16:30+0900\n"
 "Last-Translator: Teramoto Ikuhiro <yellow@affrc.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/"
 "reference_accessorxml/ja/>\n"
@@ -1036,7 +1036,9 @@ msgstr "ST_DumpPoints"
 msgid ""
 "Returns a set of <varname>geometry_dump</varname> rows for the coordinates "
 "in a geometry."
-msgstr "ジオメトリについての要約文を返します。"
+msgstr ""
+"ジオメトリ内の座標の行である<varname>geometry_dump</varname>行の集合を返しま"
+"す。"
 
 #. Tag: funcprototype
 #: reference_accessor.xml:378
@@ -1505,7 +1507,9 @@ msgstr "ST_DumpSegments"
 msgid ""
 "Returns a set of <varname>geometry_dump</varname> rows for the segments in a "
 "geometry."
-msgstr "ジオメトリについての要約文を返します。"
+msgstr ""
+"ジオメトリ内の辺の行である<varname>geometry_dump</varname>行の集合を返しま"
+"す。"
 
 #. Tag: funcprototype
 #: reference_accessor.xml:464
@@ -2777,7 +2781,7 @@ msgid ""
 "index is out of range."
 msgstr ""
 "ポリゴンのN番目の内環を返します。ジオメトリがポリゴンでないかNが範囲外の場合"
-"はNULLを返します。。"
+"はNULLを返します。"
 
 #. Tag: para
 #: reference_accessor.xml:928
@@ -3695,7 +3699,7 @@ msgid ""
 "pg_total_relation_size - includes, the table, the toasted tables, and the "
 "indexes."
 msgstr ""
-"pg_total_relation_size - テーブル、TOASTテーブル、インデクスを含みます。"
+"pg_total_relation_size - テーブル、TOASTテーブル、インデックスを含みます。"
 
 #. Tag: para
 #: reference_accessor.xml:1420
