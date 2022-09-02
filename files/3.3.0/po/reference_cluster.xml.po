@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-02-06 07:55+0000\n"
-"PO-Revision-Date: 2022-08-29 18:18+0900\n"
+"PO-Revision-Date: 2022-09-02 18:54+0900\n"
 "Last-Translator: Teramoto Ikuhiro <yellow@affrc.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/"
 "reference_clusterxml/ja/>\n"
@@ -430,7 +430,7 @@ msgid ""
 "coordinate will be treated as weight of input and has to be larger than 0."
 msgstr ""
 "入力ジオメトリごとの<ulink url=\"https://en.wikipedia.org/wiki/K-"
-"means_clustering\">K平均法</ulink>のクラスタ番号を返します。クラスタリングに"
+"means_clustering\">k平均法</ulink>のクラスタ番号を返します。クラスタリングに"
 "使われる距離は、2次元ジオメトリでは重心間の距離、3次元ジオメトリではバウン"
 "ディングボックスの中心点間の距離です。POINT入力では、M値は入力の重みとして扱"
 "われ、0より大きくなければなりません。"
@@ -453,7 +453,7 @@ msgstr ""
 #: reference_cluster.xml:195
 #, no-c-format
 msgid "Enhanced: 3.2.0 Support for <varname>max_radius</varname>"
-msgstr "Enhanced: 3.2.0 <varname>max_radius</varname>パラメタに対応しました"
+msgstr "Enhanced: 3.2.0 <varname>max_radius</varname>パラメータに対応しました"
 
 #. Tag: para
 #: reference_cluster.xml:196
@@ -682,8 +682,9 @@ msgid ""
 "geometries separated by no more than the specified distance. (Distances are "
 "Cartesian distances in the units of the SRID.)"
 msgstr ""
-"集計関数です。ジオメトリコレクションの配列を返します。要素は、指定した距離 "
-"(SRIDの単位によるデカルト距離)以内となるよう分けられたジオメトリの集合です。"
+"ST_ClusterWithinはジオメトリコレクションの配列を返す集計関数です。それぞれの"
+"ジオメトリコレクション要素は、指定した距離 (SRIDの単位によるデカルト距離)以内"
+"となるよう分けられたジオメトリの集合です。"
 
 #. Tag: programlisting
 #: reference_cluster.xml:283
