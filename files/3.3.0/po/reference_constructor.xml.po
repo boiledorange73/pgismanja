@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PostGIS\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-08-29 17:43+0000\n"
-"PO-Revision-Date: 2022-08-29 18:18+0900\n"
+"PO-Revision-Date: 2022-09-08 12:13+0900\n"
 "Last-Translator: Sandro Santilli <strk@kbt.io>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/"
 "reference_constructorxml/ja/>\n"
@@ -650,7 +650,7 @@ msgstr ""
 #: reference_constructor.xml:234
 #, no-c-format
 msgid "Create a 3D line from two 3D points."
-msgstr "二つの3次元ポイントからの3次元ラインの生成。"
+msgstr "二つの3次元ポイントから3次元ラインを生成します。"
 
 #. Tag: programlisting
 #: reference_constructor.xml:235
@@ -672,7 +672,7 @@ msgstr ""
 #: reference_constructor.xml:237
 #, no-c-format
 msgid "Create a line from two disjoint LineStrings."
-msgstr "二つの接続されていないラインストリングからのラインの生成。"
+msgstr "二つの接続されていないラインストリングからラインを生成します。"
 
 #. Tag: programlisting
 #: reference_constructor.xml:238
@@ -702,7 +702,7 @@ msgstr "例: 配列を引数に取る形式"
 #: reference_constructor.xml:244
 #, no-c-format
 msgid "Create a line from an array formed by a subquery with ordering."
-msgstr "並べ替えを伴うサブクエリで作られた配列からのラインの生成。"
+msgstr "並べ替えを伴うサブクエリで作られた配列からラインを生成します。"
 
 #. Tag: programlisting
 #: reference_constructor.xml:245
@@ -718,7 +718,7 @@ msgstr ""
 #: reference_constructor.xml:247
 #, no-c-format
 msgid "Create a 3D line from an array of 3D points"
-msgstr "3次元ポイントの配列からの次元ラインの生成。"
+msgstr "3次元ポイントの配列から3次元ラインを生成します。"
 
 #. Tag: programlisting
 #: reference_constructor.xml:248
@@ -964,7 +964,7 @@ msgstr "ST_MakePointM"
 #: reference_constructor.xml:344
 #, no-c-format
 msgid "Creates a Point from X, Y and M values."
-msgstr "X, Y, M値からのポイントを生成します。"
+msgstr "X, Y, M値からポイントを生成します。"
 
 #. Tag: funcprototype
 #: reference_constructor.xml:349
@@ -984,7 +984,7 @@ msgstr ""
 #: reference_constructor.xml:361
 #, no-c-format
 msgid "Creates a point with X, Y and M (measure) coordinates."
-msgstr "X, Y, M (Measure) 値からのポイントを生成します。"
+msgstr "X, Y, M (Measure) 値からポイントを生成します。"
 
 #. Tag: para
 #: reference_constructor.xml:363
@@ -1010,7 +1010,7 @@ msgstr ""
 #: reference_constructor.xml:374
 #, no-c-format
 msgid "Create point with unknown SRID."
-msgstr "不明なSRIDでのポイントの生成。"
+msgstr "不明なSRIDでのポイントを生成します。"
 
 #. Tag: programlisting
 #: reference_constructor.xml:375
@@ -1034,7 +1034,7 @@ msgstr ""
 #: reference_constructor.xml:377
 #, no-c-format
 msgid "Create point with a measure in the WGS 84 geodetic coordinate system."
-msgstr "WGS ８４地理座標系のM値を持つポイントの生成。"
+msgstr "WGS 84地理座標系のM値を持つポイントの生成。"
 
 #. Tag: programlisting
 #: reference_constructor.xml:378
@@ -1056,7 +1056,7 @@ msgstr ""
 #: reference_constructor.xml:380
 #, no-c-format
 msgid "Get measure of created point."
-msgstr "生成したポイントのM値の取得。"
+msgstr "生成したポイントのM値を取得します。"
 
 #. Tag: programlisting
 #: reference_constructor.xml:381
@@ -1169,7 +1169,7 @@ msgstr "例: 単一入力の形式"
 #: reference_constructor.xml:432
 #, no-c-format
 msgid "Create a Polygon from a 2D LineString."
-msgstr "2次元ラインストリングからのポリゴンの生成。"
+msgstr "2次元ラインストリングからポリゴンを生成します。"
 
 #. Tag: programlisting
 #: reference_constructor.xml:433
@@ -1189,7 +1189,7 @@ msgid ""
 "\"/> and <xref linkend=\"ST_AddPoint\"/> to close it."
 msgstr ""
 "開いたラインストリングを閉じるために<xref linkend=\"ST_StartPoint\"/>と<xref "
-"linkend=\"ST_AddPoint\"/>を使用したうえでのポリゴンの生成。"
+"linkend=\"ST_AddPoint\"/>を使用したうえでポリゴンを生成します。"
 
 #. Tag: programlisting
 #: reference_constructor.xml:437
@@ -1211,7 +1211,7 @@ msgstr ""
 #: reference_constructor.xml:439
 #, no-c-format
 msgid "Create a Polygon from a 3D LineString"
-msgstr "3次元ラインストリングからのポリゴンの生成。"
+msgstr "3次元ラインストリングからポリゴンを生成します。"
 
 #. Tag: programlisting
 #: reference_constructor.xml:440
@@ -1235,7 +1235,7 @@ msgstr ""
 #: reference_constructor.xml:441
 #, no-c-format
 msgid "Create a Polygon from a LineString with measures"
-msgstr "M値を持つラインストリングからのポリゴンの生成。"
+msgstr "M値を持つラインストリングからポリゴンを生成します。"
 
 #. Tag: programlisting
 #: reference_constructor.xml:442
@@ -1265,7 +1265,7 @@ msgstr "例: 内部の穴を持つ外殻の形式"
 #: reference_constructor.xml:447
 #, no-c-format
 msgid "Create a donut Polygon with an extra hole"
-msgstr "余分な穴を持つドーナツポリゴンの生成。"
+msgstr "余分な穴を持つドーナツポリゴンを生成します。"
 
 #. Tag: programlisting
 #: reference_constructor.xml:448
@@ -1516,7 +1516,7 @@ msgstr "SELECT CAST( ST_Point( -71.104, 42.315, 4326) AS geography);"
 msgid ""
 "PostgreSQL also provides the <varname>::</varname> short-hand for casting"
 msgstr ""
-"PostgreSQLはキャストの簡略表記として<varname>::</varname>を提供しています。"
+"PostgreSQLはキャストの簡略表記として<varname>::</varname>を提供しています"
 
 #. Tag: programlisting
 #: reference_constructor.xml:536
@@ -1834,7 +1834,7 @@ msgstr "&sqlmm_compliant; SQL-MM 3: 8.3.2"
 #: reference_constructor.xml:708
 #, no-c-format
 msgid "Create a 2D polygon."
-msgstr "2次元ポリゴンの生成。"
+msgstr "2次元ポリゴンを生成します。"
 
 #. Tag: programlisting
 #: reference_constructor.xml:709
@@ -1856,7 +1856,7 @@ msgstr ""
 #: reference_constructor.xml:710
 #, no-c-format
 msgid "Create a 3D polygon."
-msgstr "3次元ポリゴン"
+msgstr "3次元ポリゴンを生成します。"
 
 #. Tag: programlisting
 #: reference_constructor.xml:711
