@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-08-29 17:43+0000\n"
-"PO-Revision-Date: 2022-08-29 18:30+0900\n"
+"PO-Revision-Date: 2022-09-08 12:45+0900\n"
 "Last-Translator: Teramoto Ikuhiro <yellow@affrc.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/"
 "reference_validationxml/ja/>\n"
@@ -700,6 +700,8 @@ msgid ""
 "Enhanced: 3.2.0, added algorithm options, 'linework' and 'structure' which "
 "requires GEOS &gt;= 3.10.0."
 msgstr ""
+"Enhanced: 3.2.0, アルゴリズムに関する任意パラメータ'linework'と'structure'が"
+"追加されました。GEOS 3.10.0以上が必要です。"
 
 #. Tag: para
 #: reference_validation.xml:293

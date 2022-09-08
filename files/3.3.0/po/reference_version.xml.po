@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-07-13 19:13+0000\n"
-"PO-Revision-Date: 2022-08-29 18:30+0900\n"
+"PO-Revision-Date: 2022-09-08 12:47+0900\n"
 "Last-Translator: Teramoto Ikuhiro <yellow@affrc.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/"
 "reference_versionxml/ja/>\n"
@@ -101,6 +101,8 @@ msgid ""
 "Changed: 3.3.0 support for upgrades from any PostGIS version. Does not work "
 "on all systems."
 msgstr ""
+"Changed: 3.3.0 どのPostGISのバージョンからでもアップグレードできるようになり"
+"ました。ただし全てのシステムで動作するわけではありません。"
 
 #. Tag: para
 #: reference_version.xml:47
