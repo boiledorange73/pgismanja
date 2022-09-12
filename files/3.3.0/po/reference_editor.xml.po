@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PostGIS\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-05-03 02:58+0000\n"
-"PO-Revision-Date: 2022-08-29 18:18+0900\n"
+"PO-Revision-Date: 2022-09-08 15:17+0900\n"
 "Last-Translator: Regina Obe <regina@arrival3d.com>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/"
 "reference_editorxml/ja/>\n"
@@ -1045,7 +1045,7 @@ msgstr "ST_Scroll"
 #: reference_editor.xml:301
 #, no-c-format
 msgid "Change start point of a closed LineString."
-msgstr "閉じたLINESTRINGの開始点を変更する"
+msgstr "閉じたLINESTRINGの開始点を変更します。"
 
 #. Tag: funcprototype
 #: reference_editor.xml:305
