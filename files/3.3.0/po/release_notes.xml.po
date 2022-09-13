@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PostGIS\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-08-29 17:43+0000\n"
-"PO-Revision-Date: 2022-08-29 18:30+0900\n"
+"PO-Revision-Date: 2022-09-13 12:06+0900\n"
 "Last-Translator: TERAMOTO Ikuhiro <yellow@affrc.go.jp>\n"
 "Language-Team: Japanese (http://www.transifex.com/postgis/postgis/language/"
 "ja/)\n"
@@ -221,7 +221,7 @@ msgid ""
 "ST_Polygon so it works faster but might produce invalid polygons. "
 "(Aliaksandr Kalenik)"
 msgstr ""
-"<ulink url=\"https://github.com/postgis/postgis/pull/674\">GH 674</ulink>,  "
+"<ulink url=\"https://github.com/postgis/postgis/pull/674\">GH 674</ulink>, "
 "ST_DumpAsPolygonsとST_Polygonのジオメトリの妥当性評価と修正は無効になってて、"
 "動作速度は早くなりますが不正なポリゴンが生成される可能性があります "
 "(Aliaksandr Kalenikさん)"
@@ -1608,7 +1608,8 @@ msgid ""
 "services to be accessed with authentication keys, etc. (Paul Ramsey)"
 msgstr ""
 "新しいGUC postgis.gdal_vsi_options。これによって、VSIネットワークサービス上で"
-"のデータベース外ラスタが認証キー等を使ったアクセスが可能になりました。"
+"のデータベース外ラスタが認証キー等を使ったアクセスが可能になりました。 (Paul "
+"Ramseyさん)"
 
 #. Tag: para
 #: release_notes.xml:387 release_notes.xml:563
@@ -2316,7 +2317,7 @@ msgid ""
 msgstr ""
 "4805, _ST_SortableHashは、PostgreSQLの並列ソートの能率に関する問題の回避法が"
 "出ています。テーブルが巨大な場合には、ORDER BY geomでなくORDER BY "
-"_ST_SortableHash(geom) を使います。"
+"_ST_SortableHash(geom) を使います。(Darafei Praliaskouskiさん)"
 
 #. Tag: para
 #: release_notes.xml:600
@@ -5174,7 +5175,7 @@ msgid ""
 "\"spatial sorting\""
 msgstr ""
 "#3844, Make =演算子を厳密な等価性テストにし、&lt; &gt;を荒い「空間ソート」に"
-"しました。"
+"しました"
 
 #. Tag: para
 #: release_notes.xml:1286
@@ -6288,7 +6289,7 @@ msgid ""
 msgstr ""
 "<ulink url=\"http://trac.osgeo.org/postgis/ticket/3040\"><ulink url=\"http://"
 "trac.osgeo.org/postgis/ticket/3040\">#3040</ulink></ulink>, 重心に基づくKNN "
-"GiSTインデックス  (&lt;&lt;-&gt;&gt;) n次元距離演算子 (Sandro Santilliさん / "
+"GiSTインデックス (&lt;&lt;-&gt;&gt;) n次元距離演算子 (Sandro Santilliさん / "
 "Boundless)"
 
 #. Tag: para
@@ -8349,7 +8350,7 @@ msgstr "ST_PixelOfValue (Bborie Parkさん / UC Davis)"
 #: release_notes.xml:1880
 #, no-c-format
 msgid "Casts to/from PostgreSQL geotypes (point/path/polygon)."
-msgstr "PostgreSQLの幾何データ型 (point/path/polygon)との相互キャスト"
+msgstr "PostgreSQLの幾何データ型 (point/path/polygon)との相互キャスト。"
 
 #. Tag: para
 #: release_notes.xml:1881
@@ -8877,7 +8878,7 @@ msgid ""
 "missing TopoGeometry objects from their natural layer."
 msgstr ""
 "TopologySummary出力に登録されていないレイヤとレイヤから欠落している"
-"TopoGeometryオブジェクトの個数が含まれるようになりました"
+"TopoGeometryオブジェクトの個数が含まれるようになりました。"
 
 #. Tag: para
 #: release_notes.xml:1962
@@ -8903,7 +8904,7 @@ msgstr ""
 #: release_notes.xml:1967
 #, no-c-format
 msgid "Proper support for raster band's isnodata flag in core API and loader."
-msgstr "中核APIとローダでラスタバンドのisnodataフラグへの確実な対応"
+msgstr "中核APIとローダでラスタバンドのisnodataフラグへの確実な対応。"
 
 #. Tag: para
 #: release_notes.xml:1968
@@ -9277,9 +9278,8 @@ msgid ""
 "<ulink url=\"http://trac.osgeo.org/postgis/ticket/2215\">#2215</ulink>, "
 "Fixed raster exclusion constraint for conflicting name of implicit index"
 msgstr ""
-"<ulink url=\"http://trac.osgeo.org/postgis/ticket/2215\">#2215</ulink>, 暗黙"
-"のインデックスの名前の衝突のためラスタ除外制約\n"
-"Fixed raster exclusion constraint for conflicting name of implicit index"
+"<ulink url=\"http://trac.osgeo.org/postgis/ticket/2215\">#2215</ulink>, ラス"
+"タ除外制約で発生する暗黙のインデックスの名前の衝突の訂正"
 
 #. Tag: para
 #: release_notes.xml:2016
@@ -10628,7 +10628,7 @@ msgid ""
 "improved build dependencies"
 msgstr ""
 "<ulink url=\"http://trac.osgeo.org/postgis/ticket/1786\">#1786</ulink>, ビル"
-"ドの依存関係を改善。"
+"ドの依存関係を改善"
 
 #. Tag: para
 #: release_notes.xml:2248
@@ -10738,7 +10738,7 @@ msgid ""
 "Tiger and Topology. Testing on various server VMs"
 msgstr ""
 "Brian Hamlinさん - ベンチマーク (コアに組み込む前の試験ブランチも)、Tigerとト"
-"ポロジを含む多数の要素の全体的なテスト、多種の仮想サーバ上でのテスト。"
+"ポロジを含む多数の要素の全体的なテスト、多種の仮想サーバ上でのテスト"
 
 #. Tag: member
 #: release_notes.xml:2276
@@ -10901,7 +10901,7 @@ msgstr ""
 "<ulink url=\"http://trac.osgeo.org/postgis/wiki/WKTRaster/PlanningAndFunding"
 "\">ラスター機能の統合と文書化</ulink>(Pierre Racineさん, Jorge Arévaloさん, "
 "Mateusz Loskotさん, Sandro Santilliさん, David Zwargさん, Regina Obeさん, "
-"Bborie Parkさん)  (企業の開発者と資金提供: University Laval, Deimos Space, "
+"Bborie Parkさん) (企業の開発者と資金提供: University Laval, Deimos Space, "
 "CadCorp, Michigan Tech Research Institute, Azavea, Paragon Corporation, UC "
 "Davis Center for Vectorborne Diseases)"
 
@@ -10922,7 +10922,7 @@ msgid ""
 "Santilli / Faunalia for RT-SIGTA), Andrea Peri, Regina Obe, Jose Carlos "
 "Martinez Llari"
 msgstr ""
-"トポロジ機能の改善 (関数の追加)、文書化、テスト  (Sandro Santilliさん / "
+"トポロジ機能の改善 (関数の追加)、文書化、テスト (Sandro Santilliさん / "
 "Faunalia for RT-SIGTA), Andrea Periさん, Regina Obeさん, Jose Carlos "
 "Martinez Llari"
 
@@ -10939,7 +10939,7 @@ msgid ""
 "ST_3DDistance, ST_3DClosestPoint, ST_3DIntersects, ST_3DShortestLine and "
 "more..."
 msgstr ""
-"ST_3DDistance, ST_3DClosestPoint, ST_3DIntersects, ST_3DShortestLine等多数"
+"ST_3DDistance, ST_3DClosestPoint, ST_3DIntersects, ST_3DShortestLine等多数..."
 
 #. Tag: para
 #: release_notes.xml:2318
@@ -11064,7 +11064,7 @@ msgstr ""
 msgid ""
 "pgsql2shp conversion from predefined list (Loic Dachary / Mark Cave-Ayland)"
 msgstr ""
-"pgsql2shpの事前に定義されたリストからの変換  (Loic Dacharyさん / Mark Cave-"
+"pgsql2shpの事前に定義されたリストからの変換 (Loic Dacharyさん / Mark Cave-"
 "Aylandさん)"
 
 #. Tag: para
@@ -11309,8 +11309,8 @@ msgid ""
 "<ulink url=\"http://trac.osgeo.org/postgis/ticket/1184\">#1184</ulink>, "
 "honour DESTDIR in documentation Makefile (Bryce L Nordgren)"
 msgstr ""
-"<ulink url=\"http://trac.osgeo.org/postgis/ticket/1184\">#1184</ulink>, "
-"honour DESTDIR in documentation Makefile (Bryce L Nordgren)"
+"<ulink url=\"http://trac.osgeo.org/postgis/ticket/1184\">#1184</ulink>, 文書"
+"用MakefileでDESTDIRを尊重するように訂正 (Bryce L Nordgrenさん)"
 
 #. Tag: para
 #: release_notes.xml:2381
@@ -12079,7 +12079,7 @@ msgstr "GEOS, Proj4およびLibXML2は必須となりました"
 #: release_notes.xml:2500
 #, no-c-format
 msgid "The library versions below are the minimum requirements for PostGIS 1.5"
-msgstr "次に示すライブラリのバージョンは、PostGIS 1.5で必要となる最低限です。"
+msgstr "次に示すライブラリのバージョンは、PostGIS 1.5で必要となる最低限です"
 
 #. Tag: para
 #: release_notes.xml:2501
@@ -12453,8 +12453,8 @@ msgid ""
 "ST_MinimumBoundingCircle() -- returns the smallest circle polygon that can "
 "encompass a geometry (Bruce Rindahl)"
 msgstr ""
-"ST_MinimumBoundingCircle()  --包含する円ポリゴンをより小さくできるようにしま"
-"した (Bruce Rindahlさん)"
+"ST_MinimumBoundingCircle() --包含する円ポリゴンをより小さくできるようにしまし"
+"た (Bruce Rindahlさん)"
 
 #. Tag: para
 #: release_notes.xml:2592
@@ -12839,7 +12839,7 @@ msgid ""
 "ST_Contains, ST_Intersects, ST_Within and ST_Disjoint"
 msgstr ""
 "ST_Contains, ST_Intersects, ST_WithinとST_Disjoint用のキャッシュとインデック"
-"スを用いたポリゴン内ポイントの簡略版の追加。"
+"スを用いたポリゴン内ポイントの簡略版の追加"
 
 #. Tag: para
 #: release_notes.xml:2707
@@ -13074,7 +13074,7 @@ msgstr "ローダ/ダンパ: 回帰テストと使用法出力の訂正"
 #: release_notes.xml:2803
 #, no-c-format
 msgid "Fixed setSRID() bug in JDBC, thanks to Thomas Marti"
-msgstr "JDBCにおけるsetSRID()の誤り訂正。Thomas Martiさんに感謝。"
+msgstr "JDBCにおけるsetSRID()の誤り訂正、Thomas Martiさんに感謝"
 
 #. Tag: title
 #: release_notes.xml:2807 release_notes.xml:2990 release_notes.xml:3061
@@ -13395,7 +13395,7 @@ msgstr "JDBCコードの小規模な訂正"
 msgid ""
 "Added proper accessor functions for all fields in preparation of making "
 "those fields private later"
-msgstr "全てのフィールドを今後非公開にする準備として適切なアクセサ関数の追加。"
+msgstr "全てのフィールドを今後非公開にする準備として適切なアクセサ関数の追加"
 
 #. Tag: para
 #: release_notes.xml:2992
@@ -13407,7 +13407,7 @@ msgstr "ローダ/ダンパに対応する新しい回帰テスト。"
 #: release_notes.xml:2994
 #, no-c-format
 msgid "Added --with-proj-libdir and --with-geos-libdir configure switches."
-msgstr "コンフィギュアスイッチ--with-proj-libdirと--with-geos-libdirの追加"
+msgstr "コンフィギュアスイッチ--with-proj-libdirと--with-geos-libdirの追加。"
 
 #. Tag: para
 #: release_notes.xml:2997
@@ -13524,8 +13524,7 @@ msgstr "./configureスクリプトをよりポータブルにしました"
 #, no-c-format
 msgid "Changed ./run_test script to have more sane default behaviour"
 msgstr ""
-"./run_testスクリプトを、デフォルトの振る舞いがより健全になるよう変更しまし"
-"た。"
+"./run_testスクリプトを、デフォルトの振る舞いがより健全になるよう変更しました"
 
 #. Tag: title
 #: release_notes.xml:3071
@@ -14008,7 +14007,8 @@ msgid ""
 "If you are upgrading from release 1.0.3 or later you <emphasis>DO NOT</"
 "emphasis> need a dump/reload."
 msgstr ""
-"1.0.3以降から更新する場合には、ダンプ/リロードは<emphasis>不要です</emphasis>"
+"1.0.3以降から更新する場合には、ダンプ/リロードは<emphasis>不要です</"
+"emphasis>。"
 
 #. Tag: para
 #: release_notes.xml:3317
@@ -14130,7 +14130,7 @@ msgstr "アナライザにおける少量のNULL値の計算の訂正"
 #: release_notes.xml:3378
 #, no-c-format
 msgid "Fixed a small bug in the getPoint4d_p() low-level function"
-msgstr "低水準関数getPoint4d_p()の小さな誤り訂正。"
+msgstr "低水準関数getPoint4d_p()の小さな誤り訂正"
 
 #. Tag: para
 #: release_notes.xml:3381
@@ -14217,7 +14217,7 @@ msgid ""
 "If you are upgrading from release 1.0.3 you <emphasis>DO NOT</emphasis> need "
 "a dump/reload."
 msgstr ""
-"1.0.3から更新する場合には、ダンプ/リロードは<emphasis>不要です</emphasis>"
+"1.0.3から更新する場合には、ダンプ/リロードは<emphasis>不要です</emphasis>。"
 
 #. Tag: para
 #: release_notes.xml:3437
@@ -14769,7 +14769,7 @@ msgstr "リリース日: 2005/03/25"
 msgid ""
 "Fifth release candidate for 1.0.0. Contains a few bug fixes and a "
 "improvements."
-msgstr "1.0.0の5番目のリリース候補、若干の誤り訂正と改善があります"
+msgstr "1.0.0の5番目のリリース候補、若干の誤り訂正と改善があります。"
 
 #. Tag: para
 #: release_notes.xml:3721
@@ -14778,7 +14778,8 @@ msgid ""
 "If you are upgrading from release 1.0.0RC4 you <emphasis>DO NOT</emphasis> "
 "need a dump/reload."
 msgstr ""
-"1.0.0RC4から更新する場合には、ダンプ/リロードは<emphasis>不要です</emphasis>"
+"1.0.0RC4から更新する場合には、ダンプ/リロードは<emphasis>不要です</"
+"emphasis>。"
 
 #. Tag: para
 #: release_notes.xml:3732
@@ -14823,7 +14824,7 @@ msgstr "リリース日: 2005/03/18"
 msgid ""
 "Fourth release candidate for 1.0.0. Contains bug fixes and a few "
 "improvements."
-msgstr "1.0.0の4番目のリリース候補、誤り訂正と若干の改善があります"
+msgstr "1.0.0の4番目のリリース候補、誤り訂正と若干の改善があります。"
 
 #. Tag: para
 #: release_notes.xml:3766
@@ -14890,7 +14891,7 @@ msgstr "ローダとダンパのMULTOLINEシェープの処理の問題を訂正
 #: release_notes.xml:3795
 #, no-c-format
 msgid "BUGFIX in loader, skipping all but first hole of polygons."
-msgstr "ローダでポリゴンの最初の穴を読み飛ばす誤りを訂正。"
+msgstr "ローダでポリゴンの最初の穴を読み飛ばす誤りを訂正"
 
 #. Tag: para
 #: release_notes.xml:3798

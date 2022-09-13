@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: PostGIS\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2021-09-11 01:55+0000\n"
-"PO-Revision-Date: 2022-08-29 18:19+0900\n"
+"PO-Revision-Date: 2022-09-13 11:12+0900\n"
 "Last-Translator: Sandro Santilli <strk@kbt.io>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/"
 "reference_operatorxml/ja/>\n"
@@ -110,7 +110,7 @@ msgstr ""
 msgid ""
 "This operand will make use of any indexes that may be available on the "
 "geometries."
-msgstr "これのオペランドは、ジオメトリで使用できるインデクスを使用します。"
+msgstr "これのオペランドは、ジオメトリで使用できるインデックスを使用します。"
 
 #. Tag: para
 #: reference_operator.xml:61
@@ -2500,10 +2500,10 @@ msgid ""
 "geographies."
 msgstr ""
 "<varname>&lt;-&gt;</varname>演算子は二つのジオメトリの2次元距離を返しま"
-"す。\"ORDER BY\"句内で使われ、インデクスの援助を受けた近傍結果集合を提供しま"
-"す。PostgreSQL 9.5より前では、バウンディングボックスの中心距離を出すだけでし"
-"たが、PostgreSQL 9.5以上では、ジオメトリ間の本当の距離が与えられた本当のKNN距"
-"離検索を行います。ジオグラフィでは球面上の距離を計算します。"
+"す。\"ORDER BY\"句内で使われ、インデックスの援助を受けた近傍結果集合を提供し"
+"ます。PostgreSQL 9.5より前では、バウンディングボックスの中心距離を出すだけで"
+"したが、PostgreSQL 9.5以上では、ジオメトリ間の本当の距離が与えられた本当のKNN"
+"距離検索を行います。ジオグラフィでは球面上の距離を計算します。"
 
 #. Tag: para
 #: reference_operator.xml:1644
@@ -2514,8 +2514,8 @@ msgid ""
 "that the spatial index is only used when the operator is in the ORDER BY "
 "clause."
 msgstr ""
-"これのオペランドはジオメトリで利用できるインデクスを使用します。他の演算子と"
-"の相違点は、ORDER BY句でのみインデクスが使用される点です。"
+"これのオペランドはジオメトリで利用できるインデックスを使用します。他の演算子"
+"との相違点は、ORDER BY句でのみインデックスが使用される点です。"
 
 #. Tag: para
 #: reference_operator.xml:1645 reference_operator.xml:1838
@@ -2527,7 +2527,7 @@ msgid ""
 msgstr ""
 "ジオメトリのひとつが定数となる (副問い合わせ/共通テーブル式にない)場合 (a."
 "geomでなく'SRID=3005;POINT(1011102 450541)'::geometry等となる場合)には、イン"
-"デクスが有効になるだけです。"
+"デックスが有効になるだけです。"
 
 #. Tag: para
 #: reference_operator.xml:1646
@@ -2688,8 +2688,8 @@ msgid ""
 "an exact query to get correct ordering:"
 msgstr ""
 "PostgreSQL 9.5未満では、実際の近傍を発見するために、ハイブリッドのクエリを使"
-"います。最初にインデクスを用いたKNNを使って共通テーブル式 (CTE)クエリを行い、"
-"正しい順序を得る確実なクエリを実行します。"
+"います。最初にインデックスを用いたKNNを使って共通テーブル式 (CTE)クエリを行"
+"い、正しい順序を得る確実なクエリを実行します。"
 
 #. Tag: programlisting
 #: reference_operator.xml:1669
@@ -2787,7 +2787,7 @@ msgid ""
 msgstr ""
 "<varname>|=|</varname>演算子は二つのトラジェクトリの3次元距離を返します "
 "(<xref linkend=\"ST_IsValidTrajectory\"/>を参照して下さい)。これは、<xref "
-"linkend=\"ST_DistanceCPA\"/>と同じですが、N次元インデクスを使った近傍探索 "
+"linkend=\"ST_DistanceCPA\"/>と同じですが、N次元インデックスを使った近傍探索 "
 "(PostgreSQL 9.5.0以上)で使われる演算子です。"
 
 #. Tag: para
@@ -2799,9 +2799,9 @@ msgid ""
 "that the spatial index is only used when the operator is in the ORDER BY "
 "clause."
 msgstr ""
-"この演算子は、ジオメトリで使用可能なND GiST (n次元GiST)インデクスを使用しま"
-"す。他の空間インデクスを使う演算子と違い、ORDER BY句でのみ空間インデクスを使"
-"います。"
+"この演算子は、ジオメトリで使用可能なND GiST (n次元GiST)インデックスを使用しま"
+"す。他の空間インデックスを使う演算子と違い、ORDER BY句でのみ空間インデックス"
+"を使います。"
 
 #. Tag: para
 #: reference_operator.xml:1719
@@ -2813,14 +2813,14 @@ msgid ""
 msgstr ""
 "ジオメトリのひとつが定数となる (副問い合わせ/共通テーブル式にない)場合 (a."
 "geomでなく'SRID=3005;LINESTRINGM(0 0 0,0 0 1)'::geometry等となる場合)には、イ"
-"ンデクスが有効になるだけです。"
+"ンデックスが有効になるだけです。"
 
 #. Tag: para
 #: reference_operator.xml:1721
 #, no-c-format
 msgid "Availability: 2.2.0. Index-supported only available for PostgreSQL 9.5+"
 msgstr ""
-"Availability:: 2.2.0 インデクス対応はPostgreSQL 9.5以上でのみ有効です。"
+"Availability:: 2.2.0 インデックス対応はPostgreSQL 9.5以上でのみ有効です。"
 
 #. Tag: programlisting
 #: reference_operator.xml:1727
@@ -2909,9 +2909,9 @@ msgid ""
 "\"strong\">approximate</emphasis> distance ordering."
 msgstr ""
 "<varname>&lt;#&gt;</varname>演算子は二つの浮動小数点数によるバウンディング"
-"ボックス間の距離を返します。可能なら空間インデクス (PostgreSQL 9.1以上が必要"
-"です)を読みます。近傍の<emphasis role=\"strong\">概ねの</emphasis>距離による"
-"並び替えに使います。"
+"ボックス間の距離を返します。可能なら空間インデックス (PostgreSQL 9.1以上が必"
+"要です)を読みます。近傍の<emphasis role=\"strong\">概ねの</emphasis>距離によ"
+"る並び替えに使います。"
 
 #. Tag: para
 #: reference_operator.xml:1773 reference_operator.xml:1892
@@ -2922,8 +2922,8 @@ msgid ""
 "that the spatial index is only used when the operator is in the ORDER BY "
 "clause."
 msgstr ""
-"これのオペランドはジオメトリで利用できるインデクスを使用します。他の演算子と"
-"の相違点は、ORDER BY句でのみインデクスが使用される点です。"
+"これのオペランドはジオメトリで利用できるインデックスを使用します。他の演算子"
+"との相違点は、ORDER BY句でのみインデックスが使用される点です。"
 
 #. Tag: para
 #: reference_operator.xml:1776
@@ -2934,7 +2934,7 @@ msgid ""
 msgstr ""
 "ジオメトリのひとつがg1.geom &lt;#&gt;と違って ORDER BY "
 "(ST_GeomFromText('POINT(1 2)') &lt;#&gt; geom)というように定数である場合に"
-"は、インデクスが有効になるだけです。"
+"は、インデックスが有効になるだけです。"
 
 #. Tag: para
 #: reference_operator.xml:1778
@@ -3062,8 +3062,8 @@ msgid ""
 "that the spatial index is only used when the operator is in the ORDER BY "
 "clause."
 msgstr ""
-"これのオペランドはジオメトリで利用できるインデクスを使用します。他の演算子と"
-"の相違点は、ORDER BY句でのみインデクスが使用される点です。"
+"これのオペランドはジオメトリで利用できるインデックスを使用します。他の演算子"
+"との相違点は、ORDER BY句でのみインデックスが使用される点です。"
 
 #. Tag: para
 #: reference_operator.xml:1844 reference_operator.xml:1901
@@ -3112,9 +3112,9 @@ msgid ""
 "<emphasis role=\"strong\">approximate</emphasis> distance ordering."
 msgstr ""
 "<varname>&lt;&lt;#&gt;&gt;</varname>演算子は二つの浮動小数点数バウンディング"
-"ボックスの距離を返します。可能なら空間インデクス  (PostgreSQL 9.1以上が必要で"
-"す)を読みます。近傍の<emphasis role=\"strong\">概ねの</emphasis>距離による並"
-"び替えに使います。"
+"ボックスの距離を返します。可能なら空間インデックス (PostgreSQL 9.1以上が必要"
+"です)を読みます。近傍の<emphasis role=\"strong\">概ねの</emphasis>距離による"
+"並び替えに使います。"
 
 #. Tag: para
 #: reference_operator.xml:1895
@@ -3126,7 +3126,7 @@ msgid ""
 msgstr ""
 "ジオメトリの一つがg1.geom &lt;&lt;#&gt;&gt;.と違ってORDER BY "
 "(ST_GeomFromText('POINT(1 2)') &lt;&lt;#&gt;&gt; geom)といった定数である場合"
-"には、インデクスが有効になるだけです。"
+"には、インデックスが有効になるだけです。"
 
 #. Tag: para
 #: reference_operator.xml:1907

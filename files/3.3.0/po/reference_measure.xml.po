@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PostGIS\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-07-14 02:04+0000\n"
-"PO-Revision-Date: 2022-08-29 18:19+0900\n"
+"PO-Revision-Date: 2022-09-13 11:08+0900\n"
 "Last-Translator: Teramoto Ikuhiro <yellow@affrc.go.jp>\n"
 "Language-Team: Japanese <https://weblate.osgeo.org/projects/postgis/reference_measurexml/ja/>\n"
 "Language: ja\n"
@@ -290,7 +290,7 @@ msgstr ""
 #: reference_measure.xml:67
 #, no-c-format
 msgid "If your data is in geography already:"
-msgstr "ジオグラフィのデータが既にある場合"
+msgstr "ジオグラフィのデータが既にある場合。"
 
 #. Tag: programlisting
 #: reference_measure.xml:68
@@ -525,7 +525,7 @@ msgid ""
 "If a 4th point provided computes the angle points P1-P2 and P3-P4"
 msgstr ""
 "<emphasis role=\"bold\">形式1:</emphasis>P1-P2-P3がなす角度を計算します。4番目のポイントが充てられ"
-"た場合には、P1-P2とP3-P4がなすかくどを計算します。"
+"た場合には、P1-P2とP3-P4がなす角度を計算します。"
 
 #. Tag: para
 #: reference_measure.xml:187
@@ -1748,7 +1748,7 @@ msgstr ""
 #: reference_measure.xml:737
 #, no-c-format
 msgid "<emphasis role=\"bold\">Example:</emphasis> Hausdorff distance with densification."
-msgstr "<emphasis role=\"bold\">Example:</emphasis> 高密度化したうえで求めたハウスドルフ距離"
+msgstr "<emphasis role=\"bold\">Example:</emphasis> 高密度化したうえで求めたハウスドルフ距離。"
 
 #. Tag: programlisting
 #: reference_measure.xml:738
@@ -2561,7 +2561,7 @@ msgstr "ST_MaxDistance"
 #: reference_measure.xml:1101
 #, no-c-format
 msgid "Returns the 2D largest distance between two geometries in projected units."
-msgstr "二つのジオメトリ間の2次元最長距離を空間参照系の単位で返します"
+msgstr "二つのジオメトリ間の2次元最長距離を空間参照系の単位で返します。"
 
 #. Tag: funcprototype
 #: reference_measure.xml:1107
@@ -2803,9 +2803,7 @@ msgstr "距離<varname>e</varname>より近くなるジオメトリ内の二つ�
 #, no-c-format
 msgid ""
 "No vertex is closer than <varname>e</varname> to a line segement of which it is not an endpoint."
-msgstr ""
-"頂点について、その頂点の端点となる辺を除いて、辺との距離が<varname>e</varname>より近いものは存在し"
-"ない"
+msgstr "終端となる辺を除いて、辺との距離が<varname>e</varname>より近い頂点は存在しません。"
 
 #. Tag: para
 #: reference_measure.xml:1242
@@ -3311,7 +3309,7 @@ msgstr ""
 #: reference_measure.xml:1484
 #, no-c-format
 msgid "Enhanced: 2.4.0 Allow negative distance and non-normalized azimuth."
-msgstr "Enhanced: 2.4.0 負の距離と非正規化方位を許容するようになりました"
+msgstr "Enhanced: 2.4.0 負の距離と非正規化方位を許容するようになりました。"
 
 #. Tag: title
 #: reference_measure.xml:1489

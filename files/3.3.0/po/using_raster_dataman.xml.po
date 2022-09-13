@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PostGIS\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-07-13 19:13+0000\n"
-"PO-Revision-Date: 2022-08-29 18:31+0900\n"
+"PO-Revision-Date: 2022-09-12 15:03+0900\n"
 "Last-Translator: TERAMOTO Ikuhiro <yellow@affrc.go.jp>\n"
 "Language-Team: Japanese (http://www.transifex.com/postgis/postgis/language/"
 "ja/)\n"
@@ -1342,9 +1342,9 @@ msgid ""
 "details."
 msgstr ""
 "<varname>scale_y</varname> 地理空間座標とピクセルの間の拡大縮小係数です。これ"
-"は、ラスタカラムのすべてのタイルが同じ<varname>scale_y</varname>を持ち、制約"
-"が適用されている場合のみ出現します。詳細情報については<xref linkend="
-"\"RT_ST_ScaleY\"/>を参照してください。"
+"は、ラスタカラムのすべてのタイルが同じ<varname>scale_y</varname>を持ち、"
+"<varname>scale_y</varname>の制約が適用されている場合のみ出現します。詳細情報"
+"については<xref linkend=\"RT_ST_ScaleY\"/>を参照してください。"
 
 #. Tag: para
 #: using_raster_dataman.xml:427
@@ -1395,7 +1395,9 @@ msgstr ""
 msgid ""
 "<varname>num_bands</varname> The number of bands in each tile of your raster "
 "set. This is the same information as what is provided by"
-msgstr "<varname>num_bands</varname> ラスタ集合のタイルごとのバンド数。"
+msgstr ""
+"<varname>num_bands</varname> ラスタ集合のタイルごとのバンド数。これは次の関数"
+"で得られる情報と同じです。"
 
 #. Tag: para
 #: using_raster_dataman.xml:442
@@ -2329,7 +2331,7 @@ msgstr ""
 msgid ""
 "Unlike the python approach, this approach creates the file on your local "
 "computer."
-msgstr "この方法はPythonの場合と違い、ローカル機にファイルが生成されます"
+msgstr "この方法はPythonの場合と違い、ローカル機にファイルが生成されます。"
 
 #. Tag: screen
 #: using_raster_dataman.xml:561
