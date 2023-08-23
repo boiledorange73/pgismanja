@@ -1,0 +1,41 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>debug_standardize_address</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="../style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.4.0 マニュアル"><link rel="up" href="Extras.html#Address_Standardizer_Functions" title="11.1.4. 住所標準化関数"><link rel="prev" href="gaztab.html" title="gaz table"><link rel="next" href="parse_address.html" title="parse_address"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">debug_standardize_address</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="gaztab.html">Prev</a> </td><th width="60%" align="center">11.1.4. 住所標準化関数</th><td width="20%" align="right"> <a accesskey="n" href="parse_address.html">Next</a></td></tr></table></div><div class="refentry"><a name="debug_standardize_address"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>debug_standardize_address — パースしたトークンと標準化のリストをJSON形式の文字列で返します</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">text <b class="fsfunc">debug_standardize_address</b>(</code>text  <var class="pdparam">lextab</var>, text  <var class="pdparam">gaztab</var>, text  <var class="pdparam">rultab</var>, text  <var class="pdparam">micro</var>, text  <var class="pdparam">macro=NULL</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp361623328"></a><h2>説明</h2><p>これは住所標準化ルールとlex/gazの対応付けに関するデバッグ用関数です。合致する規則と、<a class="xref" href="lextab.html" title="lex table">lex table</a>テーブル名、<a class="xref" href="gaztab.html" title="gaz table">gaz table</a>、<a class="xref" href="rulestab.html" title="rules table">rules table</a>テーブル名と住所を使用して、入力住所の<a class="xref" href="stdaddr.html" title="stdaddr">stdaddr</a>形式による最善標準化住所を含むJSON形式の文字列を返します。</p><p>単一行の住所は<code class="varname">micro</code>だけを使います</p><p>二行住所では、郵便住所の標準の1行目である<code class="code">house_num street</code>等で構成される<code class="varname">micro</code>と、2行目である<code class="code">city, state postal_code country</code>等で構成されるmacroからなります。</p><p>JSON文書で返される要素は次の通りです </p><div class="variablelist"><dl class="variablelist"><dt><span class="term">input_tokens</span></dt><dd><p>入力住所の単語ごとに、単語位置、単語のトークン分類、関連付けられる標準単語が返されます。入力単語のうち、入力が1回より多く分類されると、複数レコードが返されることがあります。 </p></dd><dt><span class="term">rules</span></dt><dd><p>入力に合致した規則と対応する個々のスコアの集合です。最初の規則 (最高スコア)が標準化に使われます</p></dd><dt><span class="term">stdaddr</span></dt><dd><p><a class="xref" href="standardize_address.html" title="standardize_address">standardize_address</a>を実行しているとｋにに返される標準化された住所要素<a class="xref" href="stdaddr.html" title="stdaddr">stdaddr</a></p></dd></dl></div><p class="availability">Availability: 3.4.0</p><p class="tag_address_standardizer_required">
+            <span class="inlinemediaobject"><img src="../images/check.png"></span> このメソッドはaddress_standardizerエクステンションが必要です。 </p></div><div class="refsection"><a name="idp361636640"></a><h2>例</h2><p>address_standardizer_data_usエクステンションを使います。</p><pre class="programlisting">CREATE EXTENSION address_standardizer_data_us; -- only needs to be done once</pre><p>一つ目の形式: 単一行アドレスと入力トークンの返却</p><pre class="programlisting">SELECT it-&gt;
+&gt;'pos' AS position, it-&gt;
+&gt;'word' AS word, it-&gt;
+&gt;'stdword' AS standardized_word,
+            it-&gt;
+&gt;'token' AS token, it-&gt;
+&gt;'token-code' AS token_code
+    FROM jsonb(
+            debug_standardize_address('us_lex',
+                'us_gaz', 'us_rules', 'One Devonshire Place, PH 301, Boston, MA 02109')
+                 ) AS s, jsonb_array_elements(s-&gt;'input_tokens') AS it;</pre><pre class="screen">position |    word    | standardized_word | token  | token_code
+----------+------------+-------------------+--------+------------
+ 0        | ONE        | 1                 | NUMBER | 0
+ 0        | ONE        | 1                 | WORD   | 1
+ 1        | DEVONSHIRE | DEVONSHIRE        | WORD   | 1
+ 2        | PLACE      | PLACE             | TYPE   | 2
+ 3        | PH         | PATH              | TYPE   | 2
+ 3        | PH         | PENTHOUSE         | UNITT  | 17
+ 4        | 301        | 301               | NUMBER | 0
+(7 rows)</pre><p>二つ目の形式: 複数行住所と最初の入力規則の対応付けとスコアの返却</p><pre class="programlisting">SELECT (s-&gt;'rules'-&gt;0-&gt;
+&gt;'score')::numeric AS score, it-&gt;
+&gt;'pos' AS position,
+        it-&gt;
+&gt;'input-word' AS word, it-&gt;
+&gt;'input-token' AS input_token, it-&gt;
+&gt;'mapped-word' AS standardized_word,
+            it-&gt;
+&gt;'output-token' AS output_token
+    FROM jsonb(
+            debug_standardize_address('us_lex',
+                'us_gaz', 'us_rules', 'One Devonshire Place, PH 301', 'Boston, MA 02109')
+                 ) AS s, jsonb_array_elements(s-&gt;'rules'-&gt;0-&gt;'rule_tokens') AS it;</pre><pre class="screen">score   | position |    word    | input_token | standardized_word | output_token
+----------+----------+------------+-------------+-------------------+--------------
+ 0.876250 | 0        | ONE        | NUMBER      | 1                 | HOUSE
+ 0.876250 | 1        | DEVONSHIRE | WORD        | DEVONSHIRE        | STREET
+ 0.876250 | 2        | PLACE      | TYPE        | PLACE             | SUFTYP
+ 0.876250 | 3        | PH         | UNITT       | PENTHOUSE         | UNITT
+ 0.876250 | 4        | 301        | NUMBER      | 301               | UNITT
+(5 rows)
+</pre></div><div class="refsection"><a name="idp360101280"></a><h2>関連情報</h2><p><a class="xref" href="stdaddr.html" title="stdaddr">stdaddr</a>, <a class="xref" href="rulestab.html" title="rules table">rules table</a>, <a class="xref" href="lextab.html" title="lex table">lex table</a>, <a class="xref" href="gaztab.html" title="gaz table">gaz table</a>, <a class="xref" href="Pagc_Normalize_Address.html" title="Pagc_Normalize_Address">Pagc_Normalize_Address</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="gaztab.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="Extras.html#Address_Standardizer_Functions">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="parse_address.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">gaz table </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> parse_address</td></tr></table></div></body></html>

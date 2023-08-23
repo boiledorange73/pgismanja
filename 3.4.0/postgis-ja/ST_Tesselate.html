@@ -1,0 +1,37 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Tesselate</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="../style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.4.0 マニュアル"><link rel="up" href="reference.html#reference_sfcgal" title="7.21. SFCGAL関数"><link rel="prev" href="ST_StraightSkeleton.html" title="ST_StraightSkeleton"><link rel="next" href="ST_Volume.html" title="ST_Volume"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Tesselate</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_StraightSkeleton.html">Prev</a> </td><th width="60%" align="center">7.21. SFCGAL関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_Volume.html">Next</a></td></tr></table></div><div class="refentry"><a name="ST_Tesselate"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_Tesselate — ポリゴンまたは多面体サーフェスのテッセレーションを計算し、TINまたはTINコレクションを返します。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_Tesselate</b>(</code>geometry <var class="pdparam">geom</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp335458848"></a><h2>説明</h2><p>(MULTI)POLYGONまたはPOLYHEDRALSURFACEのような面を入力に取り、三角形を使ったテッセレーション処理を通してTIN表現を返します。</p><p class="availability">Availability: 2.1.0</p><p class="tag_sfcgal_required">
+            <span class="inlinemediaobject"><img src="../images/check.png"></span> このメソッドにはSFCGALバックエンドが必要です。 </p><p class="tag_Z_support">
+            <span class="inlinemediaobject"><img src="../images/check.png"></span> この関数は3次元に対応し、Z値を削除しません。 </p><p class="tag_P_support">
+            <span class="inlinemediaobject"><img src="../images/check.png"></span> この関数は多面体サーフェスに対応しています。 </p><p class="tag_T_support">
+            <span class="inlinemediaobject"><img src="../images/check.png"></span> この関数は三角形と不規則三角網 (TIN)に対応しています。 </p></div><div class="refsection"><a name="idp335471904"></a><h2>例</h2><div class="informaltable"><table class="informaltable" style="border-collapse: collapse;border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col><col></colgroup><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><p>
+						</p><pre class="programlisting">SELECT ST_GeomFromText('POLYHEDRALSURFACE Z( ((0 0 0, 0 0 1, 0 1 1, 0 1 0, 0 0 0)),
+                ((0 0 0, 0 1 0, 1 1 0, 1 0 0, 0 0 0)), ((0 0 0, 1 0 0, 1 0 1, 0 0 1, 0 0 0)),
+                ((1 1 0, 1 1 1, 1 0 1, 1 0 0, 1 1 0)),
+                ((0 1 0, 0 1 1, 1 1 1, 1 1 0, 0 1 0)), ((0 0 1, 1 0 1, 1 1 1, 0 1 1, 0 0 1)) )');</pre><p>
+						</p><div class="informalfigure"><div class="mediaobject"><img src="../images/st_tesselate01.png"><div class="caption"><p>元の立方体</p></div></div></div>
+					  </td><td style="border-bottom: 1px solid ; "><p>
+					  </p><pre class="programlisting">SELECT ST_Tesselate(ST_GeomFromText('POLYHEDRALSURFACE Z( ((0 0 0, 0 0 1, 0 1 1, 0 1 0, 0 0 0)),
+        ((0 0 0, 0 1 0, 1 1 0, 1 0 0, 0 0 0)), ((0 0 0, 1 0 0, 1 0 1, 0 0 1, 0 0 0)),
+        ((1 1 0, 1 1 1, 1 0 1, 1 0 0, 1 1 0)),
+        ((0 1 0, 0 1 1, 1 1 1, 1 1 0, 0 1 0)), ((0 0 1, 1 0 1, 1 1 1, 0 1 1, 0 0 1)) )'));</pre>
+		<p>ST_AsTextの出力:</p>
+		<pre class="screen">TIN Z (((0 0 0,0 0 1,0 1 1,0 0 0)),((0 1 0,0 0 0,0 1 1,0 1 0)),
+        ((0 0 0,0 1 0,1 1 0,0 0 0)),
+        ((1 0 0,0 0 0,1 1 0,1 0 0)),((0 0 1,1 0 0,1 0 1,0 0 1)),
+        ((0 0 1,0 0 0,1 0 0,0 0 1)),
+        ((1 1 0,1 1 1,1 0 1,1 1 0)),((1 0 0,1 1 0,1 0 1,1 0 0)),
+        ((0 1 0,0 1 1,1 1 1,0 1 0)),((1 1 0,0 1 0,1 1 1,1 1 0)),
+        ((0 1 1,1 0 1,1 1 1,0 1 1)),((0 1 1,0 0 1,1 0 1,0 1 1)))</pre>
+		       <p> </p><div class="informalfigure"><div class="mediaobject"><img src="../images/st_tesselate02.png"><div class="caption"><p>彩色した三角形によるテッセレーションを施した立方体</p></div></div></div>
+					  </td></tr><tr><td style="border-right: 1px solid ; "><p>
+						</p><pre class="programlisting">SELECT 'POLYGON (( 10 190, 10 70, 80 70, 80 130, 50 160, 120 160, 120 190, 10 190 ))'::geometry;</pre><p>
+						</p><div class="informalfigure"><div class="mediaobject"><img src="../images/st_tesselate03.png"><div class="caption"><p>元のポリゴン</p></div></div></div>
+					  </td><td style=""><p>
+					  </p><pre class="programlisting">SELECT
+        ST_Tesselate('POLYGON (( 10 190, 10 70, 80 70, 80 130, 50 160, 120 160, 120 190, 10 190 ))'::geometry);</pre><p>
+	</p>
+	<p>ST_AsTextの出力:</p>
+	<pre class="screen">TIN(((80 130,50 160,80 70,80 130)),((50 160,10 190,10 70,50 160)),
+         ((80 70,50 160,10 70,80 70)),((120 160,120 190,50 160,120 160)),
+ ((120 190,10 190,50 160,120 190)))</pre>
+					  <div class="informalfigure"><div class="mediaobject"><img src="../images/st_tesselate04.png"><div class="caption"><p>テッセレーションを施したポリゴン</p></div></div></div>
+					  </td></tr></tbody></table></div></div><div class="refsection"><a name="idp335502112"></a><h2>関連情報</h2><p><a class="xref" href="ST_ConstrainedDelaunayTriangles.html" title="ST_ConstrainedDelaunayTriangles">ST_ConstrainedDelaunayTriangles</a>, <a class="xref" href="ST_DelaunayTriangles.html" title="ST_DelaunayTriangles">ST_DelaunayTriangles</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_StraightSkeleton.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#reference_sfcgal">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_Volume.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_StraightSkeleton </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_Volume</td></tr></table></div></body></html>

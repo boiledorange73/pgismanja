@@ -1,0 +1,27 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_3DDistance</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="../style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.4.0 マニュアル"><link rel="up" href="reference.html#Measurement_Functions" title="7.12. 計測関数"><link rel="prev" href="ST_Distance.html" title="ST_Distance"><link rel="next" href="ST_DistanceSphere.html" title="ST_DistanceSphere"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_3DDistance</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_Distance.html">Prev</a> </td><th width="60%" align="center">7.12. 計測関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_DistanceSphere.html">Next</a></td></tr></table></div><div class="refentry"><a name="ST_3DDistance"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_3DDistance — 投影座標系の単位で、二つのジオメトリ間の3次元デカルト距離の最小値を返します (空間参照系に基づきます)。 </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">float <b class="fsfunc">ST_3DDistance</b>(</code>geometry  <var class="pdparam">g1</var>, geometry  <var class="pdparam">g2</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp319320096"></a><h2>説明</h2><p>投影座標系の単位で、二つのジオメトリ間の3次元デカルト距離の最小値を返します (空間参照系に基づきます)。</p><p class="tag_Z_support">
+            <span class="inlinemediaobject"><img src="../images/check.png"></span> この関数は3次元に対応し、Z値を削除しません。 </p><p class="tag_P_support">
+            <span class="inlinemediaobject"><img src="../images/check.png"></span> この関数は多面体サーフェスに対応しています。 </p><p class="tag_sqlmm_compliant">
+            <span class="inlinemediaobject"><img src="../images/check.png"></span> このメソッドはSQL/MM仕様の実装です。 </p><p> SQL-MM ISO/IEC 13249-3</p><p class="availability">Availability: 2.0.0</p><p class="changed">Changed: 2.2.0 - 2次元と3次元の場合には、もはや、存在しないZの値について0を仮定しません。</p><p class="changed">Changed: 3.0.0 - SFCGAL版は削除されました</p></div><div class="refsection"><a name="idp319341216"></a><h2>例</h2><pre class="programlisting">-- Geometry example - units in meters (SRID: 2163 US National Atlas Equal area) (3D point and line compared 2D point and line)
+-- Note: currently no vertical datum support so Z is not transformed and assumed to be same units as final.
+SELECT ST_3DDistance(
+                        ST_Transform('SRID=4326;POINT(-72.1235 42.3521 4)'::geometry,2163),
+                        ST_Transform('SRID=4326;LINESTRING(-72.1260 42.45 15, -72.123 42.1546 20)'::geometry,2163)
+                ) As dist_3d,
+                ST_Distance(
+                        ST_Transform('SRID=4326;POINT(-72.1235 42.3521)'::geometry,2163),
+                        ST_Transform('SRID=4326;LINESTRING(-72.1260 42.45, -72.123 42.1546)'::geometry,2163)
+                ) As dist_2d;
+
+     dist_3d      |     dist_2d
+------------------+-----------------
+ 127.295059324629 | 126.66425605671
+</pre><pre class="programlisting">-- Multilinestring and polygon both 3d and 2d distance
+-- Same example as 3D closest point example
+SELECT ST_3DDistance(poly, mline) As dist3d,
+    ST_Distance(poly, mline) As dist2d
+        FROM (SELECT  'POLYGON((175 150 5, 20 40 5, 35 45 5, 50 60 5, 100 100 5, 175 150 5))'::geometry as poly,
+               'MULTILINESTRING((175 155 2, 20 40 20, 50 60 -2, 125 100 1, 175 155 1), (1 10 2, 5 20 1))'::geometry as mline) as foo;
+      dist3d       | dist2d
+-------------------+--------
+ 0.716635696066337 |      0
+</pre></div><div class="refsection"><a name="idp319343008"></a><h2>関連情報</h2><p><a class="xref" href="ST_Distance.html" title="ST_Distance">ST_Distance</a>, <a class="xref" href="ST_3DClosestPoint.html" title="ST_3DClosestPoint">ST_3DClosestPoint</a>, <a class="xref" href="ST_3DDWithin.html" title="ST_3DDWithin">ST_3DDWithin</a>, <a class="xref" href="ST_3DMaxDistance.html" title="ST_3DMaxDistance">ST_3DMaxDistance</a>, <a class="xref" href="ST_3DShortestLine.html" title="ST_3DShortestLine">ST_3DShortestLine</a>, <a class="xref" href="ST_Transform.html" title="ST_Transform">ST_Transform</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_Distance.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Measurement_Functions">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_DistanceSphere.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Distance </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_DistanceSphere</td></tr></table></div></body></html>

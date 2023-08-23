@@ -1,0 +1,31 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_BandMetaData</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="../style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.4.0 マニュアル"><link rel="up" href="RT_reference.html#RasterBand_Accessors" title="10.5. ラスタバンドアクセサ"><link rel="prev" href="RT_ST_WorldToRasterCoordY.html" title="ST_WorldToRasterCoordY"><link rel="next" href="RT_ST_BandNoDataValue.html" title="ST_BandNoDataValue"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_BandMetaData</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_WorldToRasterCoordY.html">Prev</a> </td><th width="60%" align="center">10.5. ラスタバンドアクセサ</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_BandNoDataValue.html">Next</a></td></tr></table></div><div class="refentry"><a name="RT_ST_BandMetaData"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_BandMetaData — 指定したラスタバンドの基本的なメタデータを返します。バンド番号を指定しない場合には、1番と仮定します。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">(1) record <b class="fsfunc">ST_BandMetaData</b>(</code>raster <var class="pdparam">rast</var>, integer <var class="pdparam">band=1</var><code>)</code>;</p><p><code class="funcdef">(2) record <b class="fsfunc">ST_BandMetaData</b>(</code>raster <var class="pdparam">rast</var>, integer[] <var class="pdparam">band</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp352727712"></a><h2>説明</h2><p>指定したラスタバンドの基本的なメタデータを返します。返されるカラムは pixeltype, nodatavalue, isoutdb, path, outdbbandnum, filesize, filetimestamp です。 </p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>ラスタがバンドを持たない場合にはエラーが投げられます。 </p></td></tr></table></div><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>バンドにNODATA値が無い場合には、nodatavalueはNULLになります。 </p></td></tr></table></div><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>isoutdbがFALSEの場合には、path, outdbbandnum, filedizeおよびfiletimestampはNULLです。outdbのアクセスが禁止されているなら、filesizeとfiletimestampがNULLになります。 </p></td></tr></table></div><p class="enhanced">Enhanced: 2.5.0 outdbラスタに<span class="emphasis"><em>outdbbandnum</em></span>, <span class="emphasis"><em>filesize</em></span>と<span class="emphasis"><em>filetimestamp</em></span>を取り入れました。</p></div><div class="refsection"><a name="idp352732960"></a><h2>例: 一つ目の形式</h2><pre class="programlisting">SELECT
+    rid,
+    (foo.md).*
+FROM (
+    SELECT
+        rid,
+        ST_BandMetaData(rast, 1) AS md
+    FROM dummy_rast
+    WHERE rid=2
+) As foo;
+
+ rid | pixeltype | nodatavalue | isoutdb | path | outdbbandnum
+-----+-----------+---- --------+---------+------+--------------
+   2 | 8BUI      |           0 | f       |      |
+                </pre></div><div class="refsection"><a name="idp352734240"></a><h2>例: 二つ目の形式</h2><pre class="programlisting">WITH foo AS (
+    SELECT
+        ST_AddBand(NULL::raster, '/home/pele/devel/geo/postgis-git/raster/test/regress/loader/Projected.tif', NULL::int[]) AS rast
+)
+SELECT
+    *
+FROM ST_BandMetadata(
+    (SELECT rast FROM foo),
+    ARRAY[1,3,2]::int[]
+);
+
+ bandnum | pixeltype | nodatavalue | isoutdb |                                      path                                      | outdbbandnum  | filesize | filetimestamp |
+---------+-----------+-------------+---------+--------------------------------------------------------------------------------+---------------+----------+---------------+-
+       1 | 8BUI      |             | t       | /home/pele/devel/geo/postgis-git/raster/test/regress/loader/Projected.tif      |            1  |    12345 |    1521807257 |
+       3 | 8BUI      |             | t       | /home/pele/devel/geo/postgis-git/raster/test/regress/loader/Projected.tif      |            3  |    12345 |    1521807257 |
+       2 | 8BUI      |             | t       | /home/pele/devel/geo/postgis-git/raster/test/regress/loader/Projected.tif      |            2  |    12345 |    1521807257 |
+                </pre></div><div class="refsection"><a name="idp352735776"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_MetaData.html" title="ST_MetaData">ST_MetaData</a>, <a class="xref" href="RT_ST_BandPixelType.html" title="ST_BandPixelType">ST_BandPixelType</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_WorldToRasterCoordY.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#RasterBand_Accessors">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_BandNoDataValue.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_WorldToRasterCoordY </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_BandNoDataValue</td></tr></table></div></body></html>

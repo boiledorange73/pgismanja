@@ -1,0 +1,29 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_LongestLine</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="../style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.4.0 マニュアル"><link rel="up" href="reference.html#Measurement_Functions" title="7.12. 計測関数"><link rel="prev" href="ST_Length_Spheroid.html" title="ST_LengthSpheroid"><link rel="next" href="ST_3DLongestLine.html" title="ST_3DLongestLine"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_LongestLine</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_Length_Spheroid.html">Prev</a> </td><th width="60%" align="center">7.12. 計測関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_3DLongestLine.html">Next</a></td></tr></table></div><div class="refentry"><a name="ST_LongestLine"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_LongestLine — 二つのジオメトリ間の2次元最長ラインを返します。 </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_LongestLine</b>(</code>geometry  <var class="pdparam">g1</var>, geometry  <var class="pdparam">g2</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp319470112"></a><h2>説明</h2><p>二つのジオメトリのポイントで作られる2次元の最長ラインを返します。ラインは<code class="varname">g1</code>上から始まり、<code class="varname">g2</code>上で終わります。 </p><p>最長ラインは常に二つの頂点となります。一つ以上の最長ラインが発見された場合には、この関数は最初のものを返します。ラインの長さは<a class="xref" href="ST_MaxDistance.html" title="ST_MaxDistance">ST_MaxDistance</a>が返す距離と同じです。 </p><p>g1とg2が同じジオメトリの場合には、ジオメトリで最も遠くに離れる2頂点を結ぶラインが返ります。このラインの端点は<a class="xref" href="ST_MinimumBoundingCircle.html" title="ST_MinimumBoundingCircle">ST_MinimumBoundingCircle</a>で計算された円の上に存在します。 </p><p class="availability">Availability: 1.5.0</p></div><div class="refsection"><a name="idp319474208"></a><h2>例</h2><div class="informalfigure"><div class="mediaobject"><img src="../images/st_longestline01.png"><div class="caption"><p>ポイントとラインストリングの間の最長となるライン</p></div></div></div><p>
+</p><pre class="programlisting">SELECT ST_AsText( ST_LongestLine(
+        'POINT (160 40)',
+        'LINESTRING (10 30, 50 50, 30 110, 70 90, 180 140, 130 190)' )
+        ) AS lline;
+-----------------
+LINESTRING(160 40,130 190)
+</pre><p>
+	</p><p>
+        </p><div class="informalfigure"><div class="mediaobject"><img src="../images/st_longestline02.png"><div class="caption"><p>二つのポリゴンの間の最長となるライン</p></div></div></div><p>
+</p><pre class="programlisting">SELECT ST_AsText( ST_LongestLine(
+        'POLYGON ((190 150, 20 10, 160 70, 190 150))',
+        ST_Buffer('POINT(80 160)', 30)
+            ) ) AS llinewkt;
+-----------------
+LINESTRING(20 10,105.3073372946034 186.95518130045156)
+</pre><p>
+	</p><div class="informalfigure"><div class="mediaobject"><img src="../images/st_longestline03.png"><div class="caption"><p>一つのジオメトリを横切る最長のラインす。ラインの長さは最大距離と同じです。ラインの端点は最小境界円上に存在します。</p></div></div></div><p>
+</p><pre class="programlisting">SELECT ST_AsText( ST_LongestLine( geom, geom)) AS llinewkt,
+                  ST_MaxDistance( geom, geom) AS max_dist,
+                  ST_Length( ST_LongestLine(geom, geom)) AS lenll
+FROM (SELECT 'POLYGON ((40 180, 110 160, 180 180, 180 120, 140 90, 160 40, 80 10, 70 40, 20 50, 40 180),
+              (60 140, 99 77.5, 90 140, 60 140))'::geometry AS geom) AS t;
+
+         llinewkt          |      max_dist      |       lenll
+---------------------------+--------------------+--------------------
+ LINESTRING(20 50,180 180) | 206.15528128088303 | 206.15528128088303
+</pre><p>
+	</p></div><div class="refsection"><a name="idp319483936"></a><h2>関連情報</h2><p><a class="xref" href="ST_MaxDistance.html" title="ST_MaxDistance">ST_MaxDistance</a>, <a class="xref" href="ST_ShortestLine.html" title="ST_ShortestLine">ST_ShortestLine</a>, <a class="xref" href="ST_3DLongestLine.html" title="ST_3DLongestLine">ST_3DLongestLine</a>, <a class="xref" href="ST_MinimumBoundingCircle.html" title="ST_MinimumBoundingCircle">ST_MinimumBoundingCircle</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_Length_Spheroid.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Measurement_Functions">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_3DLongestLine.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_LengthSpheroid </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_3DLongestLine</td></tr></table></div></body></html>

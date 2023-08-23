@@ -1,0 +1,50 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>AsTopoJSON</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="../style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.4.0 マニュアル"><link rel="up" href="Topology.html#TopoGeometry_Outputs" title="8.12. TopoGeometry出力"><link rel="prev" href="AsGML.html" title="AsGML"><link rel="next" href="TG_Equals.html" title="Equals"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">AsTopoJSON</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="AsGML.html">Prev</a> </td><th width="60%" align="center">8.12. TopoGeometry出力</th><td width="20%" align="right"> <a accesskey="n" href="TG_Equals.html">Next</a></td></tr></table></div><div class="refentry"><a name="AsTopoJSON"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>AsTopoJSON — opoGeometryのTopoJSON表現を返します。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">text <b class="fsfunc">AsTopoJSON</b>(</code>topogeometry  <var class="pdparam">tg</var>, regclass  <var class="pdparam">edgeMapTable</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp349614112"></a><h2>説明</h2><p>TopoGeometryのTopoJSON表現を返します。<code class="varname">edgeMapTable</code>がNULLでない場合には、エッジ識別番号とアーク添え字のルックアップと格納のマッピングに使われます。これは、最終的な文書内のコンパクトな"arcs"配列ができるようにするためです。 </p><p>このテーブルは、与えられた場合には、"serial"型の"arc_id"カラムと整数型の"edge_id"とを持つことが期待されます。関数はこのテーブルに"edge_id"を問い合わせるので、このカラムにインデクスを追加することが推奨されます。 </p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>TopoJSONでのアークのインデックスは0始まりですが、"edgeMapTable"テーブルでは1始まりです。 </p></td></tr></table></div><p>完全なTopoJSON文書は、この関数が返すスニペットだけでなく、実際のarcsメンバと、いくつかのヘッダを含む必要があります。 <a class="ulink" href="http://github.com/mbostock/topojson-specification/blob/master/README.md" target="_top">TopoJSON specification</a>をご覧ください。 </p><p class="availability">Availability: 2.1.0 </p><p class="enhanced">Enhanced: 2.2.1 点入力に対応するようになりました</p></div><div class="refsection"><a name="idp349619488"></a><h2>関連情報</h2><p><a class="xref" href="ST_AsGeoJSON.html" title="ST_AsGeoJSON">ST_AsGeoJSON</a></p></div><div class="refsection"><a name="idp349620768"></a><h2>例</h2><pre class="programlisting">CREATE TEMP TABLE edgemap(arc_id serial, edge_id int unique);
+
+-- header
+SELECT '{ "type": "Topology", "transform": { "scale": [1,1], "translate": [0,0] }, "objects": {'
+
+-- objects
+UNION ALL SELECT '"' || feature_name || '": ' || AsTopoJSON(feature, 'edgemap')
+FROM features.big_parcels WHERE feature_name = 'P3P4';
+
+-- arcs
+WITH edges AS (
+  SELECT m.arc_id, e.geom FROM edgemap m, city_data.edge e
+  WHERE e.edge_id = m.edge_id
+), points AS (
+  SELECT arc_id, (st_dumppoints(geom)).* FROM edges
+), compare AS (
+  SELECT p2.arc_id,
+         CASE WHEN p1.path IS NULL THEN p2.geom
+              ELSE ST_Translate(p2.geom, -ST_X(p1.geom), -ST_Y(p1.geom))
+         END AS geom
+  FROM points p2 LEFT OUTER JOIN points p1
+  ON ( p1.arc_id = p2.arc_id AND p2.path[1] = p1.path[1]+1 )
+  ORDER BY arc_id, p2.path
+), arcsdump AS (
+  SELECT arc_id, (regexp_matches( ST_AsGeoJSON(geom), '\[.*\]'))[1] as t
+  FROM compare
+), arcs AS (
+  SELECT arc_id, '[' || array_to_string(array_agg(t), ',') || ']' as a FROM arcsdump
+  GROUP BY arc_id
+  ORDER BY arc_id
+)
+SELECT '}, "arcs": [' UNION ALL
+SELECT array_to_string(array_agg(a), E',\n') from arcs
+
+-- footer
+UNION ALL SELECT ']}'::text as t;
+
+-- Result:
+{ "type": "Topology", "transform": { "scale": [1,1], "translate": [0,0] }, "objects": {
+"P3P4": { "type": "MultiPolygon", "arcs": [[[-1]],[[6,5,-5,-4,-3,1]]]}
+}, "arcs": [
+ [[25,30],[6,0],[0,10],[-14,0],[0,-10],[8,0]],
+ [[35,6],[0,8]],
+ [[35,6],[12,0]],
+ [[47,6],[0,8]],
+ [[47,14],[0,8]],
+ [[35,22],[12,0]],
+ [[35,14],[0,8]]
+ ]}
+</pre></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="AsGML.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="Topology.html#TopoGeometry_Outputs">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="TG_Equals.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">AsGML </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Equals</td></tr></table></div></body></html>

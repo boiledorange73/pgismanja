@@ -1,0 +1,78 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_AsMARC21</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="../style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.4.0 マニュアル"><link rel="up" href="reference.html#idp315238816" title="7.9.3. その他の書式"><link rel="prev" href="ST_AsLatLonText.html" title="ST_AsLatLonText"><link rel="next" href="ST_AsMVTGeom.html" title="ST_AsMVTGeom"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_AsMARC21</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_AsLatLonText.html">Prev</a> </td><th width="60%" align="center">7.9.3. その他の書式</th><td width="20%" align="right"> <a accesskey="n" href="ST_AsMVTGeom.html">Next</a></td></tr></table></div><div class="refentry"><a name="ST_AsMARC21"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_AsMARC21 — ジオメトリを、地理データフィールド (034)を持つMARC21/XMLデータとして返します。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef"> text <b class="fsfunc">ST_AsMARC21</b> (</code> geometry  <var class="pdparam">geom</var> ,  text  <var class="pdparam">format='hdddmmss'</var> <code>)</code>;</p></div></div><div class="refsection"><a name="idp315508256"></a><h2>説明</h2><p>この関数は与えられたジオメトリのバウンディングボックスを表現する<a class="ulink" href="https://www.loc.gov/marc/bibliographic/bd034.html" target="_top">コード化地図数値データ</a>を持つMARC21/XMLのデータを返します。<code class="varname">format</code>パラメータを使うと、MARC21/XMLが対応する全てのフォーマットにおける<code class="varname">$d</code>、<code class="varname">$e</code>、<code class="varname">$f</code>、<code class="varname">$g</code>サブフィールド内の座標を符号化できます。妥当なフォーマットは次の通りです。</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>経緯度識別値、度、分、秒 (デフォルト): <code class="varname">hdddmmss</code></p></li><li class="listitem"><p>経緯度識別値付き十進の度: <code class="varname">hddd.dddddd</code></p></li><li class="listitem"><p>経緯度識別値なし十進の度: <code class="varname">ddd.dddddd</code></p></li><li class="listitem"><p>経緯度識別値付き十進の分: <code class="varname">hdddmm.mmmm</code></p></li><li class="listitem"><p>経緯度識別値なし十進の分: <code class="varname">dddmm.mmmm</code></p></li><li class="listitem"><p>経緯度識別値付き十進の秒: <code class="varname">hdddmmss.sss</code></p></li></ul></div><p>小数点は<code class="varname">hdddmm,mmmm</code>のようにカンマでも構いません。</p><p>10進数形式の精度は小数点以下の数字の数によって制限されます。十進の分で<code class="varname">hdddmm.mm</code>の場合には2桁の精度となります。</p><p>この関数はZ値とM値を無視します。</p><p>対応するLOC MARC21/XMLのバージョンは次の通りです。 </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><a class="ulink" href="https://www.loc.gov/standards/marcxml/" target="_top">MARC21/XML 1.1</a></p></li></ul></div><p>
+            </p><p class="availability">Availability: 3.3.0 </p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>この関数は経度/緯度でないジオメトリには対応していません。MARC21/XML標準 (コード化地図数値データ)で対応していないためです。</p></td></tr></table></div><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>MARC21/XML標準では、コード化地図数値データに空間参照系情報を与えることはできません。これはMARC21/XMLへの変換で空間参照系情報が失われることを意味します。 </p></td></tr></table></div></div><div class="refsection"><a name="idp315526816"></a><h2>例</h2><p><code class="varname">POINT</code>のhdddmmss (デフォルト)を使ったMARC21/XMLへの変換</p><pre class="programlisting">
+
+                SELECT ST_AsMARC21('SRID=4326;POINT(-4.504289 54.253312)'::geometry);
+
+                                st_asmarc21
+                -------------------------------------------------
+                &lt;record xmlns="http://www.loc.gov/MARC21/slim"&gt;
+                    &lt;datafield tag="034" ind1="1" ind2=" "&gt;
+                        &lt;subfield code="a"
+&gt;a&lt;/subfield&gt;
+                        &lt;subfield code="d"
+&gt;W0043015&lt;/subfield&gt;
+                        &lt;subfield code="e"
+&gt;W0043015&lt;/subfield&gt;
+                        &lt;subfield code="f"
+&gt;N0541512&lt;/subfield&gt;
+                        &lt;subfield code="g"
+&gt;N0541512&lt;/subfield&gt;
+                    &lt;/datafield&gt;
+                &lt;/record&gt;
+
+            
+            </pre><p><code class="varname">POLYGON</code>の、十進の度を使ったMARC21/XMLへの変換</p><pre class="programlisting">
+
+                SELECT ST_AsMARC21('SRID=4326;POLYGON((-4.5792388916015625 54.18172660239091,-4.56756591796875 54.196993557130355,-4.546623229980469 54.18313300502024,-4.5792388916015625 54.18172660239091))'::geometry,'hddd.dddd');
+
+                &lt;record xmlns="http://www.loc.gov/MARC21/slim"&gt;
+                    &lt;datafield tag="034" ind1="1" ind2=" "&gt;
+                        &lt;subfield code="a"
+&gt;a&lt;/subfield&gt;
+                        &lt;subfield code="d"
+&gt;W004.5792&lt;/subfield&gt;
+                        &lt;subfield code="e"
+&gt;W004.5466&lt;/subfield&gt;
+                        &lt;subfield code="f"
+&gt;N054.1970&lt;/subfield&gt;
+                        &lt;subfield code="g"
+&gt;N054.1817&lt;/subfield&gt;
+                    &lt;/datafield&gt;
+                &lt;/record&gt;
+
+            
+            </pre><p><code class="varname">GEOMETRYCOLLECTION</code>の、十進の分を使ったMARC21/XMLへの変換。MARC21/XML出力のジオメトリの順序はコレクション内の順序に対応しています。</p><pre class="programlisting">
+
+                SELECT ST_AsMARC21('SRID=4326;GEOMETRYCOLLECTION(POLYGON((13.1 52.65,13.516666666666667 52.65,13.516666666666667 52.38333333333333,13.1 52.38333333333333,13.1 52.65)),POINT(-4.5 54.25))'::geometry,'hdddmm.mmmm');
+
+                                st_asmarc21
+                -------------------------------------------------
+                &lt;record xmlns="http://www.loc.gov/MARC21/slim"&gt;
+                    &lt;datafield tag="034" ind1="1" ind2=" "&gt;
+                        &lt;subfield code="a"
+&gt;a&lt;/subfield&gt;
+                        &lt;subfield code="d"
+&gt;E01307.0000&lt;/subfield&gt;
+                        &lt;subfield code="e"
+&gt;E01331.0000&lt;/subfield&gt;
+                        &lt;subfield code="f"
+&gt;N05240.0000&lt;/subfield&gt;
+                        &lt;subfield code="g"
+&gt;N05224.0000&lt;/subfield&gt;
+                    &lt;/datafield&gt;
+                    &lt;datafield tag="034" ind1="1" ind2=" "&gt;
+                        &lt;subfield code="a"
+&gt;a&lt;/subfield&gt;
+                        &lt;subfield code="d"
+&gt;W00430.0000&lt;/subfield&gt;
+                        &lt;subfield code="e"
+&gt;W00430.0000&lt;/subfield&gt;
+                        &lt;subfield code="f"
+&gt;N05415.0000&lt;/subfield&gt;
+                        &lt;subfield code="g"
+&gt;N05415.0000&lt;/subfield&gt;
+                    &lt;/datafield&gt;
+                &lt;/record&gt;
+
+            
+            </pre></div><div class="refsection"><a name="idp315531040"></a><h2>関連情報</h2><p><a class="xref" href="ST_GeomFromMARC21.html" title="ST_GeomFromMARC21">ST_GeomFromMARC21</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_AsLatLonText.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#idp315238816">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_AsMVTGeom.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_AsLatLonText </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_AsMVTGeom</td></tr></table></div></body></html>

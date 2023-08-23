@@ -1,0 +1,26 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_ZMin</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="../style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.4.0 マニュアル"><link rel="up" href="reference.html#BBox_Functions" title="7.18. バウンディングボックス関数"><link rel="prev" href="ST_ZMax.html" title="ST_ZMax"><link rel="next" href="ST_LineInterpolatePoint.html" title="ST_LineInterpolatePoint"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_ZMin</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_ZMax.html">Prev</a> </td><th width="60%" align="center">7.18. バウンディングボックス関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_LineInterpolatePoint.html">Next</a></td></tr></table></div><div class="refentry"><a name="ST_ZMin"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_ZMin — 2次元または3次元のバウンディングボックスまたはジオメトリのZの最小値を返します。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">float <b class="fsfunc">ST_ZMin</b>(</code>box3d  <var class="pdparam">aGeomorBox2DorBox3D</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp333989664"></a><h2>説明</h2><p>2次元または3次元のバウンディングボックスまたはジオメトリのZの最小値を返します。</p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>この関数はBOX3Dに対してのみ定義されていますが、自動キャストによってBOX2Dやジオメトリ値でも動作します。しかしながら、ジオメトリまたはBOX2Dの文字列表現は、自動キャストを行わないため、受け付けません。</p></td></tr></table></div><p class="tag_Z_support">
+            <span class="inlinemediaobject"><img src="../images/check.png"></span> この関数は3次元に対応し、Z値を削除しません。 </p><p class="tag_curve_support">
+            <span class="inlinemediaobject"><img src="../images/check.png"></span> このメソッドは曲線ストリングと曲線に対応しています。 </p></div><div class="refsection"><a name="idp333994912"></a><h2>例</h2><pre class="programlisting">SELECT ST_ZMin('BOX3D(1 2 3, 4 5 6)');
+st_zmin
+-------
+3
+
+SELECT ST_ZMin(ST_GeomFromEWKT('LINESTRING(1 3 4, 5 6 7)'));
+st_zmin
+-------
+4
+
+SELECT ST_ZMin('BOX3D(-3 2 1, 3 4 1)' );
+st_zmin
+-------
+1
+--Observe THIS DOES NOT WORK because it will try to auto-cast the string representation to a BOX3D
+SELECT ST_ZMin('LINESTRING(1 3 4, 5 6 7)');
+
+--ERROR:  BOX3D parser - doesn't start with BOX3D(
+
+SELECT ST_ZMin(ST_GeomFromEWKT('CIRCULARSTRING(220268 150415 1,220227 150505 2,220227 150406 3)'));
+st_zmin
+--------
+1
+                </pre></div><div class="refsection"><a name="idp333996448"></a><h2>関連情報</h2><p><a class="xref" href="ST_GeomFromEWKT.html" title="ST_GeomFromEWKT">ST_GeomFromEWKT</a>, <a class="xref" href="ST_GeomFromText.html" title="ST_GeomFromText">ST_GeomFromText</a>, <a class="xref" href="ST_XMin.html" title="ST_XMin">ST_XMin</a>, <a class="xref" href="ST_XMax.html" title="ST_XMax">ST_XMax</a>, <a class="xref" href="ST_YMax.html" title="ST_YMax">ST_YMax</a>, <a class="xref" href="ST_YMin.html" title="ST_YMin">ST_YMin</a>, <a class="xref" href="ST_ZMax.html" title="ST_ZMax">ST_ZMax</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_ZMax.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#BBox_Functions">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_LineInterpolatePoint.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_ZMax </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_LineInterpolatePoint</td></tr></table></div></body></html>

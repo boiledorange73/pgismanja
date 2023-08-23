@@ -1,0 +1,66 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_DelaunayTriangles</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="../style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.4.0 マニュアル"><link rel="up" href="reference.html#Geometry_Processing" title="7.14. ジオメトリ処理関数"><link rel="prev" href="ST_ConvexHull.html" title="ST_ConvexHull"><link rel="next" href="ST_FilterByM.html" title="ST_FilterByM"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_DelaunayTriangles</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_ConvexHull.html">Prev</a> </td><th width="60%" align="center">7.14. ジオメトリ処理関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_FilterByM.html">Next</a></td></tr></table></div><div class="refentry"><a name="ST_DelaunayTriangles"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_DelaunayTriangles — ジオメトリの頂点のドローネ三角形を返します。 </p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_DelaunayTriangles</b>(</code>geometry  <var class="pdparam">g1</var>, float  <var class="pdparam">tolerance = 0.0</var>, int4  <var class="pdparam">flags = 0</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp321368480"></a><h2>説明</h2><p>入力ジオメトリの頂点の<a class="ulink" href="http://en.wikipedia.org/wiki/Delaunay_triangulation" target="_top">ドロネー三角形</a>を計算します。任意引数<code class="varname">tolerance</code>は、入力頂点が近いとスナップする際に使います。ロバスト性が増すことがあります。結果ジオメトリの境界は入力頂点の凸包と同じになります。結果ジオメトリの表現は、次に示す<code class="varname">flags</code>コードによって変わります。 </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="code">0</code> - 三角形のPOLYGONからなるGEOMETRYCOLLECTION (デフォルト) </p></li><li class="listitem"><p><code class="code">1</code> - 三角形の辺のMULTILINESTRING </p></li><li class="listitem"><p><code class="code">2</code> - 三角形のTIN </p></li></ul></div><p>GEOSモジュールで実現しています。</p><p class="availability">Availability: 2.1.0</p><p class="tag_Z_support">
+            <span class="inlinemediaobject"><img src="../images/check.png"></span> この関数は3次元に対応し、Z値を削除しません。 </p><p class="tag_T_support">
+            <span class="inlinemediaobject"><img src="../images/check.png"></span> この関数は三角形と不規則三角網 (TIN)に対応しています。 </p></div><div class="refsection"><a name="idp321378208"></a><h2>例</h2><div class="informaltable"><table class="informaltable" style="border-collapse: collapse;border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col></colgroup><tbody><tr><td style="border-bottom: 1px solid ; "><div class="informalfigure"><div class="mediaobject"><img src="../images/st_delaunaytriangles01.png"><div class="caption"><p>元のポリゴン</p></div></div></div>
+<pre class="programlisting"><em class="lineannotation"><span class="lineannotation">our original geometry</span></em>
+    ST_Union(ST_GeomFromText('POLYGON((175 150, 20 40,
+            50 60, 125 100, 175 150))'),
+        ST_Buffer(ST_GeomFromText('POINT(110 170)'), 20)
+        )</pre></td></tr><tr><td style="border-bottom: 1px solid ; "><div class="informalfigure"><div class="mediaobject"><img src="../images/st_delaunaytriangles03.png"><div class="caption"><p>二つのポリゴンのST_DelaunayTriangles: ポリゴンごとに異なる色をつけたドロネー三角形ポリゴン</p></div></div></div><p>
+                </p><pre class="programlisting"><em class="lineannotation"><span class="lineannotation">
+geometries overlaid multilinestring triangles
+</span></em>
+SELECT
+    ST_DelaunayTriangles(
+        ST_Union(ST_GeomFromText('POLYGON((175 150, 20 40,
+            50 60, 125 100, 175 150))'),
+        ST_Buffer(ST_GeomFromText('POINT(110 170)'), 20)
+        ))
+     As  dtriag;
+                </pre><p>
+                          </p></td></tr><tr><td style="border-bottom: 1px solid ; "><div class="informalfigure"><div class="mediaobject"><img src="../images/st_delaunaytriangles02.png"><div class="caption"><p>マルチラインストリングにしたドロネー三角形</p></div></div></div><p>
+                </p><pre class="programlisting">SELECT
+    ST_DelaunayTriangles(
+        ST_Union(ST_GeomFromText('POLYGON((175 150, 20 40,
+            50 60, 125 100, 175 150))'),
+        ST_Buffer(ST_GeomFromText('POINT(110 170)'), 20)
+        ),0.001,1)
+     As  dtriag;</pre><p>
+                        </p></td></tr><tr><td style=""><div class="informalfigure"><div class="mediaobject"><img src="../images/st_delaunaytriangles04.png"><div class="caption"><p>45個のポイントから生成した55個のドロネー三角形</p></div></div></div><p>
+                </p><pre class="programlisting"><em class="lineannotation"><span class="lineannotation">
+this produces a table of 42 points that form an L shape
+</span></em>
+SELECT (ST_DumpPoints(ST_GeomFromText(
+'MULTIPOINT(14 14,34 14,54 14,74 14,94 14,114 14,134 14,
+150 14,154 14,154 6,134 6,114 6,94 6,74 6,54 6,34 6,
+14 6,10 6,8 6,7 7,6 8,6 10,6 30,6 50,6 70,6 90,6 110,6 130,
+6 150,6 170,6 190,6 194,14 194,14 174,14 154,14 134,14 114,
+14 94,14 74,14 54,14 34,14 14)'))).geom
+    INTO TABLE l_shape;
+<em class="lineannotation"><span class="lineannotation">
+output as individual polygon triangles
+</span></em>
+SELECT ST_AsText((ST_Dump(geom)).geom) As wkt
+FROM ( SELECT ST_DelaunayTriangles(ST_Collect(geom)) As geom
+FROM l_shape) As foo;
+
+<em class="lineannotation"><span class="lineannotation">
+wkt
+</span></em>
+POLYGON((6 194,6 190,14 194,6 194))
+POLYGON((14 194,6 190,14 174,14 194))
+POLYGON((14 194,14 174,154 14,14 194))
+POLYGON((154 14,14 174,14 154,154 14))
+POLYGON((154 14,14 154,150 14,154 14))
+POLYGON((154 14,150 14,154 6,154 14))
+</pre><p>
+                        </p></td></tr></tbody></table></div><p>Z値を持つ頂点を使う例。</p><pre class="programlisting"><em class="lineannotation"><span class="lineannotation">
+3D multipoint
+</span></em>
+SELECT ST_AsText(ST_DelaunayTriangles(ST_GeomFromText(
+         'MULTIPOINT Z(14 14 10, 150 14 100,34 6 25, 20 10 150)'))) As wkt;
+
+<em class="lineannotation"><span class="lineannotation">
+wkt
+</span></em>
+GEOMETRYCOLLECTION Z (POLYGON Z ((14 14 10,20 10 150,34 6 25,14 14 10))
+ ,POLYGON Z ((14 14 10,34 6 25,150 14 100,14 14 10)))</pre></div><div class="refsection"><a name="idp321413152"></a><h2>関連情報</h2><p><a class="xref" href="ST_VoronoiPolygons.html" title="ST_VoronoiPolygons">ST_VoronoiPolygons</a>, <a class="xref" href="ST_TriangulatePolygon.html" title="ST_TriangulatePolygon">ST_TriangulatePolygon</a>, <a class="xref" href="ST_ConstrainedDelaunayTriangles.html" title="ST_ConstrainedDelaunayTriangles">ST_ConstrainedDelaunayTriangles</a>, <a class="xref" href="ST_VoronoiLines.html" title="ST_VoronoiLines">ST_VoronoiLines</a>, <a class="xref" href="ST_ConvexHull.html" title="ST_ConvexHull">ST_ConvexHull</a> </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_ConvexHull.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Geometry_Processing">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_FilterByM.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_ConvexHull </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_FilterByM</td></tr></table></div></body></html>

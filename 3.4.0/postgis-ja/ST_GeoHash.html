@@ -1,0 +1,21 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_GeoHash</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="../style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.4.0 マニュアル"><link rel="up" href="reference.html#idp315238816" title="7.9.3. その他の書式"><link rel="prev" href="ST_AsX3D.html" title="ST_AsX3D"><link rel="next" href="geometry_overlaps.html" title="&amp;&amp;"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_GeoHash</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_AsX3D.html">Prev</a> </td><th width="60%" align="center">7.9.3. その他の書式</th><td width="20%" align="right"> <a accesskey="n" href="geometry_overlaps.html">Next</a></td></tr></table></div><div class="refentry"><a name="ST_GeoHash"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_GeoHash — ジオメトリのGeoHash表現を返します。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">text <b class="fsfunc">ST_GeoHash</b>(</code>geometry  <var class="pdparam">geom</var>, integer  <var class="pdparam">maxchars=full_precision_of_point</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp315826592"></a><h2>説明</h2><p>ジオメトリの<a class="ulink" href="https://ja.wikipedia.org/wiki/%E3%82%B8%E3%82%AA%E3%83%8F%E3%83%83%E3%82%B7%E3%83%A5" target="_top">ジオハッシュ</a>表現を計算します。ジオハッシュは地理座標系のポイントを、前置に基づいた文字列として符号化したもので、ソート可能かつ検索可能です。短いジオハッシュではポイントは低精度に表現されています。これは、ポイントを含むボックスと考えることができます。 </p><p>0でない範囲を持つ、ポイントでないジオメトリ値はジオハッシュコードに対応付けできます。コードの精度はジオメトリの地理範囲に依存します。 </p><p><code class="varname">maxchars</code>が指定されていない場合には、返されるジオハッシュコードは、入力ジオメトリを含む最も小さいセルです。ポイントでは、20文字の精度 (入力の完全な倍精度浮動小数点数の保持十分です)ジオハッシュを返します。他のジオメトリタイプでは、より低い精度のジオハッシュを返しますが、精度はジオメトリの範囲に依存します。大きいジオメトリは低い精度となり、小さいジオメトリは高い精度になります。ジオハッシュコードで決まるボックスは常に入力入力地物を含んでいます。</p><p><code class="varname">maxchars</code>が指定された場合には、この値は、返されるジオハッシュコードの最大文字数になります。入力ジオメトリは(おそらく)より低い精度で表現されます。ポイントでない場合には、計算の最初のポイントはジオメトリのバウンダリボックスの中心となります。</p><p class="availability">Availability: 1.4.0</p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>ST_GeoHashの入力ジオメトリは、地理座標系 (経度/緯度)でなければなりません。</p></td></tr></table></div><p class="tag_curve_support">
+            <span class="inlinemediaobject"><img src="../images/check.png"></span> このメソッドは曲線ストリングと曲線に対応しています。 </p></div><div class="refsection"><a name="idp315832864"></a><h2>例</h2><pre class="programlisting">SELECT ST_GeoHash( ST_Point(-126,48) );
+
+         st_geohash
+----------------------
+ c0w3hf1s70w3hf1s70w3
+
+SELECT ST_GeoHash( ST_Point(-126,48), 5);
+
+ st_geohash
+------------
+ c0w3h
+
+-- This line contains the point, so the GeoHash is a prefix of the point code
+SELECT ST_GeoHash('LINESTRING(-126 48, -126.1 48.1)'::geometry);
+
+ st_geohash
+------------
+ c0w3
+                
+                </pre></div><div class="refsection"><a name="idp315834144"></a><h2>関連情報</h2><p><a class="xref" href="ST_GeomFromGeoHash.html" title="ST_GeomFromGeoHash">ST_GeomFromGeoHash</a>, <a class="xref" href="ST_PointFromGeoHash.html" title="ST_PointFromGeoHash">ST_PointFromGeoHash</a>, <a class="xref" href="ST_Box2dFromGeoHash.html" title="ST_Box2dFromGeoHash">ST_Box2dFromGeoHash</a></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_AsX3D.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#idp315238816">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="geometry_overlaps.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_AsX3D </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> &amp;&amp;</td></tr></table></div></body></html>

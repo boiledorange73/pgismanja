@@ -1,0 +1,43 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Grayscale</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="../style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.4.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Processing_MapAlgebra" title="10.12. ラスタ処理: 地図代数"><link rel="prev" href="RT_ST_ColorMap.html" title="ST_ColorMap"><link rel="next" href="RT_ST_Intersection.html" title="ST_Intersection"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Grayscale</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_ColorMap.html">Prev</a> </td><th width="60%" align="center">10.12. ラスタ処理: 地図代数</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_Intersection.html">Next</a></td></tr></table></div><div class="refentry"><a name="RT_ST_Grayscale"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>ST_Grayscale — 元のラスタと指定したバンドを赤、緑、青バンドとして一つの8BUIバンドを持つラスタを生成します。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">(1) raster <b class="fsfunc">ST_Grayscale</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">redband=1</var>, integer  <var class="pdparam">greenband=2</var>, integer  <var class="pdparam">blueband=3</var>, text  <var class="pdparam">extenttype=INTERSECTION</var><code>)</code>;</p></div><div class="funcsynopsis"><p><code class="funcdef">(2) raster <b class="fsfunc">ST_Grayscale</b>(</code>rastbandarg[]  <var class="pdparam">rastbandargset</var>, text  <var class="pdparam">extenttype=INTERSECTION</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp354634016"></a><h2>説明</h2><p>三つの入力バンド (一つ以上のラスタ)を与えられ、一つの8BUIバンドを持つラスタを生成します。タイプが8BUIでない入力バンドは全て<a class="xref" href="RT_ST_Reclass.html" title="ST_Reclass">ST_Reclass</a>で再分類されます。 </p><div class="note"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>この関数は<a class="xref" href="RT_ST_ColorMap.html" title="ST_ColorMap">ST_ColorMap</a>に<code class="varname">grayscale</code>キーワードを与えた場合とは違います。ST_ColorMapでは一つのバンドを扱いますが、この関数ではRGBの3バンドを期待します。この関数は 0.2989 * 赤 + 0.5870 * 緑 + 0.1140 * 青 という式を適用してRGBをグレースケールにしています。 </p></td></tr></table></div><p class="availability">Availability: 2.5.0 </p></div><div class="refsection"><a name="idp354637728"></a><h2>例: 一つ目の形式</h2><pre class="programlisting">SET postgis.gdal_enabled_drivers = 'ENABLE_ALL';
+SET postgis.enable_outdb_rasters = True;
+
+WITH apple AS (
+    SELECT ST_AddBand(
+        ST_MakeEmptyRaster(350, 246, 0, 0, 1, -1, 0, 0, 0),
+        '/tmp/apple.png'::text,
+        NULL::int[]
+    ) AS rast
+)
+SELECT
+    ST_AsPNG(rast) AS original_png,
+    ST_AsPNG(ST_Grayscale(rast)) AS grayscale_png
+FROM apple;
+                    </pre><div class="informaltable"><table class="informaltable" style="border-collapse: collapse;border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col><col></colgroup><tbody><tr><td style="border-right: 1px solid ; ">
+                                        <p>
+                                            </p><div class="informalfigure"><div class="mediaobject"><img src="../images/apple.png"><div class="caption"><p>original_png</p></div></div></div><p>
+                                        </p>
+                                    </td><td style="">
+                                        <p>
+                                            </p><div class="informalfigure"><div class="mediaobject"><img src="../images/apple_st_grayscale.png"><div class="caption"><p>grayscale_png</p></div></div></div><p>
+                                        </p>
+                                    </td></tr></tbody></table></div></div><div class="refsection"><a name="idp354647072"></a><h2>例: 二つ目の形式</h2><pre class="programlisting">SET postgis.gdal_enabled_drivers = 'ENABLE_ALL';
+SET postgis.enable_outdb_rasters = True;
+
+WITH apple AS (
+    SELECT ST_AddBand(
+        ST_MakeEmptyRaster(350, 246, 0, 0, 1, -1, 0, 0, 0),
+        '/tmp/apple.png'::text,
+        NULL::int[]
+    ) AS rast
+)
+SELECT
+    ST_AsPNG(rast) AS original_png,
+    ST_AsPNG(ST_Grayscale(
+        ARRAY[
+            ROW(rast, 1)::rastbandarg, -- red
+            ROW(rast, 2)::rastbandarg, -- green
+            ROW(rast, 3)::rastbandarg, -- blue
+        ]::rastbandarg[]
+    )) AS grayscale_png
+FROM apple;
+                    </pre></div><div class="refsection"><a name="idp354648352"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_AsPNG.html" title="ST_AsPNG">ST_AsPNG</a>, <a class="xref" href="RT_ST_Reclass.html" title="ST_Reclass">ST_Reclass</a>, <a class="xref" href="RT_ST_ColorMap.html" title="ST_ColorMap">ST_ColorMap</a> </p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_ColorMap.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Processing_MapAlgebra">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_Intersection.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ST_ColorMap </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> ST_Intersection</td></tr></table></div></body></html>

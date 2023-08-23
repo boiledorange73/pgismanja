@@ -1,0 +1,28 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>parse_address</title><link rel="stylesheet" type="text/css" href="docbook.css"><link rel="stylesheet" type="text/css" href="../style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 3.4.0 マニュアル"><link rel="up" href="Extras.html#Address_Standardizer_Functions" title="11.1.4. 住所標準化関数"><link rel="prev" href="debug_standardize_address.html" title="debug_standardize_address"><link rel="next" href="standardize_address.html" title="standardize_address"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">parse_address</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="debug_standardize_address.html">Prev</a> </td><th width="60%" align="center">11.1.4. 住所標準化関数</th><td width="20%" align="right"> <a accesskey="n" href="standardize_address.html">Next</a></td></tr></table></div><div class="refentry"><a name="parse_address"></a><div class="titlepage"></div><div class="refnamediv"><h2>Name</h2><p>parse_address — 1行の住所を取り、分割します。</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><div class="funcsynopsis"><p><code class="funcdef">record <b class="fsfunc">parse_address</b>(</code>text  <var class="pdparam">address</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp360108576"></a><h2>説明</h2><p>一つの住所を入力に取り、<span class="emphasis"><em>num</em></span>、<span class="emphasis"><em>street</em></span>、<span class="emphasis"><em>street2</em></span>、<span class="emphasis"><em>address1</em></span>、<span class="emphasis"><em>city</em></span>、<span class="emphasis"><em>state</em></span>、<span class="emphasis"><em>zip</em></span>、<span class="emphasis"><em>zipplus</em></span>、<span class="emphasis"><em>country</em></span>からなるレコードを一つ返します。</p><p class="availability">Availability: 2.2.0</p><p class="tag_address_standardizer_required">
+            <span class="inlinemediaobject"><img src="../images/check.png"></span> このメソッドはaddress_standardizerエクステンションが必要です。 </p></div><div class="refsection"><a name="idp360115744"></a><h2>例</h2><p>単一の住所</p><pre class="programlisting">SELECT num, street, city, zip, zipplus
+        FROM parse_address('1 Devonshire Place, Boston, MA 02109-1234') AS a;</pre><pre class="screen">num |      street      |  city  |  zip  | zipplus
+-----+------------------+--------+-------+---------
+ 1   | Devonshire Place | Boston | 02109 | 1234                </pre><p>住所テーブル</p><pre class="programlisting">-- basic table
+CREATE TABLE places(addid serial PRIMARY KEY, address text);
+
+INSERT INTO places(address)
+VALUES ('529 Main Street, Boston MA, 02129'),
+ ('77 Massachusetts Avenue, Cambridge, MA 02139'),
+ ('25 Wizard of Oz, Walaford, KS 99912323'),
+ ('26 Capen Street, Medford, MA'),
+ ('124 Mount Auburn St, Cambridge, Massachusetts 02138'),
+ ('950 Main Street, Worcester, MA 01610');
+
+ -- parse the addresses
+ -- if you want all fields you can use (a).*
+SELECT addid, (a).num, (a).street, (a).city, (a).state, (a).zip, (a).zipplus
+FROM (SELECT addid, parse_address(address) As a
+ FROM places) AS p;</pre><pre class="screen">addid | num |        street        |   city    | state |  zip  | zipplus
+-------+-----+----------------------+-----------+-------+-------+---------
+     1 | 529 | Main Street          | Boston    | MA    | 02129 |
+     2 | 77  | Massachusetts Avenue | Cambridge | MA    | 02139 |
+     3 | 25  | Wizard of Oz         | Walaford  | KS    | 99912 | 323
+     4 | 26  | Capen Street         | Medford   | MA    |       |
+     5 | 124 | Mount Auburn St      | Cambridge | MA    | 02138 |
+     6 | 950 | Main Street          | Worcester | MA    | 01610 |
+(6 rows)</pre></div><div class="refsection"><a name="idp361672096"></a><h2>関連情報</h2><p></p></div></div><div class="navfooter"><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="debug_standardize_address.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="Extras.html#Address_Standardizer_Functions">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="standardize_address.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">debug_standardize_address </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> standardize_address</td></tr></table></div></body></html>
