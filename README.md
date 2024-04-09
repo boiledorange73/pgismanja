@@ -6,8 +6,6 @@ PostGIS マニュアル 日本語訳 を掲載しています。
 
 https://boiledorange73.github.io/pgismanja/ です。
 
-# オリジナル
-
 3.4.0以降は公式サイトをご覧下さい。
 https://postgis.net/documentation/manual/
 
