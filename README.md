@@ -8,5 +8,6 @@ https://boiledorange73.github.io/pgismanja/ です。
 
 # オリジナル
 
-オリジナルは http://cse.naro.affrc.go.jp/yellow/pgisman/index.html です。
+3.4.0以降は公式サイトをご覧下さい。
+https://postgis.net/documentation/manual/
 
