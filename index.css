@@ -1,0 +1,11 @@
+.box,
+.large-box {
+  margin: 1em 0.5em;
+  padding: 1em;
+  border: solid 1px #999;
+  background: #ffe;
+}
+
+.large-box {
+  font-size: 1.2em;
+}
