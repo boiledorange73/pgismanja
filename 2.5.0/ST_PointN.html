@@ -1,0 +1,35 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_PointN</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 2.5.0 マニュアル"><link rel="up" href="reference.html#Geometry_Accessors" title="8.5. ジオメトリアクセサ"><link rel="prev" href="ST_PatchN.html" title="ST_PatchN"><link rel="next" href="ST_Points.html" title="ST_Points"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_PointN</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_PatchN.html">戻る</a> </td><th width="60%" align="center">8.5. ジオメトリアクセサ</th><td width="20%" align="right"> <a accesskey="n" href="ST_Points.html">次へ</a></td></tr></table><hr></div><div class="refentry"><a name="ST_PointN"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_PointN — ラインストリングまたは曲線ストリングのN番目の点を返します。負数はラインストリングの終端から逆方向に遡って数えます。ジオメトリにラインストリングが無い場合には、NULLを返します。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_PointN</b>(</code>geometry  <var class="pdparam">a_linestring</var>, integer  <var class="pdparam">n</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp73130184"></a><h2>説明</h2><p>ラインストリングまたは曲線ストリングのN番目の点を返します。負数はラインストリングの終端から逆方向に遡って数えます。-1は終端を指します。ジオメトリにラインストリングが無い場合には、NULLを返します。</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>OGC仕様のため0.8.0版からインデックスを1始まりにしています。これより前の版では0はじまりになっています。後方インデックス (負数インデックス)はOGC仕様ではありません。</p></td></tr></table></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>マルチラインストリングからN番目のポイントを得たい場合には、ST_Dumpを併用して下さい。</p></td></tr></table></div><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This method implements the <a class="ulink" href="http://www.opengeospatial.org/standards/sfs" target="_top">OpenGIS Simple Features
+ Implementation Specification for SQL 1.1.</a></p><p><span class="inlinemediaobject"><img src="images/check.png"></span> This method implements the SQL/MM specification. SQL-MM 3: 7.2.5, 7.3.5</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports 3d and will not drop the z-index.</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This method supports Circular Strings and Curves</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>Changed: 2.0.0 単一ジオメトリのMULTILINESTRINGで動作しなくなりました。単一のラインストリングからなるMULTILINESTRINGについては幸運にも動いていて、最初のポイントを返していました。2.0.0では他のMULTILINESTRINGと同様にNULLを返すようになりました。</p><p>Changed: 2.3.0 : 負数インデックスが有効になりました (-1は終端を指します) </p></td></tr></table></div></div><div class="refsection"><a name="idp73139528"></a><h2>例</h2><pre class="programlisting">-- LINESTRINGから全てのPOINTを抽出
+SELECT ST_AsText(
+   ST_PointN(
+          column1,
+          generate_series(1, ST_NPoints(column1))
+   ))
+FROM ( VALUES ('LINESTRING(0 0, 1 1, 2 2)'::geometry) ) AS foo;
+
+ st_astext
+------------
+ POINT(0 0)
+ POINT(1 1)
+ POINT(2 2)
+(3 rows)
+
+-- CIRCULARSTRINGの例
+SELECT ST_AsText(ST_PointN(ST_GeomFromText('CIRCULARSTRING(1 2, 3 2, 1 2)'),2));
+
+st_astext
+----------
+POINT(3 2)
+
+SELECT st_astext(f)
+FROM ST_GeometryFromtext('LINESTRING(0 0 0, 1 1 1, 2 2 2)') as g
+        ,ST_PointN(g, -2) AS f -- 1 based index
+
+st_astext
+----------
+"POINT Z (1 1 1)"
+
+</pre></div><div class="refsection"><a name="idp73140808"></a><h2>関連情報</h2><p><a class="xref" href="ST_NPoints.html" title="ST_NPoints">ST_NPoints</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_PatchN.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Geometry_Accessors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_Points.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_PatchN </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_Points</td></tr></table></div></body></html>

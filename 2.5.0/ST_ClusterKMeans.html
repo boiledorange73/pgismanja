@@ -1,0 +1,37 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_ClusterKMeans</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 2.5.0 マニュアル"><link rel="up" href="reference.html#Spatial_Relationships_Measurements" title="8.9. 空間関係関数と空間計測関数"><link rel="prev" href="ST_ClusterIntersecting.html" title="ST_ClusterIntersecting"><link rel="next" href="ST_ClusterWithin.html" title="ST_ClusterWithin"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_ClusterKMeans</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_ClusterIntersecting.html">戻る</a> </td><th width="60%" align="center">8.9. 空間関係関数と空間計測関数 </th><td width="20%" align="right"> <a accesskey="n" href="ST_ClusterWithin.html">次へ</a></td></tr></table><hr></div><div class="refentry"><a name="ST_ClusterKMeans"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_ClusterKMeans — 個々のジオメトリが入るクラスタの整数識別子を返すウィンドウ関数です。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">integer <b class="fsfunc">ST_ClusterKMeans</b>(</code>geometry winset  <var class="pdparam">geom</var>, integer  <var class="pdparam">number_of_clusters</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp78450888"></a><h2>説明</h2><p>入力ジオメトリごとの、2次元距離に基づく<a class="ulink" href="https://ja.wikipedia.org/wiki/K%E5%B9%B3%E5%9D%87%E6%B3%95" target="_top">k平均法</a>クラスタ番号を返します。クラスタリングに使用する距離はジオメトリの重心間の距離です。 </p><p>Availability: 2.3.0 - GEOSが必要です。 </p></div><div class="refsection"><a name="idp78453064"></a><h2>例</h2><p>例としてダミーの区画の集合を生成します。</p><pre class="programlisting">CREATE TABLE parcels AS
+SELECT lpad((row_number() over())::text,3,'0') As parcel_id, geom,
+('{residential, commercial}'::text[])[1 + mod(row_number()OVER(),2)] As type
+FROM
+    ST_Subdivide(ST_Buffer('LINESTRING(40 100, 98 100, 100 150, 60 90)'::geometry,
+    40, 'endcap=square'),12) As geom;
+</pre><div class="informaltable"><table class="informaltable" border="1"><colgroup><col></colgroup><tbody><tr><td>
+						<div class="informalfigure"><div class="mediaobject"><img src="images/st_clusterkmeans01.png"><div class="caption"><p>元の区画</p></div></div></div><p>
+						</p>
+					</td><td><div class="informalfigure"><div class="mediaobject"><img src="images/st_clusterkmeans02.png"><div class="caption"><p>クラスタ番号 (cid)による色付けを施した区画</p></div></div></div><p>
+						</p><pre class="programlisting">SELECT ST_ClusterKMeans(geom, 5) OVER() AS cid, parcel_id, geom
+FROM parcels;
+-- 結果 --
+ cid | parcel_id |   geom
+-----+-----------+---------------
+   0 | 001       | 0103000000...
+   0 | 002       | 0103000000...
+   1 | 003       | 0103000000...
+   0 | 004       | 0103000000...
+   1 | 005       | 0103000000...
+   2 | 006       | 0103000000...
+   2 | 007       | 0103000000...
+(7 rows)</pre><p>
+					</p></td></tr></tbody></table></div><pre class="programlisting">-- 種別による区画クラスタの分割
+SELECT ST_ClusterKMeans(geom,3) over (PARTITION BY type) AS cid, parcel_id, type
+FROM parcels;
+-- 結果 --
+ cid | parcel_id |    type
+-----+-----------+-------------
+   1 | 005       | commercial
+   1 | 003       | commercial
+   2 | 007       | commercial
+   0 | 001       | commercial
+   1 | 004       | residential
+   0 | 002       | residential
+   2 | 006       | residential
+(7 rows)</pre></div><div class="refsection"><a name="idp78462792"></a><h2>関連情報</h2><p><a class="xref" href="ST_ClusterDBSCAN.html" title="ST_ClusterDBSCAN">ST_ClusterDBSCAN</a>, <a class="xref" href="ST_ClusterIntersecting.html" title="ST_ClusterIntersecting">ST_ClusterIntersecting</a>, <a class="xref" href="ST_ClusterWithin.html" title="ST_ClusterWithin">ST_ClusterWithin</a>, <a class="xref" href="ST_Subdivide.html" title="ST_Subdivide">ST_Subdivide</a> </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_ClusterIntersecting.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Spatial_Relationships_Measurements">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_ClusterWithin.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_ClusterIntersecting </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_ClusterWithin</td></tr></table></div></body></html>

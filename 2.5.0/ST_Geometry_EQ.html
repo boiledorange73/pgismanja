@@ -1,0 +1,36 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>=</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 2.5.0 マニュアル"><link rel="up" href="reference.html#Operators" title="8.8. 演算子"><link rel="prev" href="ST_Geometry_Below.html" title="&lt;&lt;|"><link rel="next" href="ST_Geometry_Right.html" title="&gt;&gt;"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">=</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_Geometry_Below.html">戻る</a> </td><th width="60%" align="center">8.8. 演算子</th><td width="20%" align="right"> <a accesskey="n" href="ST_Geometry_Right.html">次へ</a></td></tr></table><hr></div><div class="refentry"><a name="ST_Geometry_EQ"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>= — ジオメトリ/ジオグラフィ Aの座標と座標の並び順がジオメトリ/ジオグラフィ Bと同じ場合に<code class="varname">TRUE</code>を返します。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">boolean <b class="fsfunc">=</b>(</code> geometry  <var class="pdparam">A</var> ,  geometry  <var class="pdparam">B</var> <code>)</code>;</p><p><code class="funcdef">boolean <b class="fsfunc">=</b>(</code> geography  <var class="pdparam">A</var> ,  geography  <var class="pdparam">B</var> <code>)</code>;</p></div></div><div class="refsection"><a name="idp77121608"></a><h2>説明</h2><p><code class="varname">=</code>演算子は、ジオメトリ/ジオグラフィ Aの座標と座標の並び順がジオメトリ/ジオグラフィ Bと同じ場合に<code class="varname">TRUE</code>を返します。PostgreSQLは、ジオメトリの内部の順位付けと比較 (GROUP BYやORDER BY節などで使います)のために、ジオメトリ用に定義されている=, &lt;および&gt; 演算子を使います。</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>この演算子は、同じ座標値と並び順である、全ての点で確実に同じジオメトリ/ジオグラフィだけを同じと考えます。「空間的に等価」、つまり、並び順は無視し、異なる表現でも同じ空間領域を占めるかどうかをテストするには、<a class="xref" href="ST_OrderingEquals.html" title="ST_OrderingEquals">ST_OrderingEquals</a>または<a class="xref" href="ST_Equals.html" title="ST_Equals">ST_Equals</a>を使います。</p></td></tr></table></div><div class="caution" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Caution"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注意]" src="images/caution.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>この演算子は、ジオメトリで有効なインデックスを一切*使いません*。インデックスを使った確実な等価性試験を行うには、=と&amp;&amp;を併用します。</p></td></tr></table></div><p>Changed: 2.4.0, 以前の版では、ジオメトリ自体の等価性でなくバウンディングボックスが等価かどうかを見ていました。バウンディングボックスが等価かどうかを知る必要がある場合には、替わりに<a class="xref" href="ST_Geometry_Same.html" title="~=">~=</a>を使います。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This method supports Circular Strings and Curves</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports Polyhedral surfaces.</p></div><div class="refsection"><a name="idp77128776"></a><h2>例</h2><pre class="programlisting">SELECT 'LINESTRING(0 0, 0 1, 1 0)'::geometry = 'LINESTRING(1 1, 0 0)'::geometry;
+ ?column?
+----------
+ t
+(1 row)
+
+SELECT ST_AsText(column1)
+FROM ( VALUES
+        ('LINESTRING(0 0, 1 1)'::geometry),
+        ('LINESTRING(1 1, 0 0)'::geometry)) AS foo;
+          st_astext
+---------------------
+ LINESTRING(0 0,1 1)
+ LINESTRING(1 1,0 0)
+(2 rows)
+
+-- Note: the GROUP BY uses the "=" to compare for geometry equivalency.
+SELECT ST_AsText(column1)
+FROM ( VALUES
+        ('LINESTRING(0 0, 1 1)'::geometry),
+        ('LINESTRING(1 1, 0 0)'::geometry)) AS foo
+GROUP BY column1;
+          st_astext
+---------------------
+ LINESTRING(0 0,1 1)
+(1 row)
+
+-- 2.0より前の版では、これはTRUEを返します --
+ SELECT ST_GeomFromText('POINT(1707296.37 4820536.77)') =
+        ST_GeomFromText('POINT(1707296.27 4820536.87)') As pt_intersect;
+
+--pt_intersect --
+f
+</pre></div><div class="refsection"><a name="idp77130056"></a><h2>関連情報</h2><p><a class="xref" href="ST_Equals.html" title="ST_Equals">ST_Equals</a>, <a class="xref" href="ST_OrderingEquals.html" title="ST_OrderingEquals">ST_OrderingEquals</a>, <a class="xref" href="ST_Geometry_Same.html" title="~=">~=</a> </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_Geometry_Below.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Operators">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_Geometry_Right.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">&lt;&lt;| </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> &gt;&gt;</td></tr></table></div></body></html>

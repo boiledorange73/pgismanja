@@ -1,0 +1,39 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_SetBandPath</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 2.5.0 マニュアル"><link rel="up" href="RT_reference.html#RasterBand_Editors" title="9.8. ラスタバンドエディタ"><link rel="prev" href="RT_ST_SetBandIsNoData.html" title="ST_SetBandIsNoData"><link rel="next" href="RT_ST_SetBandIndex.html" title="ST_SetBandIndex"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_SetBandPath</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_SetBandIsNoData.html">戻る</a> </td><th width="60%" align="center">9.8. ラスタバンドエディタ</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_SetBandIndex.html">次へ</a></td></tr></table><hr></div><div class="refentry"><a name="RT_ST_SetBandPath"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_SetBandPath — データベース外バンドの外部パスとバンド番号を更新します。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">raster <b class="fsfunc">ST_SetBandPath</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">band</var>, text  <var class="pdparam">outdbpath</var>, integer  <var class="pdparam">outdbindex</var>, boolean  <var class="pdparam">force=false</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp94584648"></a><h2>説明</h2><p>データベース外バンドの外部パスと外部バンド番号を更新します。</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p><code class="varname">force</code>がTRUEの場合には、外部ラスタファイルとPostGISラスタとの互換性 (例：アラインメント、ピクセル対応)確認のためのテストを行いません。このモードは、外部ラスタファイルが存在するファイルシステムの変更を目的としています。 </p></td></tr></table></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>内部的には、このメソッドは、存在するパス情報を更新する替わりに、PostGISラスタの<code class="varname">band</code>で指定したバンドを新しいバンドに置き換えます。 </p></td></tr></table></div><p>Availability: 2.5.0</p></div><div class="refsection"><a name="idp94588488"></a><h2>例</h2><pre class="programlisting">WITH foo AS (
+        SELECT
+                ST_AddBand(NULL::raster, '/home/pele/devel/geo/postgis-git/raster/test/regress/loader/Projected.tif', NULL::int[]) AS rast
+)
+SELECT
+        1 AS query,
+        *
+FROM ST_BandMetadata(
+        (SELECT rast FROM foo),
+         ARRAY[1,3,2]::int[]
+)
+UNION ALL
+SELECT
+        2,
+        *
+FROM ST_BandMetadata(
+        (
+                SELECT
+                        <span class="strong"><strong>ST_SetBandPath(
+                                rast,
+                                2,
+                                '/home/pele/devel/geo/postgis-git/raster/test/regress/loader/Projected2.tif',
+                                1
+                        )</strong></span> AS rast
+                 FROM foo
+        ),
+         ARRAY[1,3,2]::int[]
+)
+ORDER BY 1, 2;
+
+ query | bandnum | pixeltype | nodatavalue | isoutdb |                                      path                                       | outdbbandnum
+-------+---------+-----------+-------------+---------+---------------------------------------------------------------------------------+--------------
+     1 |       1 | 8BUI      |             | t       | /home/pele/devel/geo/postgis-git/raster/test/regress/loader/Projected.tif       |            1
+     1 |       2 | 8BUI      |             | t       | /home/pele/devel/geo/postgis-git/raster/test/regress/loader/Projected.tif       |            2
+     1 |       3 | 8BUI      |             | t       | /home/pele/devel/geo/postgis-git/raster/test/regress/loader/Projected.tif       |            3
+     2 |       1 | 8BUI      |             | t       | /home/pele/devel/geo/postgis-git/raster/test/regress/loader/Projected.tif       |            1
+<span class="strong"><strong>     2 |       2 | 8BUI      |             | t       | /home/pele/devel/geo/postgis-git/raster/test/regress/loader/Projected2.tif      |            1</strong></span>
+     2 |       3 | 8BUI      |             | t       | /home/pele/devel/geo/postgis-git/raster/test/regress/loader/Projected.tif       |            3
+                                </pre></div><div class="refsection"><a name="idp94590792"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_BandMetaData.html" title="ST_BandMetaData">ST_BandMetaData</a>, <a class="xref" href="RT_ST_SetBandIndex.html" title="ST_SetBandIndex">ST_SetBandIndex</a> </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_SetBandIsNoData.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#RasterBand_Editors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_SetBandIndex.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_SetBandIsNoData </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_SetBandIndex</td></tr></table></div></body></html>

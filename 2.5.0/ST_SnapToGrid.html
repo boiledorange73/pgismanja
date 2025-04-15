@@ -1,0 +1,33 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_SnapToGrid</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 2.5.0 マニュアル"><link rel="up" href="reference.html#Geometry_Editors" title="8.6. ジオメトリエディタ"><link rel="prev" href="ST_SetSRID.html" title="ST_SetSRID"><link rel="next" href="ST_Snap.html" title="ST_Snap"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_SnapToGrid</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_SetSRID.html">戻る</a> </td><th width="60%" align="center">8.6. ジオメトリエディタ</th><td width="20%" align="right"> <a accesskey="n" href="ST_Snap.html">次へ</a></td></tr></table><hr></div><div class="refentry"><a name="ST_SnapToGrid"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_SnapToGrid — 入力ジオメトリの全ての点を規則的なグリッドにスナップします。 </p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_SnapToGrid</b>(</code>geometry  <var class="pdparam">geomA</var>, float  <var class="pdparam">originX</var>, float  <var class="pdparam">originY</var>, float  <var class="pdparam">sizeX</var>, float  <var class="pdparam">sizeY</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_SnapToGrid</b>(</code>geometry  <var class="pdparam">geomA</var>, float  <var class="pdparam">sizeX</var>, float  <var class="pdparam">sizeY</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_SnapToGrid</b>(</code>geometry  <var class="pdparam">geomA</var>, float  <var class="pdparam">size</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_SnapToGrid</b>(</code>geometry  <var class="pdparam">geomA</var>, geometry  <var class="pdparam">pointOrigin</var>, float  <var class="pdparam">sizeX</var>, float  <var class="pdparam">sizeY</var>, float  <var class="pdparam">sizeZ</var>, float  <var class="pdparam">sizeM</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp74865992"></a><h2>説明</h2><p>1, 2, 3番目の形式では、入力ジオメトリの全てのポイントを原点とセルサイズを定めたグリッドにスナップします。同じセルに落ちた、連続するポイントを削除します。引数ジオメトリのジオメトリタイプを定義できないポイントしか残らなかった場合は、NULLを返します。コレクション内で崩壊したジオメトリはそこから削除されます。精度を落とすのに使います。 </p><p>4番目の形式は、1.1.0で導入されました。入力ジオメトリの全てのポイントを原点 (第2引数で指定するもので、ポイントでなければなりません)とセルサイズを定めたグリッドにスナップします。グリッドにスナップしたくない次元についてはサイズに0を指定します。</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>返されるジオメトリは単純性が失われているかも知れません (<a class="xref" href="ST_IsSimple.html" title="ST_IsSimple">ST_IsSimple</a>を参照してください)。</p></td></tr></table></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>1.1.0版より前では、この関数は常に2次元ジオメトリを返しました。1.1.0版からは、返されるジオメトリの次元数は、入力値のうちで手のつけられていない最大の次元と同じになります。全てのグリッドの次元を定義するには、第2引数にジオメトリを取る形式を使って下さい。</p></td></tr></table></div><p>Availability: 1.0.0RC1</p><p>Availability: 1.1.0 - Z値とM値に対応しました</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports 3d and will not drop the z-index.</p></div><div class="refsection"><a name="idp74871624"></a><h2>例</h2><pre class="programlisting">-- 10^-3のグリッドに基づく精度にジオメトリをスナップさせます
+UPDATE mytable
+   SET the_geom = ST_SnapToGrid(the_geom, 0.001);
+
+SELECT ST_AsText(ST_SnapToGrid(
+                        ST_GeomFromText('LINESTRING(1.1115678 2.123, 4.111111 3.2374897, 4.11112 3.23748667)'),
+                        0.001)
+                );
+                          st_astext
+-------------------------------------
+ LINESTRING(1.112 2.123,4.111 3.237)
+ --Snap a 4d geometry
+SELECT ST_AsEWKT(ST_SnapToGrid(
+        ST_GeomFromEWKT('LINESTRING(-1.1115678 2.123 2.3456 1.11111,
+                4.111111 3.2374897 3.1234 1.1111, -1.11111112 2.123 2.3456 1.1111112)'),
+ ST_GeomFromEWKT('POINT(1.12 2.22 3.2 4.4444)'),
+ 0.1, 0.1, 0.1, 0.01) );
+                                                                  st_asewkt
+------------------------------------------------------------------------------
+ LINESTRING(-1.08 2.12 2.3 1.1144,4.12 3.22 3.1 1.1144,-1.08 2.12 2.3 1.1144)
+
+
+-- 4次元ジオメトリ - ST_SnapToGrid(geom, size)は、X座標とY座標のみ変更します
+-- M値とZ値は同じになります
+SELECT ST_AsEWKT(ST_SnapToGrid(ST_GeomFromEWKT('LINESTRING(-1.1115678 2.123 3 2.3456,
+                4.111111 3.2374897 3.1234 1.1111)'),
+           0.01)      );
+                                                st_asewkt
+---------------------------------------------------------
+ LINESTRING(-1.11 2.12 3 2.3456,4.11 3.24 3.1234 1.1111)
+
+                </pre></div><div class="refsection"><a name="idp74873160"></a><h2>関連情報</h2><p><a class="xref" href="ST_Snap.html" title="ST_Snap">ST_Snap</a>, <a class="xref" href="ST_AsEWKT.html" title="ST_AsEWKT">ST_AsEWKT</a>, <a class="xref" href="ST_AsText.html" title="ST_AsText">ST_AsText</a>, <a class="xref" href="ST_GeomFromText.html" title="ST_GeomFromText">ST_GeomFromText</a>, <a class="xref" href="ST_GeomFromEWKT.html" title="ST_GeomFromEWKT">ST_GeomFromEWKT</a>, <a class="xref" href="ST_Simplify.html" title="ST_Simplify">ST_Simplify</a> </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_SetSRID.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Geometry_Editors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_Snap.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_SetSRID </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_Snap</td></tr></table></div></body></html>

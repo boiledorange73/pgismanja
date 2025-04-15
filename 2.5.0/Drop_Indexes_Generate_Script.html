@@ -1,0 +1,35 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Drop_Indexes_Generate_Script</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 2.5.0 マニュアル"><link rel="up" href="Extras.html#Tiger_Geocoder" title="13.1. Tigerジオコーダ"><link rel="prev" href="Extras.html" title="第13章 PostGIS追加機能"><link rel="next" href="Drop_Nation_Tables_Generate_Script.html" title="Drop_Nation_Tables_Generate_Script"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Drop_Indexes_Generate_Script</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="Extras.html">戻る</a> </td><th width="60%" align="center">13.1. Tigerジオコーダ</th><td width="20%" align="right"> <a accesskey="n" href="Drop_Nation_Tables_Generate_Script.html">次へ</a></td></tr></table><hr></div><div class="refentry"><a name="Drop_Indexes_Generate_Script"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>Drop_Indexes_Generate_Script — tigerスキーマとユーザが指定したスキーマ上の、全ての主キーでなく、かつユニークでないインデックスを削除します。スキーマを指定しない場合のデフォルトスキーマは、<code class="varname">tiger_data</code>です。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">text <b class="fsfunc">Drop_Indexes_Generate_Script</b>(</code>text  <var class="pdparam">param_schema=tiger_data</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp105061832"></a><h2>説明</h2><p>tigerスキーマとユーザが指定したスキーマ上の、全ての主キーでなく、かつユニークでないインデックスを削除します。スキーマを指定しない場合のデフォルトスキーマは、<code class="varname">tiger_data</code>です。</p><p>PostgreSQLのクエリプランナを混乱させる可能性があり、不要なディスク容量を取る、インデックスの膨張を最小化するために使います。ジオコーダで使われるインデックスを追加する関数<a class="xref" href="Install_Missing_Indexes.html" title="Install_Missing_Indexes">Install_Missing_Indexes</a>を併用します。</p><p>Availability: 2.0.0</p></div><div class="refsection"><a name="idp105064520"></a><h2>例</h2><pre class="programlisting">SELECT drop_indexes_generate_script() As actionsql;
+actionsql
+---------------------------------------------------------
+DROP INDEX tiger.idx_tiger_countysub_lookup_lower_name;
+DROP INDEX tiger.idx_tiger_edges_countyfp;
+DROP INDEX tiger.idx_tiger_faces_countyfp;
+DROP INDEX tiger.tiger_place_the_geom_gist;
+DROP INDEX tiger.tiger_edges_the_geom_gist;
+DROP INDEX tiger.tiger_state_the_geom_gist;
+DROP INDEX tiger.idx_tiger_addr_least_address;
+DROP INDEX tiger.idx_tiger_addr_tlid;
+DROP INDEX tiger.idx_tiger_addr_zip;
+DROP INDEX tiger.idx_tiger_county_countyfp;
+DROP INDEX tiger.idx_tiger_county_lookup_lower_name;
+DROP INDEX tiger.idx_tiger_county_lookup_snd_name;
+DROP INDEX tiger.idx_tiger_county_lower_name;
+DROP INDEX tiger.idx_tiger_county_snd_name;
+DROP INDEX tiger.idx_tiger_county_the_geom_gist;
+DROP INDEX tiger.idx_tiger_countysub_lookup_snd_name;
+DROP INDEX tiger.idx_tiger_cousub_countyfp;
+DROP INDEX tiger.idx_tiger_cousub_cousubfp;
+DROP INDEX tiger.idx_tiger_cousub_lower_name;
+DROP INDEX tiger.idx_tiger_cousub_snd_name;
+DROP INDEX tiger.idx_tiger_cousub_the_geom_gist;
+DROP INDEX tiger_data.idx_tiger_data_ma_addr_least_address;
+DROP INDEX tiger_data.idx_tiger_data_ma_addr_tlid;
+DROP INDEX tiger_data.idx_tiger_data_ma_addr_zip;
+DROP INDEX tiger_data.idx_tiger_data_ma_county_countyfp;
+DROP INDEX tiger_data.idx_tiger_data_ma_county_lookup_lower_name;
+DROP INDEX tiger_data.idx_tiger_data_ma_county_lookup_snd_name;
+DROP INDEX tiger_data.idx_tiger_data_ma_county_lower_name;
+DROP INDEX tiger_data.idx_tiger_data_ma_county_snd_name;
+:
+:
+</pre></div><div class="refsection"><a name="idp105066056"></a><h2>関連情報</h2><p><a class="xref" href="Install_Missing_Indexes.html" title="Install_Missing_Indexes">Install_Missing_Indexes</a>, <a class="xref" href="Missing_Indexes_Generate_Script.html" title="Missing_Indexes_Generate_Script">Missing_Indexes_Generate_Script</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="Extras.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="Extras.html#Tiger_Geocoder">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="Drop_Nation_Tables_Generate_Script.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">第13章 PostGIS追加機能 </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> Drop_Nation_Tables_Generate_Script</td></tr></table></div></body></html>

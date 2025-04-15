@@ -1,0 +1,37 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_DumpValues</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 2.5.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Pixel_Accessors" title="9.6. ラスタピクセルアクセサとセッター"><link rel="prev" href="RT_ST_SetValues.html" title="ST_SetValues"><link rel="next" href="RT_ST_PixelOfValue.html" title="ST_PixelOfValue"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_DumpValues</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_SetValues.html">戻る</a> </td><th width="60%" align="center">9.6. ラスタピクセルアクセサとセッター</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_PixelOfValue.html">次へ</a></td></tr></table><hr></div><div class="refentry"><a name="RT_ST_DumpValues"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_DumpValues — 指定したバンドの値を2次元で得ます。 </p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">setof record <b class="fsfunc">ST_DumpValues</b>(</code> raster  <var class="pdparam">rast</var> ,  integer[]  <var class="pdparam">nband=NULL</var> ,  boolean  <var class="pdparam">exclude_nodata_value=true</var> <code>)</code>;</p><p><code class="funcdef">double precision[][] <b class="fsfunc">ST_DumpValues</b>(</code> raster  <var class="pdparam">rast</var> ,  integer  <var class="pdparam">nband</var> ,  boolean  <var class="pdparam">exclude_nodata_value=true</var> <code>)</code>;</p></div></div><div class="refsection"><a name="idp94112712"></a><h2>説明</h2><p>指定したバンドの値を2次元で得ます (一つ目の添え字で行、二つ目の添え字で列に、それぞれ対応します)。<code class="varname">nband</code>がNULLまたは指定されていない場合には、全てのラスタバンドが処理されます。 </p><p>Availability: 2.1.0</p></div><div class="refsection"><a name="idp94114632"></a><h2>例</h2><pre class="programlisting">WITH foo AS (
+        SELECT ST_AddBand(ST_AddBand(ST_AddBand(ST_MakeEmptyRaster(3, 3, 0, 0, 1, -1, 0, 0, 0), 1, '8BUI'::text, 1, 0), 2, '32BF'::text, 3, -9999), 3, '16BSI', 0, 0) AS rast
+)
+SELECT
+        (ST_DumpValues(rast)).*
+FROM foo;
+
+ nband |                       valarray
+-------+------------------------------------------------------
+     1 | {{1,1,1},{1,1,1},{1,1,1}}
+     2 | {{3,3,3},{3,3,3},{3,3,3}}
+     3 | {{NULL,NULL,NULL},{NULL,NULL,NULL},{NULL,NULL,NULL}}
+(3 rows)
+                                </pre><pre class="programlisting">WITH foo AS (
+        SELECT ST_AddBand(ST_AddBand(ST_AddBand(ST_MakeEmptyRaster(3, 3, 0, 0, 1, -1, 0, 0, 0), 1, '8BUI'::text, 1, 0), 2, '32BF'::text, 3, -9999), 3, '16BSI', 0, 0) AS rast
+)
+SELECT
+        (ST_DumpValues(rast, ARRAY[3, 1])).*
+FROM foo;
+
+ nband |                       valarray
+-------+------------------------------------------------------
+     3 | {{NULL,NULL,NULL},{NULL,NULL,NULL},{NULL,NULL,NULL}}
+     1 | {{1,1,1},{1,1,1},{1,1,1}}
+(2 rows)
+                                </pre><pre class="programlisting">WITH foo AS (
+        SELECT ST_SetValue(ST_AddBand(ST_MakeEmptyRaster(3, 3, 0, 0, 1, -1, 0, 0, 0), 1, '8BUI', 1, 0), 1, 2, 5) AS rast
+)
+SELECT
+        (ST_DumpValues(rast, 1))[2][1]
+FROM foo;
+
+ st_dumpvalues
+---------------
+             5
+(1 row)
+                                </pre></div><div class="refsection"><a name="idp94116936"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_Value.html" title="ST_Value">ST_Value</a>, <a class="xref" href="RT_ST_SetValue.html" title="ST_SetValue">ST_SetValue</a>, <a class="xref" href="RT_ST_SetValues.html" title="ST_SetValues">ST_SetValues</a> </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_SetValues.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Pixel_Accessors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_PixelOfValue.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_SetValues </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_PixelOfValue</td></tr></table></div></body></html>

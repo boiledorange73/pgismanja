@@ -1,0 +1,24 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_AsGDALRaster</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.79.1"><link rel="home" href="index.html" title="PostGIS 2.5.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Outputs" title="9.11. 出力"><link rel="prev" href="RT_ST_AsHexWKB.html" title="ST_AsHexWKB"><link rel="next" href="RT_ST_AsJPEG.html" title="ST_AsJPEG"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_AsGDALRaster</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_AsHexWKB.html">戻る</a> </td><th width="60%" align="center">9.11. 出力</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_AsJPEG.html">次へ</a></td></tr></table><hr></div><div class="refentry"><a name="RT_ST_AsGDALRaster"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_AsGDALRaster — 指定されたGDALラスタ書式でラスタタイルを返します。ラスタ書式はコンパイルしたライブラリが対応するものです。ライブラリが対応する書式の一覧を得るにはST_GDALRasters()を使います。</p></div><div class="refsynopsisdiv"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">bytea <b class="fsfunc">ST_AsGDALRaster</b>(</code>raster  <var class="pdparam">rast</var>, text  <var class="pdparam">format</var>, text[]  <var class="pdparam">options=NULL</var>, integer  <var class="pdparam">srid=sameassource</var><code>)</code>;</p></div></div><div class="refsection"><a name="idp95106120"></a><h2>説明</h2><p>指定された書式でラスタタイルを返します。引数は次の通りです。</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">format</code> 出力書式です。libgdalライブラリでコンパイルしたドライバに依存します。一般的には'JPEG', 'GTIff', 'PNG'が有効になっています。ライブラリが対応する形式の一覧を得るには<a class="xref" href="RT_ST_GDALDrivers.html" title="ST_GDALDrivers">ST_GDALDrivers</a>を使います。 </p></li><li class="listitem"><p><code class="varname">options</code> GDALオプションの文字列配列です。妥当なオプションは書式に依存します。詳細については<a class="ulink" href="http://www.gdal.org/frmt_various.html" target="_top">GDAL Raster format options</a>をご覧下さい。 </p></li><li class="listitem"><p><code class="varname">srs</code> 画像に埋め込むproj4textまたはsrtext (spatial_ref_sysから)です。 </p></li></ul></div><p>Availability: 2.0.0 - GDAL 1.6.0以上が必要です。 </p></div><div class="refsection"><a name="idp95112136"></a><h2>複数タイルを単一ラスタとするJPEG出力例</h2><pre class="programlisting">SELECT ST_AsGDALRaster(ST_Union(rast), 'JPEG', ARRAY['QUALITY=50']) As rastjpg
+FROM dummy_rast
+WHERE rast &amp;&amp; ST_MakeEnvelope(10, 10, 11, 11);</pre></div><div class="refsection"><a name="idp95113416"></a><h2>PostgreSQLラージオブジェクト対応を使ったラスタの出力</h2><p>ラスタを他の書式に出力する方法の一つとして、<a class="ulink" href="https://www.postgresql.org/docs/current/static/lo-funcs.html" target="_top">PostgreSQL large object export functions</a>の使用があります。前の例の繰り返しですが、出力も行います。サーバ側のlo関数を使うため、データベースへのスーパーユーザ権限が必要となることに注意して下さい。また、サーバネットワーク上のパスに出力します。ローカルに出力するには、psqlで、サーバのファイルシステムでなくローカルのファイルシステムに出力する等価のlo_関数を使います。</p><pre class="programlisting">DROP TABLE IF EXISTS tmp_out ;
+
+CREATE TABLE tmp_out AS
+SELECT lo_from_bytea(0,
+       ST_AsGDALRaster(ST_Union(rast), 'JPEG', ARRAY['QUALITY=50'])
+        ) AS loid
+  FROM dummy_rast
+WHERE rast &amp;&amp; ST_MakeEnvelope(10, 10, 11, 11);
+
+SELECT lo_export(loid, '/tmp/dummy.jpg')
+   FROM tmp_out;
+
+SELECT lo_unlink(loid)
+  FROM tmp_out;</pre></div><div class="refsection"><a name="idp95115464"></a><h2>GTIFF出力の例</h2><pre class="programlisting">SELECT ST_AsGDALRaster(rast, 'GTiff') As rastjpg
+FROM dummy_rast WHERE rid=2;
+
+-- GeoTIFFをJPEG、90%品質で圧縮して出力します
+SELECT ST_AsGDALRaster(rast, 'GTiff',
+  ARRAY['COMPRESS=JPEG', 'JPEG_QUALITY=90'],
+  4269) As rasttiff
+FROM dummy_rast WHERE rid=2;
+                                </pre></div><div class="refsection"><a name="idp95129288"></a><h2>関連情報</h2><p><a class="xref" href="using_raster_dataman.html#RT_Raster_Applications" title="5.3. PostGISラスタを使ったカスタムアプリケーションの構築">「PostGISラスタを使ったカスタムアプリケーションの構築」</a>, <a class="xref" href="RT_ST_GDALDrivers.html" title="ST_GDALDrivers">ST_GDALDrivers</a>, <a class="xref" href="RT_ST_SRID.html" title="ST_SRID">ST_SRID</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_AsHexWKB.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Outputs">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_AsJPEG.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_AsHexWKB </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_AsJPEG</td></tr></table></div></body></html>
