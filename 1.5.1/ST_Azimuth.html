@@ -1,0 +1,27 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>ST_Azimuth</title><link rel="stylesheet" href="style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.1"><link rel="home" href="index.html" title="PostGIS 1.5.1 &#12510;&#12491;&#12517;&#12450;&#12523; &#26085;&#26412;&#35486;&#35379;"><link rel="up" href="reference.html#Spatial_Relationships_Measurements" title="7.8. &#31354;&#38291;&#38306;&#20418;&#38306;&#25968;&#12392;&#31354;&#38291;&#35336;&#28204;&#38306;&#25968;"><link rel="prev" href="ST_Area.html" title="ST_Area"><link rel="next" href="ST_Centroid.html" title="ST_Centroid"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Azimuth</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_Area.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><th width="60%" align="center">7.8. 
+	&#31354;&#38291;&#38306;&#20418;&#38306;&#25968;&#12392;&#31354;&#38291;&#35336;&#28204;&#38306;&#25968;
+	
+	</th><td width="20%" align="right"> <a accesskey="n" href="ST_Centroid.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr></table><hr></div><div class="refentry" title="ST_Azimuth"><a name="ST_Azimuth"></a><div class="titlepage"></div><div class="refnamediv"><h2>&#21517;&#21069;</h2><p>ST_Azimuth &#8212; 
+		  pointA&#12392;PointB&#12391;&#23450;&#32681;&#12373;&#12428;&#12427;&#12505;&#12463;&#12479;&#12398;&#65292;&#27700;&#24179;&#38754;&#12391;&#12398;&#26041;&#20301;&#12434;&#12521;&#12472;&#12450;&#12531;&#21336;&#20301;&#12391;&#36820;&#12375;&#12414;&#12377;&#65294;
+		  
+		  </p></div><div class="refsynopsisdiv" title="&#27010;&#35201;"><h2>&#27010;&#35201;</h2><div class="funcsynopsis"><p><code class="funcdef">float <b class="fsfunc">ST_Azimuth</b>(</code>geometry <var class="pdparam">pointA</var>, geometry <var class="pdparam">pointB</var><code>)</code>;</p></div></div><div class="refsection" title="&#35500;&#26126;"><a name="id286878493"></a><h2>&#35500;&#26126;</h2><p>
+			&#19982;&#12360;&#12425;&#12428;&#12383;&#12509;&#12452;&#12531;&#12488;&#12472;&#12458;&#12513;&#12488;&#12522;&#12391;&#23450;&#32681;&#12373;&#12428;&#12427;&#32218;&#20998;&#12398;&#26041;&#20301;&#12434;&#36820;&#12375;&#65292;&#20108;&#28857;&#12364;&#21516;&#20301;&#32622;&#12395;&#12354;&#12427;&#22580;&#21512;&#12399;NULL&#12434;&#36820;&#12375;&#12414;&#12377;&#65294;&#36820;&#12426;&#20516;&#12399;&#12521;&#12472;&#12450;&#12531;&#21336;&#20301;&#12391;&#12377;&#65294;
+			
+			</p><p>
+			&#26041;&#20301;&#12399;&#22522;&#28310;&#38754;&#12392;&#12509;&#12452;&#12531;&#12488;&#12398;&#12354;&#12356;&#12383;&#12398;&#35282;&#24230;(&#12371;&#12398;&#22580;&#21512;&#12399;&#12521;&#12472;&#12450;&#12531;&#21336;&#20301;)&#12392;&#23450;&#32681;&#12373;&#12428;&#12427;&#25968;&#23398;&#30340;&#12394;&#27010;&#24565;&#12391;&#12377;&#65294;
+			
+				</p><p>
+			&#21021;&#20986;&#12496;&#12540;&#12472;&#12519;&#12531;: 1.1.0
+			
+			</p><p>
+			ST_Azimuth&#12399;&#65292;ST_Translate&#12392;&#20341;&#29992;&#12375;&#12390;&#65292;&#22402;&#30452;&#36600;&#12395;&#27839;&#12387;&#12390;&#12458;&#12502;&#12472;&#12455;&#12463;&#12488;&#12434;&#12471;&#12501;&#12488;&#12373;&#12379;&#12427;&#22580;&#21512;&#12395;&#65292;&#29305;&#12395;&#20415;&#21033;&#12391;&#12377;&#65294;
+			&#12371;&#12428;&#12398;&#20363;&#12392;&#12375;&#12390;&#65292;upgis_lineshift <a class="ulink" href="http://postgis.refractions.net/support/wiki/index.php?plpgsqlfunctions" target="_top">Plpgsqlfunctions PostGIS wiki section</a>&#12434;&#21442;&#29031;&#12375;&#12390;&#19979;&#12373;&#12356;&#65294;
+			
+				 </p></div><div class="refsection" title="&#20363;"><a name="id286878528"></a><h2>&#20363;</h2><p>--Azimuth in degrees </p><pre class="programlisting">
+SELECT ST_Azimuth(ST_MakePoint(1,2), ST_MakePoint(3,4))/(2*pi())*360 as degAz,
+	ST_Azimuth(ST_MakePoint(3,4), ST_MakePoint(1,2))/(2*pi())*360 As degAzrev
+
+degaz	degazrev
+------	---------
+45		225
+</pre></div><div class="refsection" title="&#38306;&#36899;&#24773;&#22577;"><a name="id286878542"></a><h2>&#38306;&#36899;&#24773;&#22577;</h2><p><a class="xref" href="ST_MakePoint.html" title="ST_MakePoint">ST_MakePoint</a>, <a class="xref" href="ST_Translate.html" title="ST_Translate">ST_Translate</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_Area.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Spatial_Relationships_Measurements">&#19978;&#12395;&#25147;&#12427;</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_Centroid.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Area </td><td width="20%" align="center"><a accesskey="h" href="index.html">&#12507;&#12540;&#12512;</a></td><td width="40%" align="right" valign="top"> ST_Centroid</td></tr></table></div></body></html>

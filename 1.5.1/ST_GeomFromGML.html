@@ -1,0 +1,59 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>ST_GeomFromGML</title><link rel="stylesheet" href="style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.1"><link rel="home" href="index.html" title="PostGIS 1.5.1 &#12510;&#12491;&#12517;&#12450;&#12523; &#26085;&#26412;&#35486;&#35379;"><link rel="up" href="reference.html#Geometry_Constructors" title="7.3. &#12472;&#12458;&#12513;&#12488;&#12522;&#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;"><link rel="prev" href="ST_GeometryFromText.html" title="ST_GeometryFromText"><link rel="next" href="ST_GeomFromKML.html" title="ST_GeomFromKML"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_GeomFromGML</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_GeometryFromText.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><th width="60%" align="center">7.3. 
+	  &#12472;&#12458;&#12513;&#12488;&#12522;&#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;
+	  
+	  </th><td width="20%" align="right"> <a accesskey="n" href="ST_GeomFromKML.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr></table><hr></div><div class="refentry" title="ST_GeomFromGML"><a name="ST_GeomFromGML"></a><div class="titlepage"></div><div class="refnamediv"><h2>&#21517;&#21069;</h2><p>ST_GeomFromGML &#8212; 
+		&#12472;&#12458;&#12513;&#12488;&#12522;&#12398;GML&#34920;&#29694;&#12434;&#20837;&#21147;&#12392;&#12375;&#65292;PostGIS&#12472;&#12458;&#12513;&#12488;&#12522;&#12458;&#12502;&#12472;&#12455;&#12463;&#12488;&#12434;&#20986;&#21147;&#12375;&#12414;&#12377;&#65294;
+		
+		</p></div><div class="refsynopsisdiv" title="&#27010;&#35201;"><h2>&#27010;&#35201;</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_GeomFromGML</b>(</code>text  <var class="pdparam">geomgml</var><code>)</code>;</p></div></div><div class="refsection" title="&#35500;&#26126;"><a name="id286837228"></a><h2>&#35500;&#26126;</h2><p>
+		OGC GML&#34920;&#29694;&#12363;&#12425;PostGIS ST_Geometry&#12458;&#12502;&#12472;&#12455;&#12463;&#12488;&#12434;&#29983;&#25104;&#12375;&#12414;&#12377;&#65294;
+		
+		</p><p>
+		ST_GeomFromGML&#12399;&#65292;GML&#12472;&#12458;&#12513;&#12488;&#12522;&#12398;&#12501;&#12521;&#12464;&#12513;&#12531;&#12488;&#12391;&#12398;&#12415;&#21205;&#20316;&#12375;&#12414;&#12377;&#65294;GML&#25991;&#26360;&#20840;&#20307;&#12395;&#20351;&#29992;&#12375;&#12424;&#12358;&#12392;&#12377;&#12427;&#12392;&#12456;&#12521;&#12540;&#12364;&#25237;&#12370;&#12425;&#12428;&#12414;&#12377;&#65294;
+		
+		</p><p>
+			&#12469;&#12509;&#12540;&#12488;&#12377;&#12427;OGC GML&#12398;&#12496;&#12540;&#12472;&#12519;&#12531;:
+			</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>GML 3.2.1 Namespace</p></li><li class="listitem"><p>GML 3.1.1 Simple Features profile SF-2 (GML 3.1.0, 3.0.0 &#12398;&#24460;&#26041;&#20114;&#25563;)</p></li><li class="listitem"><p>GML 2.1.2</p></li></ul></div><p>
+			OGC GML&#27161;&#28310;&#12395;&#12388;&#12356;&#12390;&#12399;<a class="ulink" href="http://www.opengeospatial.org/standards/gml" target="_top">http://www.opengeospatial.org/standards/gml</a>&#12434;&#21442;&#29031;&#12375;&#12390;&#19979;&#12373;&#12356;&#65294;
+		
+		</p><p>
+		&#21021;&#20986;&#12496;&#12540;&#12472;&#12519;&#12531;: 1.5
+		
+		</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ &#12371;&#12398;&#38306;&#25968;&#12399;&#19977;&#27425;&#20803;&#12434;&#12469;&#12509;&#12540;&#12488;&#12375;&#12414;&#12377;&#65294;Z&#12452;&#12531;&#12487;&#12463;&#12473;&#12434;&#21066;&#38500;&#12375;&#12414;&#12379;&#12435;&#65294;</p><p>
+		GML&#12399;&#65292;&#35079;&#21512;&#27425;&#20803;(&#12383;&#12392;&#12360;&#12400;&#65292;&#20108;&#27425;&#20803;&#12392;&#19977;&#27425;&#20803;&#12364;&#21516;&#12376;MultiGeometry&#20869;&#12395;&#12354;&#12427;)&#12434;&#35377;&#12375;&#12414;&#12377;&#65294;
+		PostGIS&#12472;&#12458;&#12513;&#12488;&#12522;&#12399;&#35377;&#12375;&#12414;&#12379;&#12435;&#12398;&#12391;&#65292;ST_GeomFromGML&#12399;&#65292;Z&#27425;&#20803;&#12364;&#28961;&#12356;&#12472;&#12458;&#12513;&#12488;&#12522;&#12434;&#12402;&#12392;&#12388;&#12391;&#12418;&#30330;&#35211;&#12377;&#12427;&#12392;&#65292;&#12472;&#12458;&#12513;&#12488;&#12522;&#20840;&#20307;&#12434;&#20108;&#27425;&#20803;&#12395;&#22793;&#25563;&#12375;&#12414;&#12377;&#65294;
+		
+		</p><p>
+		GML&#12399;&#21516;&#12376;MultiGeometry&#20869;&#12398;&#35079;&#25968;&#12398;SRS&#12434;&#12469;&#12509;&#12540;&#12488;&#12375;&#12414;&#12377;&#65294;PostGIS&#12391;&#12399;&#12469;&#12509;&#12540;&#12488;&#12375;&#12414;&#12379;&#12435;&#12398;&#12391;&#65292;ST_GeomFromGML&#12399;&#12371;&#12398;&#22580;&#21512;&#65292;&#20840;&#12390;&#12398;&#12469;&#12502;&#12472;&#12458;&#12513;&#12488;&#12522;&#12434;&#12523;&#12540;&#12488;&#12494;&#12540;&#12489;&#12398;SRS&#12395;&#25237;&#24433;&#22793;&#25563;&#12375;&#12414;&#12377;&#65294;GML&#12398;&#12523;&#12540;&#12488;&#12494;&#12540;&#12489;&#12395;srsName&#23646;&#24615;&#12364;&#28961;&#12356;&#22580;&#21512;&#12399;&#65292;&#12456;&#12521;&#12540;&#12364;&#25237;&#12370;&#12425;&#12428;&#12414;&#12377;&#65294;
+		
+		</p><p>
+		ST_GeomFromGML&#38306;&#25968;&#12399;&#26126;&#31034;&#30340;&#12394;GML&#21517;&#21069;&#31354;&#38291;&#12395;&#38306;&#12375;&#12390;&#12506;&#12480;&#12531;&#12481;&#12483;&#12463;&#12391;&#12399;&#12354;&#12426;&#12414;&#12379;&#12435;&#65294;&#19968;&#33324;&#30340;&#12394;&#20351;&#29992;&#27861;&#12398;&#12383;&#12417;&#12395;&#26126;&#31034;&#30340;&#12395;&#35352;&#36617;&#12377;&#12427;&#12398;&#12434;&#36991;&#12369;&#12427;&#12371;&#12392;&#12399;&#12391;&#12365;&#12414;&#12377;&#12364;&#65292;GML&#20869;&#37096;&#12391;XLink&#27231;&#33021;&#12434;&#20351;&#12356;&#12383;&#12356;&#22580;&#21512;&#12395;&#12399;&#24517;&#35201;&#12392;&#12354;&#12426;&#12414;&#12377;&#65294;
+		
+		</p><div class="note" title="&#27880;&#24847;" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[&#27880;&#24847;]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+			ST_GeomFromGML&#38306;&#25968;&#12399;SQL/MM&#26354;&#32218;&#12472;&#12458;&#12513;&#12488;&#12522;&#12434;&#12469;&#12509;&#12540;&#12488;&#12375;&#12390;&#12356;&#12414;&#12379;&#12435;&#65294;
+			
+			</p></td></tr></table></div></div><div class="refsection" title="&#20363; - srsName&#12434;&#25345;&#12388;&#21336;&#19968;&#12472;&#12458;&#12513;&#12488;&#12522;"><a name="id286837322"></a><h2>
+		&#20363; - srsName&#12434;&#25345;&#12388;&#21336;&#19968;&#12472;&#12458;&#12513;&#12488;&#12522;
+		
+		</h2><pre class="programlisting">SELECT ST_GeomFromGML('
+		&lt;gml:LineString srsName="EPSG:4269"&gt;
+			&lt;gml:coordinates&gt;
+				-71.16028,42.258729 -71.160837,42.259112 -71.161143,42.25932
+			&lt;/gml:coordinates&gt;
+		&lt;/gml:LineString&gt;');
+		</pre></div><div class="refsection" title="&#20363; - XLink&#12398;&#20351;&#29992;"><a name="id286837335"></a><h2>
+		&#20363; - XLink&#12398;&#20351;&#29992;
+		
+		</h2><pre class="programlisting">ST_GeomFromGML('
+		&lt;gml:LineString xmlns:gml="http://www.opengis.net/gml" 
+				xmlns:xlink="http://www.w3.org/1999/xlink"
+				srsName="urn:ogc:def:crs:EPSG::4269"&gt;
+			&lt;gml:pointProperty&gt;
+				&lt;gml:Point gml:id="p1"&gt;&lt;gml:pos&gt;42.258729 -71.16028&lt;/gml:pos&gt;&lt;/gml:Point&gt;
+			&lt;/gml:pointProperty&gt;
+			&lt;gml:pos&gt;42.259112 -71.160837&lt;/gml:pos&gt;
+			&lt;gml:pointProperty&gt;
+				&lt;gml:Point xlink:type="simple" xlink:href="#p1"/&gt;
+			&lt;/gml:pointProperty&gt;
+		&lt;/gml:LineString&gt;'););
+		</pre></div><div class="refsection" title="&#38306;&#36899;&#24773;&#22577;"><a name="id286837348"></a><h2>&#38306;&#36899;&#24773;&#22577;</h2><p><a class="xref" href="ST_AsGML.html" title="ST_AsGML">ST_AsGML</a></p><p><a class="xref" href="ST_GMLToSQL.html" title="ST_GMLToSQL">ST_GMLToSQL</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_GeometryFromText.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Geometry_Constructors">&#19978;&#12395;&#25147;&#12427;</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_GeomFromKML.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr><tr><td width="40%" align="left" valign="top">ST_GeometryFromText </td><td width="20%" align="center"><a accesskey="h" href="index.html">&#12507;&#12540;&#12512;</a></td><td width="40%" align="right" valign="top"> ST_GeomFromKML</td></tr></table></div></body></html>

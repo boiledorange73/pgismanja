@@ -1,0 +1,88 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>AddGeometryColumn</title><link rel="stylesheet" href="style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.1"><link rel="home" href="index.html" title="PostGIS 1.5.1 &#12510;&#12491;&#12517;&#12450;&#12523; &#26085;&#26412;&#35486;&#35379;"><link rel="up" href="reference.html#Management_Functions" title="7.2. &#31649;&#29702;&#38306;&#25968;"><link rel="prev" href="geography.html" title="geography"><link rel="next" href="DropGeometryColumn.html" title="DropGeometryColumn"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">AddGeometryColumn</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="geography.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><th width="60%" align="center">7.2. 
+	&#31649;&#29702;&#38306;&#25968;
+	
+	</th><td width="20%" align="right"> <a accesskey="n" href="DropGeometryColumn.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr></table><hr></div><div class="refentry" title="AddGeometryColumn"><a name="AddGeometryColumn"></a><div class="titlepage"></div><div class="refnamediv"><h2>&#21517;&#21069;</h2><p>AddGeometryColumn &#8212; 
+		&#12472;&#12458;&#12513;&#12488;&#12522;&#12459;&#12521;&#12512;&#12434;&#26082;&#23384;&#12398;&#23646;&#24615;&#12486;&#12540;&#12502;&#12523;&#12395;&#36861;&#21152;&#12375;&#12414;&#12377;&#65294;
+		
+		</p></div><div class="refsynopsisdiv" title="&#27010;&#35201;"><h2>&#27010;&#35201;</h2><div class="funcsynopsis"><p><code class="funcdef">text <b class="fsfunc">AddGeometryColumn</b>(</code>varchar 
+			<var class="pdparam">table_name</var>, varchar 
+			<var class="pdparam">column_name</var>, integer 
+			<var class="pdparam">srid</var>, varchar 
+			<var class="pdparam">type</var>, integer 
+			<var class="pdparam">dimension</var><code>)</code>;</p><p><code class="funcdef">text <b class="fsfunc">AddGeometryColumn</b>(</code>varchar 
+			<var class="pdparam">schema_name</var>, varchar 
+			<var class="pdparam">table_name</var>, varchar 
+			<var class="pdparam">column_name</var>, integer 
+			<var class="pdparam">srid</var>, varchar 
+			<var class="pdparam">type</var>, integer 
+			<var class="pdparam">dimension</var><code>)</code>;</p><p><code class="funcdef">text <b class="fsfunc">AddGeometryColumn</b>(</code>varchar 
+			<var class="pdparam">catalog_name</var>, varchar 
+			<var class="pdparam">schema_name</var>, varchar 
+			<var class="pdparam">table_name</var>, varchar 
+			<var class="pdparam">column_name</var>, integer 
+			<var class="pdparam">srid</var>, varchar 
+			<var class="pdparam">type</var>, integer 
+			<var class="pdparam">dimension</var><code>)</code>;</p></div></div><div class="refsection" title="&#35500;&#26126;"><a name="id286830891"></a><h2>
+		&#35500;&#26126;
+		
+		</h2><p>
+		&#12472;&#12458;&#12513;&#12488;&#12522;&#12459;&#12521;&#12512;&#12434;&#26082;&#23384;&#12398;&#23646;&#24615;&#12486;&#12540;&#12502;&#12523;&#12395;&#36861;&#21152;&#12375;&#12414;&#12377;&#65294;
+		<code class="varname">schema_name</code>&#12399;&#12473;&#12461;&#12540;&#12510;&#21517;(&#12503;&#12522;&#12473;&#12461;&#12540;&#12510;&#29256;PostgreSQL&#12398;&#22580;&#21512;&#12399;&#20351;&#12431;&#12428;&#12414;&#12379;&#12435;)
+		<code class="varname">srid</code>&#12399;SPATIAL_REF_SYS&#12486;&#12540;&#12502;&#12523;&#12398;&#12456;&#12531;&#12488;&#12522;&#12434;&#21442;&#29031;&#12377;&#12427;&#25972;&#25968;&#12391;&#12394;&#12369;&#12428;&#12400;&#12394;&#12426;&#12414;&#12379;&#12435;&#65294;
+		<code class="varname">type</code>&#12399;'POLYGON'&#12420;'MULTILINESTRING'&#12392;&#12356;&#12387;&#12383;&#65292;&#12472;&#12458;&#12513;&#12488;&#12522;&#22411;&#12434;&#31034;&#12377;&#22823;&#25991;&#23383;&#12391;&#12394;&#12369;&#12428;&#12400;&#12394;&#12426;&#12414;&#12379;&#12435;&#65294;
+		&#25351;&#23450;&#12375;&#12383;&#12473;&#12461;&#12540;&#12510;&#12364;&#23384;&#22312;&#12375;&#12394;&#12356;(&#12414;&#12383;&#12399;&#29694;&#22312;&#12398;search_path&#12363;&#12425;&#12399;&#35211;&#12360;&#12394;&#12356;)&#22580;&#21512;&#65292;&#12414;&#12383;&#12399;&#25351;&#23450;&#12375;&#12383;SRID&#65292;&#12472;&#12458;&#12513;&#12488;&#12522;&#22411;&#12418;&#12375;&#12367;&#12399;&#27425;&#20803;&#12364;&#19981;&#27491;&#12391;&#12354;&#12427;&#22580;&#21512;&#12399;&#12456;&#12521;&#12540;&#12364;&#25237;&#12370;&#12425;&#12428;&#12414;&#12377;&#65294;
+		
+		</p><div class="note" title="&#27880;&#24847;" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[&#27880;&#24847;]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+			&#12499;&#12517;&#12540;&#12420;&#27966;&#29983;&#30340;&#12395;&#29983;&#25104;&#12373;&#12428;&#12383;&#31354;&#38291;&#12486;&#12540;&#12502;&#12523;&#12399;&#65292;geometry_columns&#12408;&#12398;&#30331;&#37682;&#12434;&#25163;&#21205;&#12391;&#34892;&#12358;&#24517;&#35201;&#12364;&#12354;&#12426;&#12414;&#12377;&#65294;
+			AddGeometryColumn&#12399;&#26082;&#12395;&#31354;&#38291;&#12459;&#12521;&#12512;&#12364;&#23384;&#22312;&#12375;&#12390;&#12356;&#12427;&#26178;&#12395;&#24517;&#35201;&#12364;&#28961;&#12356;&#31354;&#38291;&#12459;&#12521;&#12512;&#12418;&#36861;&#21152;&#12377;&#12427;&#12383;&#12417;&#12391;&#12377;&#65294;
+			<a class="xref" href="ch04.html#Manual_Register_Spatial_Column" title="4.3.4. &#25163;&#21205;&#12391;&#12472;&#12458;&#12513;&#12488;&#12522;&#12459;&#12521;&#12512;&#12434;geometry_columns&#12395;&#30331;&#37682;&#12377;&#12427;">&#12300;
+		&#25163;&#21205;&#12391;&#12472;&#12458;&#12513;&#12488;&#12522;&#12459;&#12521;&#12512;&#12434;geometry_columns&#12395;&#30331;&#37682;&#12377;&#12427;
+		
+		&#12301;</a>&#12434;&#12372;&#35239;&#12367;&#12384;&#12373;&#12356;&#65294;
+			
+			</p></td></tr></table></div><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ &#12371;&#12398;&#12513;&#12477;&#12483;&#12489;&#12399; <a class="ulink" href="http://www.opengeospatial.org/standards/sfs" target="_top">OpenGIS Simple Features Implementation Specification for SQL 1.1.</a>&#12434;&#23455;&#35013;&#12377;&#12427;&#12418;&#12398;&#12391;&#12377;&#65294;</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ &#12371;&#12398;&#38306;&#25968;&#12399;&#19977;&#27425;&#20803;&#12434;&#12469;&#12509;&#12540;&#12488;&#12375;&#12414;&#12377;&#65294;Z&#12452;&#12531;&#12487;&#12463;&#12473;&#12434;&#21066;&#38500;&#12375;&#12414;&#12379;&#12435;&#65294;</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ &#12371;&#12398;&#12513;&#12477;&#12483;&#12489;&#12399;&#26354;&#32218;&#12473;&#12488;&#12522;&#12531;&#12464;&#12392;&#26354;&#32218;&#12434;&#12469;&#12509;&#12540;&#12488;&#12375;&#12414;&#12377;&#65294;</p></div><div class="refsection" title="&#20363;"><a name="id286830963"></a><h2>
+		&#20363;
+		
+		</h2><pre class="programlisting">
+-- &#21336;&#32020;&#12394;PostgreSQL&#12486;&#12540;&#12502;&#12523;&#12434;&#29983;&#25104;
+postgis=# CREATE TABLE my_schema.my_spatial_table (id serial);
+
+-- "id"&#12459;&#12521;&#12512;&#12398;&#12415;&#23384;&#22312;&#12377;&#12427;&#21336;&#32020;&#12394;&#12486;&#12540;&#12502;&#12523;&#20869;&#23481;&#12434;&#34920;&#31034;
+postgis=# \d my_schema.my_spatial_table
+							 Table "my_schema.my_spatial_table"
+ Column |  Type   |                                Modifiers
+--------+---------+-------------------------------------------------------------------------
+ id     | integer | not null default nextval('my_schema.my_spatial_table_id_seq'::regclass)
+
+-- &#31354;&#38291;&#12459;&#12521;&#12512;&#12434;&#12486;&#12540;&#12502;&#12523;&#12395;&#36861;&#21152;
+postgis=# SELECT AddGeometryColumn ('my_schema','my_spatial_table','the_geom',4326,'POINT',2);
+
+--&#26354;&#32218;&#12509;&#12522;&#12468;&#12531;&#12434;&#36861;&#21152;
+SELECT AddGeometryColumn ('my_schema','my_spatial_table','the_geomcp',4326,'CURVEPOLYGON',2);
+
+-- &#12486;&#12540;&#12502;&#12523;&#20869;&#23481;&#12398;&#20877;&#34920;&#31034;&#12375;&#12390;&#26032;&#12375;&#12367;"the_geom"&#12459;&#12521;&#12512;&#12364;&#36861;&#21152;&#12373;&#12428;&#12383;&#12371;&#12392;&#12434;&#30906;&#35469;
+postgis=# \d my_schema.my_spatial_table
+   Column   |   Type   |                                Modifiers
+
+------------+----------+-------------------------------------------------------------------------
+ id         | integer  | not null default nextval('my_schema.my_spatial_table_id_seq'::regclass)
+ the_geom   | geometry |
+ the_geomcp | geometry |
+Check constraints:
+	"enforce_dims_the_geom" CHECK (ndims(the_geom) = 2)
+	"enforce_dims_the_geomcp" CHECK (ndims(the_geomcp) = 2)
+	"enforce_geotype_the_geom" CHECK (geometrytype(the_geom) = 'POINT'::text OR
+the_geom IS NULL)
+	"enforce_geotype_the_geomcp" CHECK (geometrytype(the_geomcp) = 'CURVEPOLYGON
+'::text OR the_geomcp IS NULL)
+	"enforce_srid_the_geom" CHECK (srid(the_geom) = 4326)
+	"enforce_srid_the_geomcp" CHECK (srid(the_geomcp) = 4326)</pre></div><div class="refsection" title="&#38306;&#36899;&#24773;&#22577;"><a name="id286830979"></a><h2>
+		&#38306;&#36899;&#24773;&#22577;
+		
+		</h2><p><a class="xref" href="DropGeometryColumn.html" title="DropGeometryColumn">DropGeometryColumn</a>, <a class="xref" href="DropGeometryTable.html" title="DropGeometryTable">DropGeometryTable</a>, <a class="xref" href="ch04.html#Manual_Register_Spatial_Column" title="4.3.4. &#25163;&#21205;&#12391;&#12472;&#12458;&#12513;&#12488;&#12522;&#12459;&#12521;&#12512;&#12434;geometry_columns&#12395;&#30331;&#37682;&#12377;&#12427;">&#12300;
+		&#25163;&#21205;&#12391;&#12472;&#12458;&#12513;&#12488;&#12522;&#12459;&#12521;&#12512;&#12434;geometry_columns&#12395;&#30331;&#37682;&#12377;&#12427;
+		
+		&#12301;</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="geography.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Management_Functions">&#19978;&#12395;&#25147;&#12427;</a></td><td width="40%" align="right"> <a accesskey="n" href="DropGeometryColumn.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr><tr><td width="40%" align="left" valign="top">geography </td><td width="20%" align="center"><a accesskey="h" href="index.html">&#12507;&#12540;&#12512;</a></td><td width="40%" align="right" valign="top"> DropGeometryColumn</td></tr></table></div></body></html>

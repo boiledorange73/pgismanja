@@ -1,0 +1,33 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>ST_Segmentize</title><link rel="stylesheet" href="style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.1"><link rel="home" href="index.html" title="PostGIS 1.5.1 &#12510;&#12491;&#12517;&#12450;&#12523; &#26085;&#26412;&#35486;&#35379;"><link rel="up" href="reference.html#Geometry_Editors" title="7.5. &#12472;&#12458;&#12513;&#12488;&#12522;&#12456;&#12487;&#12451;&#12479;"><link rel="prev" href="ST_Scale.html" title="ST_Scale"><link rel="next" href="ST_SetPoint.html" title="ST_SetPoint"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Segmentize</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_Scale.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><th width="60%" align="center">7.5. 
+	  &#12472;&#12458;&#12513;&#12488;&#12522;&#12456;&#12487;&#12451;&#12479;
+	  
+	  </th><td width="20%" align="right"> <a accesskey="n" href="ST_SetPoint.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr></table><hr></div><div class="refentry" title="ST_Segmentize"><a name="ST_Segmentize"></a><div class="titlepage"></div><div class="refnamediv"><h2>&#21517;&#21069;</h2><p>ST_Segmentize &#8212; 
+			&#19982;&#12360;&#12425;&#12428;&#12383;&#36317;&#38626;&#12424;&#12426;&#38263;&#12356;&#12475;&#12464;&#12513;&#12531;&#12488;&#12434;&#25345;&#12383;&#12394;&#12356;&#12472;&#12458;&#12513;&#12488;&#12522;&#12395;&#32232;&#38598;&#12375;&#12390;&#36820;&#12375;&#12414;&#12377;&#65294;&#36317;&#38626;&#35336;&#31639;&#12399;&#20108;&#27425;&#20803;&#12391;&#12375;&#12363;&#34892;&#12356;&#12414;&#12379;&#12435;&#65294;
+			
+			</p></div><div class="refsynopsisdiv" title="&#27010;&#35201;"><h2>&#27010;&#35201;</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_Segmentize</b>(</code>geometry  <var class="pdparam">geomA</var>, float  <var class="pdparam">max_length</var><code>)</code>;</p></div></div><div class="refsection" title="&#35500;&#26126;"><a name="id286861539"></a><h2>&#35500;&#26126;</h2><p>
+			&#19982;&#12360;&#12425;&#12428;&#12383;&#36317;&#38626;&#12424;&#12426;&#38263;&#12356;&#12475;&#12464;&#12513;&#12531;&#12488;&#12434;&#25345;&#12383;&#12394;&#12356;&#12472;&#12458;&#12513;&#12488;&#12522;&#12395;&#32232;&#38598;&#12375;&#12390;&#36820;&#12375;&#12414;&#12377;&#65294;&#36317;&#38626;&#35336;&#31639;&#12399;&#20108;&#27425;&#20803;&#12391;&#12375;&#12363;&#34892;&#12356;&#12414;&#12379;&#12435;&#65294;
+			
+			</p><p>
+			&#21021;&#20986;&#12496;&#12540;&#12472;&#12519;&#12531;: 1.2.2
+			
+			</p><div class="note" title="&#27880;&#24847;" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[&#27880;&#24847;]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+			&#12371;&#12428;&#12399;&#12475;&#12464;&#12513;&#12531;&#12488;&#12434;&#22679;&#12420;&#12377;&#12384;&#12369;&#12391;&#12377;&#65294;&#26368;&#22823;&#38263;&#12424;&#12426;&#30701;&#12356;&#12475;&#12464;&#12513;&#12531;&#12488;&#12434;&#20280;&#12400;&#12375;&#12414;&#12379;&#12435;&#65294;
+			
+			</p></td></tr></table></div></div><div class="refsection" title="&#20363;"><a name="id286861563"></a><h2>&#20363;</h2><pre class="programlisting">SELECT ST_AsText(ST_Segmentize(
+ST_GeomFromText('MULTILINESTRING((-29 -27,-30 -29.7,-36 -31,-45 -33),(-45 -33,-46 -32))')
+		,5)
+);
+st_astext
+--------------------------------------------------------------------------------------------------
+MULTILINESTRING((-29 -27,-30 -29.7,-34.886615700134 -30.758766735029,-36 -31,
+-40.8809353009198 -32.0846522890933,-45 -33),
+(-45 -33,-46 -32))
+(1 row)
+
+SELECT ST_AsText(ST_Segmentize(ST_GeomFromText('POLYGON((-29 28, -30 40, -29 28))'),10));
+st_astext
+-----------------------
+POLYGON((-29 28,-29.8304547985374 37.9654575824488,-30 40,-29.1695452014626 30.0345424175512,-29 28))
+(1 row)
+
+			</pre></div><div class="refsection" title="&#38306;&#36899;&#24773;&#22577;"><a name="id286861575"></a><h2>&#38306;&#36899;&#24773;&#22577;</h2><p><a class="xref" href="ST_Line_Substring.html" title="ST_Line_Substring">ST_Line_Substring</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_Scale.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Geometry_Editors">&#19978;&#12395;&#25147;&#12427;</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_SetPoint.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Scale </td><td width="20%" align="center"><a accesskey="h" href="index.html">&#12507;&#12540;&#12512;</a></td><td width="40%" align="right" valign="top"> ST_SetPoint</td></tr></table></div></body></html>

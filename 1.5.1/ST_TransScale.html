@@ -1,0 +1,34 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>ST_TransScale</title><link rel="stylesheet" href="style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.1"><link rel="home" href="index.html" title="PostGIS 1.5.1 &#12510;&#12491;&#12517;&#12450;&#12523; &#26085;&#26412;&#35486;&#35379;"><link rel="up" href="reference.html#Geometry_Editors" title="7.5. &#12472;&#12458;&#12513;&#12488;&#12522;&#12456;&#12487;&#12451;&#12479;"><link rel="prev" href="ST_Translate.html" title="ST_Translate"><link rel="next" href="ST_AsBinary.html" title="ST_AsBinary"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_TransScale</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_Translate.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><th width="60%" align="center">7.5. 
+	  &#12472;&#12458;&#12513;&#12488;&#12522;&#12456;&#12487;&#12451;&#12479;
+	  
+	  </th><td width="20%" align="right"> <a accesskey="n" href="ST_AsBinary.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr></table><hr></div><div class="refentry" title="ST_TransScale"><a name="ST_TransScale"></a><div class="titlepage"></div><div class="refnamediv"><h2>&#21517;&#21069;</h2><p>ST_TransScale &#8212; 
+		deltaX&#12392;deltaY&#24341;&#25968;&#12434;&#20351;&#12387;&#12390;&#12472;&#12458;&#12513;&#12488;&#12522;&#12434;&#31227;&#21205;&#12373;&#12379;&#65292;XFactor,YFactor&#24341;&#25968;&#12391;&#25313;&#22823;&#32302;&#23567;&#12373;&#12379;&#12414;&#12377;&#65294;&#20108;&#27425;&#20803;&#12391;&#12398;&#12415;&#21205;&#20316;&#12375;&#12414;&#12377;&#65294;
+		
+			</p></div><div class="refsynopsisdiv" title="&#27010;&#35201;"><h2>&#27010;&#35201;</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_TransScale</b>(</code>geometry  <var class="pdparam">geomA</var>, float <var class="pdparam">deltaX</var>, float <var class="pdparam">deltaY</var>, float <var class="pdparam">XFactor</var>, float <var class="pdparam">YFactor</var><code>)</code>;</p></div></div><div class="refsection" title="&#35500;&#26126;"><a name="id286862846"></a><h2>&#35500;&#26126;</h2><p>
+		deltaX&#12392;deltaY&#24341;&#25968;&#12434;&#20351;&#12387;&#12390;&#12472;&#12458;&#12513;&#12488;&#12522;&#12434;&#31227;&#21205;&#12373;&#12379;&#65292;XFactor,YFactor&#24341;&#25968;&#12391;&#25313;&#22823;&#32302;&#23567;&#12373;&#12379;&#12414;&#12377;&#65294;&#20108;&#27425;&#20803;&#12391;&#12398;&#12415;&#21205;&#20316;&#12375;&#12414;&#12377;&#65294;
+		
+			</p><div class="note" title="&#27880;&#24847;" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[&#27880;&#24847;]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+		<code class="code">ST_TransScale(geomA, deltaX, deltaY, XFactor, YFactor)</code>&#12399;<code class="code">ST_Affine(geomA, XFactor, 0, 0, 0, YFactor, 0,
+			0, 0, 1, deltaX*XFactor, deltaY*YFactor, 0)</code>&#12398;&#30701;&#32302;&#29256;&#12391;&#12377;&#65294;		
+		
+			</p></td></tr></table></div><div class="note" title="&#27880;&#24847;" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[&#27880;&#24847;]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+		1.3.4&#12424;&#12426;&#21069;&#12399;&#65292;&#26354;&#32218;&#12434;&#21547;&#12416;&#12472;&#12458;&#12513;&#12488;&#12522;&#12391;&#20351;&#12358;&#12392;&#12463;&#12521;&#12483;&#12471;&#12517;&#12375;&#12414;&#12375;&#12383;&#65294;&#12371;&#12428;&#12399;1.3.4&#20197;&#19978;&#12391;&#12399;&#35330;&#27491;&#12373;&#12428;&#12390;&#12356;&#12414;&#12377;&#65294;
+		
+		</p></td></tr></table></div><p>
+		&#21021;&#20986;&#12496;&#12540;&#12472;&#12519;&#12531;: 1.1.0
+		
+		</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ &#12371;&#12398;&#38306;&#25968;&#12399;&#19977;&#27425;&#20803;&#12434;&#12469;&#12509;&#12540;&#12488;&#12375;&#12414;&#12377;&#65294;Z&#12452;&#12531;&#12487;&#12463;&#12473;&#12434;&#21066;&#38500;&#12375;&#12414;&#12379;&#12435;&#65294;</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ &#12371;&#12398;&#12513;&#12477;&#12483;&#12489;&#12399;&#26354;&#32218;&#12473;&#12488;&#12522;&#12531;&#12464;&#12392;&#26354;&#32218;&#12434;&#12469;&#12509;&#12540;&#12488;&#12375;&#12414;&#12377;&#65294;</p></div><div class="refsection" title="&#20363;"><a name="id286862907"></a><h2>&#20363;</h2><pre class="programlisting">SELECT ST_AsEWKT(ST_TransScale(ST_GeomFromEWKT('LINESTRING(1 2 3, 1 1 1)'), 0.5, 1, 1, 2));
+		  st_asewkt
+-----------------------------
+ LINESTRING(1.5 6 3,1.5 4 1)
+
+
+--&#12509;&#12452;&#12531;&#12488;&#12398;&#12496;&#12483;&#12501;&#12449;&#12391;&#36969;&#20999;&#12394;&#20870;&#12434;&#29983;&#25104;&#12375;&#12390;&#65292;&#26354;&#32218;&#12395;&#22793;&#25563;&#12375;&#65292;1,2&#12395;&#31227;&#21205;&#12373;&#12379;3,4&#12395;&#25313;&#22823;
+  SELECT ST_AsText(ST_Transscale(ST_LineToCurve(ST_Buffer('POINT(234 567)', 3)),1,2,3,4));
+														  st_astext
+------------------------------------------------------------------------------------------------------------------------------
+ CURVEPOLYGON(CIRCULARSTRING(714 2276,711.363961030679 2267.51471862576,705 2264,698.636038969321 2284.48528137424,714 2276))
+
+</pre></div><div class="refsection" title="&#38306;&#36899;&#24773;&#22577;"><a name="id286862924"></a><h2>&#38306;&#36899;&#24773;&#22577;</h2><p><a class="xref" href="ST_Affine.html" title="ST_Affine">ST_Affine</a>, <a class="xref" href="ST_Translate.html" title="ST_Translate">ST_Translate</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_Translate.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Geometry_Editors">&#19978;&#12395;&#25147;&#12427;</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_AsBinary.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Translate </td><td width="20%" align="center"><a accesskey="h" href="index.html">&#12507;&#12540;&#12512;</a></td><td width="40%" align="right" valign="top"> ST_AsBinary</td></tr></table></div></body></html>

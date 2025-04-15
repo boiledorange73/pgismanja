@@ -1,0 +1,294 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>PostGIS 1.5.1 &#12510;&#12491;&#12517;&#12450;&#12523; &#26085;&#26412;&#35486;&#35379;</title><link rel="stylesheet" href="style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.1"><meta name="description" content="PostGIS&#12399;&#12458;&#12502;&#12472;&#12455;&#12463;&#12488;RDB&#12391;&#12354;&#12427;PostgreSQL&#12398;&#25313;&#24373;&#12391;&#65292;GIS(&#22320;&#29702;&#24773;&#22577;&#12471;&#12473;&#12486;&#12512;)&#12458;&#12502;&#12472;&#12455;&#12463;&#12434;&#26684;&#32013;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12414;&#12377;&#65294; PostGIS&#12399;&#65292;GiST&#12505;&#12540;&#12473;&#12398;R-Tree&#31354;&#38291;&#12452;&#12531;&#12487;&#12463;&#12473;&#12434;&#12469;&#12509;&#12540;&#12488;&#12375;&#65292;GIS&#12458;&#12502;&#12472;&#12455;&#12463;&#12488;&#12398;&#35299;&#26512;&#12362;&#12424;&#12403;&#20966;&#29702;&#12434;&#34892;&#12358;&#27231;&#33021;&#12434;&#25345;&#12385;&#12414;&#12377;&#65294; &#12371;&#12428;&#12399;&#65292;1.5.1&#29256;&#12398;&#12510;&#12491;&#12517;&#12450;&#12523;&#12391;&#12377;&#65294; &#12371;&#12398;&#32763;&#35379;&#25991;&#26360;&#12399;&#65292;PostGIS 1.5.1 Release&#12395;&#28155;&#20184;&#12373;&#12428;&#12390;&#12356;&#12383;&#12510;&#12491;&#12517;&#12450;&#12523;&#12434;&#12418;&#12392;&#12395;&#20316;&#25104;&#12375;&#12414;&#12375;&#12383;&#65294; &#26085;&#26412;&#35486;&#12414;&#12383;&#12399;&#26085;&#26412;&#22269;&#20869;&#22266;&#26377;&#12398;&#21839;&#38988;&#12364;&#12354;&#12426;&#12414;&#12377;&#12398;&#12391;&#65292;&#12434;&#36861;&#21152;&#12375;&#12414;&#12375;&#12383;&#65294;&#12354;&#12431;&#12379;&#12390;&#12372;&#35239;&#12367;&#12384;&#12373;&#12356;&#65294;"><link rel="home" href="index.html" title="PostGIS 1.5.1 &#12510;&#12491;&#12517;&#12450;&#12523; &#26085;&#26412;&#35486;&#35379;"><link rel="next" href="ch01.html" title="&#31532;1&#31456; &#23566;&#20837;"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">
+  PostGIS 1.5.1 &#12510;&#12491;&#12517;&#12450;&#12523; &#26085;&#26412;&#35486;&#35379;
+  
+  </th></tr><tr><td width="20%" align="left"> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch01.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr></table><hr></div><div lang="ja" class="book" title="PostGIS 1.5.1 &#12510;&#12491;&#12517;&#12450;&#12523; &#26085;&#26412;&#35486;&#35379;"><div class="titlepage"><div><div><h1 class="title"><a name="id286810179"></a>
+  PostGIS 1.5.1 &#12510;&#12491;&#12517;&#12450;&#12523; &#26085;&#26412;&#35486;&#35379;
+  
+  </h1></div><div><div class="abstract" title="&#27010;&#35201;"><p class="title"><b>&#27010;&#35201;</b></p><p>
+	  PostGIS&#12399;&#12458;&#12502;&#12472;&#12455;&#12463;&#12488;RDB&#12391;&#12354;&#12427;PostgreSQL&#12398;&#25313;&#24373;&#12391;&#65292;GIS(&#22320;&#29702;&#24773;&#22577;&#12471;&#12473;&#12486;&#12512;)&#12458;&#12502;&#12472;&#12455;&#12463;&#12434;&#26684;&#32013;&#12377;&#12427;&#12371;&#12392;&#12364;&#12391;&#12365;&#12414;&#12377;&#65294; PostGIS&#12399;&#65292;GiST&#12505;&#12540;&#12473;&#12398;R-Tree&#31354;&#38291;&#12452;&#12531;&#12487;&#12463;&#12473;&#12434;&#12469;&#12509;&#12540;&#12488;&#12375;&#65292;GIS&#12458;&#12502;&#12472;&#12455;&#12463;&#12488;&#12398;&#35299;&#26512;&#12362;&#12424;&#12403;&#20966;&#29702;&#12434;&#34892;&#12358;&#27231;&#33021;&#12434;&#25345;&#12385;&#12414;&#12377;&#65294;
+	  
+	  </p><p>&#12371;&#12428;&#12399;&#65292;1.5.1&#29256;&#12398;&#12510;&#12491;&#12517;&#12450;&#12523;&#12391;&#12377;&#65294;
+	  
+	  </p><div class="note" title="&#27880;&#24847;" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[&#27880;&#24847;]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+			&#12371;&#12398;&#32763;&#35379;&#25991;&#26360;&#12399;&#65292;PostGIS 1.5.1 Release&#12395;&#28155;&#20184;&#12373;&#12428;&#12390;&#12356;&#12383;&#12510;&#12491;&#12517;&#12450;&#12523;&#12434;&#12418;&#12392;&#12395;&#20316;&#25104;&#12375;&#12414;&#12375;&#12383;&#65294;
+		</p><p>
+			&#26085;&#26412;&#35486;&#12414;&#12383;&#12399;&#26085;&#26412;&#22269;&#20869;&#22266;&#26377;&#12398;&#21839;&#38988;&#12364;&#12354;&#12426;&#12414;&#12377;&#12398;&#12391;&#65292;<a class="xref" href="japanese.html" title="&#20184;&#37682;B &#26085;&#26412;&#35486;&#35379;&#12395;&#38306;&#12377;&#12427;&#36861;&#21152;&#24773;&#22577;">&#20184;&#37682;B <i>&#26085;&#26412;&#35486;&#35379;&#12395;&#38306;&#12377;&#12427;&#36861;&#21152;&#24773;&#22577;</i></a>&#12434;&#36861;&#21152;&#12375;&#12414;&#12375;&#12383;&#65294;&#12354;&#12431;&#12379;&#12390;&#12372;&#35239;&#12367;&#12384;&#12373;&#12356;&#65294;
+		</p></td></tr></table></div></div></div></div><hr></div><div class="toc"><p><b>&#30446;&#27425;</b></p><dl><dt><span class="chapter"><a href="ch01.html">1. 
+  &#23566;&#20837;
+  
+  </a></span></dt><dd><dl><dt><span class="sect1"><a href="ch01.html#psc">1.1. 
+	&#12503;&#12525;&#12472;&#12455;&#12463;&#12488;&#36939;&#21942;&#22996;&#21729;&#20250;
+	
+	</a></span></dt><dt><span class="sect1"><a href="ch01.html#credits">1.2. 
+	&#36942;&#21435;&#12392;&#29694;&#22312;&#12398;&#36002;&#29486;&#32773;
+	
+	</a></span></dt><dt><span class="sect1"><a href="ch01.html#id286810571">1.3. 
+	&#36861;&#21152;&#24773;&#22577;
+	
+	</a></span></dt></dl></dd><dt><span class="chapter"><a href="ch02.html">2. 
+  &#12452;&#12531;&#12473;&#12488;&#12540;&#12523;
+  
+  </a></span></dt><dd><dl><dt><span class="sect1"><a href="ch02.html#id286810788">2.1. 
+	&#31777;&#30053;&#29256;
+	
+	</a></span></dt><dt><span class="sect1"><a href="ch02.html#id286810806">2.2. 
+	&#24517;&#35201;&#12394;&#12418;&#12398;
+	
+	</a></span></dt><dt><span class="sect1"><a href="ch02.html#id286811365">2.3. 
+	&#12477;&#12540;&#12473;&#12398;&#21462;&#24471;
+	
+	</a></span></dt><dt><span class="sect1"><a href="ch02.html#PGInstall">2.4. 
+	&#12452;&#12531;&#12473;&#12488;&#12540;&#12523;
+	
+	</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch02.html#id286811492">2.4.1. 
+	  &#12467;&#12531;&#12501;&#12451;&#12462;&#12517;&#12524;&#12540;&#12471;&#12519;&#12531;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch02.html#id286799495">2.4.2. 
+	  &#12499;&#12523;&#12489;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch02.html#id286799539">2.4.3. 
+	  &#12486;&#12473;&#12488;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch02.html#id286799616">2.4.4. 
+	  &#12452;&#12531;&#12473;&#12488;&#12540;&#12523;
+	  
+	  </a></span></dt></dl></dd><dt><span class="sect1"><a href="ch02.html#id286799734">2.5. 
+	&#31354;&#38291;&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#12398;&#20316;&#25104;
+	
+	</a></span></dt><dt><span class="sect1"><a href="ch02.html#templatepostgis">2.6. 
+	&#31354;&#38291;&#12487;&#12540;&#12479;&#12505;&#12540;&#12473;&#12434;&#12486;&#12531;&#12503;&#12524;&#12540;&#12488;&#12363;&#12425;&#29983;&#25104;&#12377;&#12427;
+	
+	</a></span></dt><dt><span class="sect1"><a href="ch02.html#upgrading">2.7. 
+	&#12450;&#12483;&#12503;&#12464;&#12524;&#12540;&#12489;
+	
+	</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch02.html#soft_upgrade">2.7.1. 
+	  &#12477;&#12501;&#12488;&#12450;&#12483;&#12503;&#12464;&#12524;&#12540;&#12489;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch02.html#hard_upgrade">2.7.2. 
+	  &#12495;&#12540;&#12489;&#12450;&#12483;&#12503;&#12464;&#12524;&#12540;&#12489;
+	  
+	  </a></span></dt></dl></dd><dt><span class="sect1"><a href="ch02.html#id286800270">2.8. 
+	&#20849;&#36890;&#12398;&#21839;&#38988;
+	
+	</a></span></dt><dt><span class="sect1"><a href="ch02.html#id286800352">2.9. JDBC</a></span></dt><dt><span class="sect1"><a href="ch02.html#id286800419">2.10. 
+	&#12525;&#12540;&#12480;/&#12480;&#12531;&#12497;
+	
+	</a></span></dt></dl></dd><dt><span class="chapter"><a href="ch03.html">3. 
+  &#12424;&#12367;&#12354;&#12427;&#36074;&#21839;
+  
+  </a></span></dt><dt><span class="chapter"><a href="ch04.html">4. 
+  PostGIS&#12434;&#20351;&#12358;: &#12487;&#12540;&#12479;&#31649;&#29702;&#12392;&#12463;&#12456;&#12522;
+  
+  </a></span></dt><dd><dl><dt><span class="sect1"><a href="ch04.html#RefObject">4.1. 
+	GIS&#12458;&#12502;&#12472;&#12455;&#12463;&#12488;
+	
+	</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04.html#OpenGISWKBWKT">4.1.1. 
+	  OpenGIS WKB &#12392;WKT
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch04.html#EWKB_EWKT">4.1.2. 
+	  PostGIS EWKB&#65292;EWKT &#12392; &#27161;&#28310;&#24418;&#24335;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch04.html#SQL_MM_Part3">4.1.3. SQL-MM Part 3</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch04.html#PostGIS_Geography">4.2. 
+	  &#12472;&#12458;&#12464;&#12521;&#12501;&#12451;&#22411;
+	  
+	  </a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04.html#Geography_Basics">4.2.1. 
+		&#12472;&#12458;&#12464;&#12521;&#12501;&#12451;&#22522;&#30990;
+		
+		</a></span></dt><dt><span class="sect2"><a href="ch04.html#PostGIS_GeographyVSGeometry">4.2.2. 
+	  &#12472;&#12458;&#12464;&#12521;&#12501;&#12451;&#22411;&#12434;&#12472;&#12458;&#12513;&#12488;&#12522;&#22411;&#12395;&#12375;&#12390;&#20351;&#29992;&#12377;&#12409;&#12365;&#26178;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch04.html#PostGIS_Geography_AdvancedFAQ">4.2.3. 
+			&#12472;&#12458;&#12464;&#12521;&#12501;&#12451;&#12398;&#39640;&#24230;&#12394;&#12424;&#12367;&#12354;&#12427;&#36074;&#21839;
+			
+			</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch04.html#id286813669">4.3. 
+	OpenGIS&#27161;&#28310;&#12434;&#20351;&#12358;
+	
+	</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04.html#spatial_ref_sys">4.3.1. 
+	  SPATIAL_REF_SYS&#12486;&#12540;&#12502;&#12523;&#12392;&#31354;&#38291;&#21442;&#29031;&#31995;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch04.html#id286814041">4.3.2. 
+	  GEOMETRY_COLUMNS&#12486;&#12540;&#12502;&#12523;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch04.html#Create_Spatial_Table">4.3.3. 
+	  &#31354;&#38291;&#12486;&#12540;&#12502;&#12523;&#12434;&#20316;&#12427;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch04.html#Manual_Register_Spatial_Column">4.3.4. 
+		&#25163;&#21205;&#12391;&#12472;&#12458;&#12513;&#12488;&#12522;&#12459;&#12521;&#12512;&#12434;geometry_columns&#12395;&#30331;&#37682;&#12377;&#12427;
+		
+		</a></span></dt><dt><span class="sect2"><a href="ch04.html#OGC_Validity">4.3.5. 
+	  &#12472;&#12458;&#12513;&#12488;&#12522;&#12398;OpenGIS&#28310;&#25312;&#12434;&#30906;&#23455;&#12395;&#12377;&#12427;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch04.html#DE-9IM">4.3.6. 
+		Dimensionally Extended 9 Intersection Model (DE-9IM)
+		
+		</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch04.html#id286816897">4.4. 
+	GIS&#12487;&#12540;&#12479;&#12434;&#12525;&#12540;&#12489;&#12377;&#12427;
+	
+	</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04.html#id286816909">4.4.1. 
+	  SQL&#12434;&#20351;&#12358;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch04.html#shp2pgsql_usage">4.4.2. 
+  &#12525;&#12540;&#12480;&#12434;&#20351;&#12358;
+  
+  </a></span></dt></dl></dd><dt><span class="sect1"><a href="ch04.html#id286817558">4.5. 
+	GIS&#12487;&#12540;&#12479;&#12434;&#26908;&#32034;&#12377;&#12427;
+	
+	</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04.html#id286817571">4.5.1. 
+	  SQL&#12434;&#20351;&#12358;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch04.html#id286817827">4.5.2. 
+	  &#12480;&#12531;&#12497;&#12434;&#20351;&#12358;
+	  
+	  </a></span></dt></dl></dd><dt><span class="sect1"><a href="ch04.html#id286818023">4.6. 
+	&#12452;&#12531;&#12487;&#12463;&#12473;&#12434;&#27083;&#31689;&#12377;&#12427;
+	
+	</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04.html#id286818134">4.6.1. 
+	  GiST&#12452;&#12531;&#12487;&#12463;&#12473;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch04.html#id286818189">4.6.2. 
+	  &#12452;&#12531;&#12487;&#12463;&#12473;&#12434;&#20351;&#12358;
+	  
+	  </a></span></dt></dl></dd><dt><span class="sect1"><a href="ch04.html#id286818722">4.7. 
+	&#35079;&#38609;&#12394;&#12463;&#12456;&#12522;
+	
+	</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04.html#id286818738">4.7.1. 
+	  &#12452;&#12531;&#12487;&#12463;&#12473;&#12398;&#21033;&#28857;&#12434;&#20351;&#12358;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch04.html#id286818798">4.7.2. 
+	  &#31354;&#38291;SQL&#12398;&#20363;
+	  
+	  </a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="ch05.html">5. 
+  PostGIS&#12434;&#20351;&#12358;: &#12450;&#12503;&#12522;&#12465;&#12540;&#12471;&#12519;&#12531;&#12434;&#27083;&#31689;&#12377;&#12427;
+  
+  </a></span></dt><dd><dl><dt><span class="sect1"><a href="ch05.html#Using_MapServer">5.1. 
+	MapServer&#12434;&#20351;&#12358;
+	
+	</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch05.html#id286825254">5.1.1. 
+	  &#22522;&#26412;&#30340;&#12394;&#20351;&#12356;&#26041;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch05.html#id286825465">5.1.2. 
+	  &#12424;&#12367;&#12354;&#12427;&#36074;&#21839;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch05.html#id286825662">5.1.3. 
+	  &#36367;&#12415;&#36796;&#12435;&#12384;&#20351;&#29992;&#27861;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch05.html#id286825778">5.1.4. 
+	  &#20363;
+	  
+	  </a></span></dt></dl></dd><dt><span class="sect1"><a href="ch05.html#id286826022">5.2. 
+	Java&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;(JDBC)
+	
+	</a></span></dt><dt><span class="sect1"><a href="ch05.html#id286826057">5.3. 
+	C&#12463;&#12521;&#12452;&#12450;&#12531;&#12488;(libpq)
+	
+	</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch05.html#id286826068">5.3.1. 
+	  &#12486;&#12461;&#12473;&#12488;&#12459;&#12540;&#12477;&#12523;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch05.html#id286826080">5.3.2. 
+	  &#12496;&#12452;&#12490;&#12522;&#12459;&#12540;&#12477;&#12523;
+	  
+	  </a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="ch06.html">6. 
+  &#24615;&#33021;&#21521;&#19978;&#12395;&#38306;&#12377;&#12427;&#25216;&#27861;
+  
+  </a></span></dt><dd><dl><dt><span class="sect1"><a href="ch06.html#id286826659">6.1. 
+	&#22823;&#12365;&#12394;&#12472;&#12458;&#12513;&#12488;&#12522;&#12434;&#25345;&#12388;&#23567;&#12373;&#12394;&#12486;&#12540;&#12502;&#12523; 
+	
+	</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch06.html#id286827078">6.1.1. 
+	  &#21839;&#38988;&#12398;&#35500;&#26126;
+	  
+	  </a></span></dt><dt><span class="sect2"><a href="ch06.html#id286827108">6.1.2. 
+	  &#24540;&#24613;&#20966;&#32622;
+	  
+	  </a></span></dt></dl></dd><dt><span class="sect1"><a href="ch06.html#id286827563">6.2. 
+	&#12472;&#12458;&#12513;&#12488;&#12522;&#12452;&#12531;&#12487;&#12463;&#12473;&#12391;CLUSTER&#12434;&#23455;&#34892;&#12377;&#12427;
+	
+	</a></span></dt><dt><span class="sect1"><a href="ch06.html#id286827606">6.3. 
+	&#27425;&#20803;&#22793;&#25563;&#12398;&#22238;&#36991;
+	
+	</a></span></dt><dt><span class="sect1"><a href="ch06.html#id286826987">6.4. 
+	&#12467;&#12531;&#12501;&#12451;&#12462;&#12517;&#12524;&#12540;&#12471;&#12519;&#12531;&#12398;&#12481;&#12517;&#12540;&#12531;
+	
+	</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch06.html#id286827010">6.4.1. 
+		&#12473;&#12479;&#12540;&#12488;&#12450;&#12483;&#12503;
+		
+		</a></span></dt><dt><span class="sect2"><a href="ch06.html#id286827877">6.4.2. &#23455;&#34892;&#26178;</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="reference.html">7. 
+  PostGIS&#12522;&#12501;&#12449;&#12524;&#12531;&#12473;
+  
+  </a></span></dt><dd><dl><dt><span class="sect1"><a href="reference.html#PostGIS_Types">7.1. 
+	PostgreSQL&#12398;PostGIS&#22411;
+	
+	</a></span></dt><dt><span class="sect1"><a href="reference.html#Management_Functions">7.2. 
+	&#31649;&#29702;&#38306;&#25968;
+	
+	</a></span></dt><dt><span class="sect1"><a href="reference.html#Geometry_Constructors">7.3. 
+	  &#12472;&#12458;&#12513;&#12488;&#12522;&#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;
+	  
+	  </a></span></dt><dt><span class="sect1"><a href="reference.html#Geometry_Accessors">7.4. 
+	&#12472;&#12458;&#12513;&#12488;&#12522;&#12450;&#12463;&#12475;&#12469;
+	
+	</a></span></dt><dt><span class="sect1"><a href="reference.html#Geometry_Editors">7.5. 
+	  &#12472;&#12458;&#12513;&#12488;&#12522;&#12456;&#12487;&#12451;&#12479;
+	  
+	  </a></span></dt><dt><span class="sect1"><a href="reference.html#Geometry_Outputs">7.6. 
+	  &#12472;&#12458;&#12513;&#12488;&#12522;&#20986;&#21147;
+	  
+	  </a></span></dt><dt><span class="sect1"><a href="reference.html#Operators">7.7. 
+	&#28436;&#31639;&#23376;
+	
+	</a></span></dt><dt><span class="sect1"><a href="reference.html#Spatial_Relationships_Measurements">7.8. 
+	&#31354;&#38291;&#38306;&#20418;&#38306;&#25968;&#12392;&#31354;&#38291;&#35336;&#28204;&#38306;&#25968;
+	
+	</a></span></dt><dt><span class="sect1"><a href="reference.html#Geometry_Processing">7.9. 
+		&#12472;&#12458;&#12513;&#12488;&#12522;&#20966;&#29702;&#38306;&#25968;
+		
+		</a></span></dt><dt><span class="sect1"><a href="reference.html#Linear_Referencing">7.10. 
+	  &#32218;&#21442;&#29031;
+	  
+	  </a></span></dt><dt><span class="sect1"><a href="reference.html#Long_Transactions_Support">7.11. 
+	  &#12525;&#12531;&#12464;&#12488;&#12521;&#12531;&#12470;&#12463;&#12471;&#12519;&#12531;&#12469;&#12509;&#12540;&#12488;
+	  
+	  </a></span></dt><dt><span class="sect1"><a href="reference.html#Miscellaneous_Functions">7.12. 
+	&#12381;&#12398;&#20182;&#12398;&#38306;&#25968;
+	
+	</a></span></dt><dt><span class="sect1"><a href="reference.html#Exceptional_Functions">7.13. 
+	&#20363;&#22806;&#30340;&#38306;&#25968;
+	
+	</a></span></dt></dl></dd><dt><span class="chapter"><a href="ch08.html">8. 
+        PostGIS&#31354;&#38291;&#38306;&#25968;&#32034;&#24341;
+        </a></span></dt><dd><dl><dt><span class="sect1"><a href="ch08.html#PostGIS_Aggregate_Functions">8.1. 
+            PostGIS&#38598;&#35336;&#38306;&#25968;
+            </a></span></dt><dt><span class="sect1"><a href="ch08.html#PostGIS_SQLMM_Functions">8.2. 
+            PostGIS SQL-MM&#23550;&#24540;&#38306;&#25968;
+            </a></span></dt><dt><span class="sect1"><a href="ch08.html#PostGIS_GeographyFunctions">8.3. 
+            PostGIS&#12472;&#12458;&#12464;&#12521;&#12501;&#12451;&#12469;&#12509;&#12540;&#12488;&#38306;&#25968;
+            </a></span></dt><dt><span class="sect1"><a href="ch08.html#PostGIS_Geometry_DumpFunctions">8.4. 
+            PostGIS&#12472;&#12458;&#12513;&#12488;&#12522;&#12480;&#12531;&#12503;&#38306;&#25968;
+            </a></span></dt><dt><span class="sect1"><a href="ch08.html#PostGIS_BoxFunctions">8.5. 
+            PostGIS&#12508;&#12483;&#12463;&#12473;&#38306;&#25968;
+            </a></span></dt><dt><span class="sect1"><a href="ch08.html#PostGIS_3D_Functions">8.6. 
+            &#19977;&#27425;&#20803;&#12434;&#12469;&#12509;&#12540;&#12488;&#12377;&#12427;PostGIS&#38306;&#25968;
+            </a></span></dt><dt><span class="sect1"><a href="ch08.html#PostGIS_Curved_GeometryFunctions">8.7. 
+            PostGIS&#26354;&#32218;&#12472;&#12458;&#12513;&#12488;&#12522;&#12469;&#12509;&#12540;&#12488;&#38306;&#25968;
+            </a></span></dt><dt><span class="sect1"><a href="ch08.html#PostGIS_TypeFunctionMatrix">8.8. 
+            PostGIS&#38306;&#25968;&#12469;&#12509;&#12540;&#12488;&#12510;&#12488;&#12522;&#12463;&#12473;
+            </a></span></dt><dt><span class="sect1"><a href="ch08.html#NewFunctions">8.9. 
+            &#26032;&#12375;&#12356;PostGIS&#38306;&#25968;
+            </a></span></dt><dd><dl><dt><span class="sect2"><a href="ch08.html#NewFunctions_1_5">8.9.1. 
+                PostGIS 1.5&#12391;&#26032;&#12375;&#12367;&#12391;&#12365;&#12383;&#38306;&#25968;&#65292;&#12405;&#12427;&#12414;&#12356;&#12364;&#22793;&#12431;&#12387;&#12383;&#38306;&#25968;&#65292;&#27231;&#33021;&#24375;&#21270;&#12373;&#12428;&#12383;&#38306;&#25968;
+                </a></span></dt><dt><span class="sect2"><a href="ch08.html#NewFunctions_1_4">8.9.2. 
+                PostGIS 1.4&#12391;&#26032;&#12375;&#12367;&#12391;&#12365;&#12383;&#38306;&#25968;&#65292;&#12405;&#12427;&#12414;&#12356;&#12364;&#22793;&#12431;&#12387;&#12383;&#38306;&#25968;&#65292;&#27231;&#33021;&#24375;&#21270;&#12373;&#12428;&#12383;&#38306;&#25968;
+                </a></span></dt><dt><span class="sect2"><a href="ch08.html#NewFunctions_1_3">8.9.3. 
+                PostGIS 1.3&#12391;&#26032;&#12375;&#12367;&#12391;&#12365;&#12383;&#38306;&#25968;
+                </a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="ch09.html">9. 
+  &#21839;&#38988;&#12434;&#22577;&#21578;&#12377;&#12427;
+  
+  </a></span></dt><dd><dl><dt><span class="sect1"><a href="ch09.html#id286971049">9.1. 
+	&#12477;&#12501;&#12488;&#12454;&#12455;&#12450;&#12398;&#12496;&#12464;&#12434;&#22577;&#21578;&#12377;&#12427;
+	
+	</a></span></dt><dt><span class="sect1"><a href="ch09.html#id286971511">9.2. 
+	&#25991;&#26360;&#12398;&#21839;&#38988;&#12434;&#22577;&#21578;&#12377;&#12427;
+	
+	</a></span></dt></dl></dd><dt><span class="appendix"><a href="release_notes.html">A. Appendix</a></span></dt><dd><dl><dt><span class="sect1"><a href="release_notes.html#id286972042">A.1. Release 1.5.1</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286972090">A.2. Release 1.5.0</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286972268">A.3. Release 1.4.0</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286972441">A.4. Release 1.3.6</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286972455">A.5. Release 1.3.5</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286972468">A.6. Release 1.3.4</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286972484">A.7. Release 1.3.3</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286972497">A.8. Release 1.3.2</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286972509">A.9. Release 1.3.1</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286972524">A.10. Release 1.3.0</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286972582">A.11. Release 1.2.1</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286972618">A.12. Release 1.2.0</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286972645">A.13. Release 1.1.6</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286972733">A.14. Release 1.1.5</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286972819">A.15. Release 1.1.4</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286972909">A.16. Release 1.1.3</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286973041">A.17. Release 1.1.2</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286973145">A.18. Release 1.1.1</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286973277">A.19. Release 1.1.0</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286973530">A.20. Release 1.0.6</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286973617">A.21. Release 1.0.5</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286973724">A.22. Release 1.0.4</a></span></dt><dt><span class="sect1"><a href="release_notes.html#rel_1.0.3_upgrading">A.23. Release 1.0.3</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286973947">A.24. Release 1.0.2</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286974048">A.25. Release 1.0.1</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286974165">A.26. Release 1.0.0</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286974244">A.27. Release 1.0.0RC6</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286974341">A.28. Release 1.0.0RC5</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286974401">A.29. Release 1.0.0RC4</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286974502">A.30. Release 1.0.0RC3</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286974675">A.31. Release 1.0.0RC2</a></span></dt><dt><span class="sect1"><a href="release_notes.html#id286974757">A.32. Release 1.0.0RC1</a></span></dt></dl></dd><dt><span class="appendix"><a href="japanese.html">B. &#26085;&#26412;&#35486;&#35379;&#12395;&#38306;&#12377;&#12427;&#36861;&#21152;&#24773;&#22577;</a></span></dt><dd><dl><dt><span class="sect1"><a href="japanese.html#id286977453">B.1. &#12300;&#12452;&#12531;&#12479;&#12475;&#12463;&#12488;&#12301;&#12392;&#12300;&#12463;&#12525;&#12473;&#12301;</a></span></dt><dt><span class="sect1"><a href="japanese.html#id286978024">B.2. &#31354;&#38291;&#21442;&#29031;&#31995;&#31561;&#12395;&#12388;&#12356;&#12390;</a></span></dt><dd><dl><dt><span class="sect2"><a href="japanese.html#id286978033">B.2.1. &#12431;&#12364;&#22269;&#12391;&#12424;&#12367;&#20351;&#12431;&#12428;&#12427;&#31354;&#38291;&#21442;&#29031;&#31995;</a></span></dt><dt><span class="sect2"><a href="japanese.html#id286978142">B.2.2. &#28204;&#22320;&#31995;</a></span></dt><dt><span class="sect2"><a href="japanese.html#id286978160">B.2.3. UTM</a></span></dt><dt><span class="sect2"><a href="japanese.html#id286978560">B.2.4. &#24179;&#38754;&#30452;&#35282;&#24231;&#27161;&#31995;</a></span></dt></dl></dd><dt><span class="sect1"><a href="japanese.html#id286978585">B.3. &#26085;&#26412;&#28204;&#22320;&#31995;&#12363;&#12425;&#25237;&#24433;&#22793;&#25563;&#12377;&#12427;&#22580;&#21512;&#12398;&#21839;&#38988;&#28857;</a></span></dt><dd><dl><dt><span class="sect2"><a href="japanese.html#id286978601">B.3.1. Proj.4&#12391;&#21839;&#38988;&#28857;&#12434;&#35211;&#12427;</a></span></dt><dt><span class="sect2"><a href="japanese.html#id286978646">B.3.2. PostGIS&#12391;&#12398;&#21839;&#38988;&#22238;&#36991;</a></span></dt></dl></dd><dt><span class="sect1"><a href="japanese.html#id286978722">B.4. Shift JIS&#31995;&#25991;&#23383;&#12467;&#12540;&#12489;&#12395;&#12388;&#12356;&#12390;</a></span></dt></dl></dd></dl></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="ch01.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"> </td><td width="40%" align="right" valign="top"> &#31532;1&#31456; 
+  &#23566;&#20837;
+  
+  </td></tr></table></div></body></html>

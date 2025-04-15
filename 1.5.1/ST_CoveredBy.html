@@ -1,0 +1,48 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>ST_CoveredBy</title><link rel="stylesheet" href="style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.1"><link rel="home" href="index.html" title="PostGIS 1.5.1 &#12510;&#12491;&#12517;&#12450;&#12523; &#26085;&#26412;&#35486;&#35379;"><link rel="up" href="reference.html#Spatial_Relationships_Measurements" title="7.8. &#31354;&#38291;&#38306;&#20418;&#38306;&#25968;&#12392;&#31354;&#38291;&#35336;&#28204;&#38306;&#25968;"><link rel="prev" href="ST_Covers.html" title="ST_Covers"><link rel="next" href="ST_Crosses.html" title="ST_Crosses"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_CoveredBy</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_Covers.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><th width="60%" align="center">7.8. 
+	&#31354;&#38291;&#38306;&#20418;&#38306;&#25968;&#12392;&#31354;&#38291;&#35336;&#28204;&#38306;&#25968;
+	
+	</th><td width="20%" align="right"> <a accesskey="n" href="ST_Crosses.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr></table><hr></div><div class="refentry" title="ST_CoveredBy"><a name="ST_CoveredBy"></a><div class="titlepage"></div><div class="refnamediv"><h2>&#21517;&#21069;</h2><p>ST_CoveredBy &#8212; 
+		&#12472;&#12458;&#12513;&#12488;&#12522;/&#12472;&#12458;&#12464;&#12521;&#12501;&#12451;A&#12398;&#28857;&#12364;&#12472;&#12458;&#12513;&#12488;&#12522;/&#12472;&#12458;&#12464;&#12521;&#12501;&#12451;B&#12398;&#22806;&#12395;&#28961;&#12356;&#22580;&#21512;&#12395;&#65292;1(TRUE)&#12434;&#36820;&#12375;&#12414;&#12377;&#65294;
+		
+		</p></div><div class="refsynopsisdiv" title="&#27010;&#35201;"><h2>&#27010;&#35201;</h2><div class="funcsynopsis"><p><code class="funcdef">boolean <b class="fsfunc">ST_CoveredBy</b>(</code>geometry 
+			<var class="pdparam">geomA</var>, geometry 
+			<var class="pdparam">geomB</var><code>)</code>;</p><p><code class="funcdef">boolean <b class="fsfunc">ST_CoveredBy</b>(</code>geography 
+			<var class="pdparam">geogA</var>, geography 
+			<var class="pdparam">geogB</var><code>)</code>;</p></div></div><div class="refsection" title="&#35500;&#26126;"><a name="id286881022"></a><h2>&#35500;&#26126;</h2><p>
+		  &#12472;&#12458;&#12513;&#12488;&#12522;/&#12472;&#12458;&#12464;&#12521;&#12501;&#12451;A&#12398;&#28857;&#12364;&#12472;&#12458;&#12513;&#12488;&#12522;/&#12472;&#12458;&#12464;&#12521;&#12501;&#12451;B&#12398;&#22806;&#12395;&#28961;&#12356;&#22580;&#21512;&#12395;&#65292;1(TRUE)&#12434;&#36820;&#12375;&#12414;&#12377;&#65294;
+		  
+			</p><p>
+		GEOS&#12514;&#12472;&#12517;&#12540;&#12523;&#12391;&#23455;&#29694;&#12375;&#12390;&#12356;&#12414;&#12377;&#65294;
+		
+		</p><div class="important" title="&#37325;&#35201;&#38917;&#30446;" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Important"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[&#37325;&#35201;&#38917;&#30446;]" src="images/important.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+		  <code class="varname">GEOMETRYCOLLECTION</code>&#12434;&#24341;&#25968;&#12395;&#12375;&#12390;&#21628;&#12400;&#12394;&#12356;&#12391;&#12367;&#12384;&#12373;&#12356;&#65294;
+		  
+		  </p></td></tr></table></div><div class="important" title="&#37325;&#35201;&#38917;&#30446;" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Important"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[&#37325;&#35201;&#38917;&#30446;]" src="images/important.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+		  &#12371;&#12398;&#38306;&#25968;&#12434;&#19981;&#27491;&#12394;&#12472;&#12458;&#12513;&#12488;&#12522;&#12391;&#21628;&#12400;&#12394;&#12356;&#12391;&#12367;&#12384;&#12373;&#12356;&#65294;&#20104;&#26399;&#12375;&#12394;&#12356;&#32080;&#26524;&#12364;&#36820;&#12373;&#12428;&#12414;&#12377;&#65294;
+		  
+		  </p></td></tr></table></div><p>
+		&#21021;&#20986;&#12496;&#12540;&#12472;&#12519;&#12531;: 1.2.2 - GEOS &gt;= 3.0&#12364;&#24517;&#35201;&#12391;&#12377;&#65294;
+		
+		</p><p>
+		&#12371;&#12398;&#38306;&#25968;&#12399;&#65292;&#12472;&#12458;&#12513;&#12488;&#12522;&#19978;&#12391;&#20351;&#29992;&#21487;&#33021;&#12394;&#12452;&#12531;&#12487;&#12463;&#12473;&#12434;&#20351;&#12358;&#12496;&#12454;&#12531;&#12487;&#12451;&#12531;&#12464;&#12508;&#12483;&#12463;&#12473;&#27604;&#36611;&#12434;&#33258;&#21205;&#30340;&#12395;&#21462;&#12426;&#36796;&#12415;&#12414;&#12377;&#65294;
+		&#12452;&#12531;&#12487;&#12463;&#12473;&#12398;&#20351;&#29992;&#12434;&#36991;&#12369;&#12427;&#12395;&#12399;&#65292;_ST_CoverdBy&#38306;&#25968;&#12434;&#20351;&#12356;&#12414;&#12377;&#65294;
+		
+		</p><p>
+		&#12372;&#27880;&#24847;: &#12371;&#12428;&#12399;&#35542;&#29702;&#20516;&#12434;&#36820;&#12375;&#12390;&#25972;&#25968;&#12434;&#36820;&#12373;&#12394;&#12356;&#12398;&#12364;&#12300;&#35377;&#12373;&#12428;&#12427;&#12301;&#29256;&#12391;&#12377;&#65294;
+		
+		</p><p>Not an OGC standard, but Oracle has it too.</p><p>
+		&#30452;&#24863;&#30340;&#12395;&#20998;&#12363;&#12426;&#12395;&#12367;&#12356;ST_Contains&#12392;ST_Within&#12398;&#24494;&#22937;&#12394;&#36949;&#12356;&#12364;&#12354;&#12426;&#12414;&#12377;&#65294;&#35443;&#32048;&#12395;&#12388;&#12356;&#12390;&#12399;&#65292;<a class="ulink" href="http://lin-ear-th-inking.blogspot.com/2007/06/subtleties-of-ogc-covers-spatial.html" target="_top">Subtleties of OGC Covers, Contains, Within</a>&#12434;&#12372;&#35239;&#12367;&#12384;&#12373;&#12356;&#65294;
+		
+		</p></div><div class="refsection" title="&#20363;"><a name="id286881125"></a><h2>&#20363;</h2><pre class="programlisting">
+	--a circle coveredby a circle
+SELECT ST_CoveredBy(smallc,smallc) As smallinsmall,
+	ST_CoveredBy(smallc, bigc) As smallcoveredbybig,
+	ST_CoveredBy(ST_ExteriorRing(bigc), bigc) As exteriorcoveredbybig,
+	ST_Within(ST_ExteriorRing(bigc),bigc) As exeriorwithinbig
+FROM (SELECT ST_Buffer(ST_GeomFromText('POINT(1 2)'), 10) As smallc,
+	ST_Buffer(ST_GeomFromText('POINT(1 2)'), 20) As bigc) As foo;
+	--Result
+ smallinsmall | smallcoveredbybig | exteriorcoveredbybig | exeriorwithinbig
+--------------+-------------------+----------------------+------------------
+ t            | t                 | t                    | f
+(1 row)	</pre></div><div class="refsection" title="&#38306;&#36899;&#24773;&#22577;"><a name="id286881137"></a><h2>&#38306;&#36899;&#24773;&#22577;</h2><p><a class="xref" href="ST_Contains.html" title="ST_Contains">ST_Contains</a>, <a class="xref" href="ST_Covers.html" title="ST_Covers">ST_Covers</a>, <a class="xref" href="ST_ExteriorRing.html" title="ST_ExteriorRing">ST_ExteriorRing</a>, <a class="xref" href="ST_Within.html" title="ST_Within">ST_Within</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_Covers.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Spatial_Relationships_Measurements">&#19978;&#12395;&#25147;&#12427;</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_Crosses.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Covers </td><td width="20%" align="center"><a accesskey="h" href="index.html">&#12507;&#12540;&#12512;</a></td><td width="40%" align="right" valign="top"> ST_Crosses</td></tr></table></div></body></html>

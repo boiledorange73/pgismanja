@@ -1,0 +1,61 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>ST_Relate</title><link rel="stylesheet" href="style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.1"><link rel="home" href="index.html" title="PostGIS 1.5.1 &#12510;&#12491;&#12517;&#12450;&#12523; &#26085;&#26412;&#35486;&#35379;"><link rel="up" href="reference.html#Spatial_Relationships_Measurements" title="7.8. &#31354;&#38291;&#38306;&#20418;&#38306;&#25968;&#12392;&#31354;&#38291;&#35336;&#28204;&#38306;&#25968;"><link rel="prev" href="ST_PointOnSurface.html" title="ST_PointOnSurface"><link rel="next" href="ST_ShortestLine.html" title="ST_ShortestLine"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Relate</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_PointOnSurface.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><th width="60%" align="center">7.8. 
+	&#31354;&#38291;&#38306;&#20418;&#38306;&#25968;&#12392;&#31354;&#38291;&#35336;&#28204;&#38306;&#25968;
+	
+	</th><td width="20%" align="right"> <a accesskey="n" href="ST_ShortestLine.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr></table><hr></div><div class="refentry" title="ST_Relate"><a name="ST_Relate"></a><div class="titlepage"></div><div class="refnamediv"><h2>&#21517;&#21069;</h2><p>ST_Relate &#8212; 
+		intersectionMatrixPattern&#12398;&#20516;&#12395;&#12388;&#12356;&#12390;&#65292;&#20108;&#12388;&#12398;&#12472;&#12458;&#12513;&#12488;&#12522;&#12398;&#20869;&#37096;&#65292;&#22659;&#30028;&#65292;&#22806;&#37096;&#12398;&#12452;&#12531;&#12479;&#12475;&#12463;&#12471;&#12519;&#12531;&#12398;&#12486;&#12473;&#12488;&#12434;&#34892;&#12356;&#65292;&#12472;&#12458;&#12513;&#12488;&#12522;&#12364;&#31354;&#38291;&#30340;&#12395;&#12418;&#12358;&#19968;&#12388;&#12398;&#12472;&#12458;&#12513;&#12488;&#12522;&#12392;&#38306;&#20418;&#12375;&#12390;&#12356;&#12427;&#22580;&#21512;&#12395;&#65292;TRUE&#12434;&#36820;&#12375;&#12414;&#12377;&#65294;
+		
+		</p></div><div class="refsynopsisdiv" title="&#27010;&#35201;"><h2>&#27010;&#35201;</h2><div class="funcsynopsis"><p><code class="funcdef">boolean <b class="fsfunc">ST_Relate</b>(</code>geometry  <var class="pdparam">geomA</var>, geometry  <var class="pdparam">geomB</var>, text  <var class="pdparam">intersectionMatrixPattern</var><code>)</code>;</p><p><code class="funcdef">text <b class="fsfunc">ST_Relate</b>(</code>geometry  <var class="pdparam">geomA</var>, geometry  <var class="pdparam">geomB</var><code>)</code>;</p></div></div><div class="refsection" title="&#35500;&#26126;"><a name="id286886461"></a><h2>&#35500;&#26126;</h2><p>
+		&#12496;&#12540;&#12472;&#12519;&#12531;1: geomA, geomB, intersectionMatrix&#12434;&#21462;&#12426;&#65292;<a class="ulink" href="http://docs.codehaus.org/display/GEOTDOC/Point+Set+Theory+and+the+DE-9IM+Matrix#PointSetTheoryandtheDE-9IMMatrix-9IntersectionMatrix" target="_top">intersectionMatrixPattern</a>&#12398;&#20516;&#12395;&#12388;&#12356;&#12390;&#65292;&#20108;&#12388;&#12398;&#12472;&#12458;&#12513;&#12488;&#12522;&#12398;&#20869;&#37096;&#65292;&#22659;&#30028;&#65292;&#22806;&#37096;&#12398;&#12452;&#12531;&#12479;&#12475;&#12463;&#12471;&#12519;&#12531;&#12398;&#12486;&#12473;&#12488;&#12434;&#34892;&#12356;&#65292;&#12472;&#12458;&#12513;&#12488;&#12522;&#12364;&#31354;&#38291;&#30340;&#12395;&#12418;&#12358;&#19968;&#12388;&#12398;&#12472;&#12458;&#12513;&#12488;&#12522;&#12392;&#38306;&#20418;&#12375;&#12390;&#12356;&#12427;&#22580;&#21512;&#12395;&#65292;1(TRUE)&#12434;&#36820;&#12375;&#12414;&#12377;&#65294;
+		
+		</p><p>
+		&#12371;&#12428;&#12399;&#65292;&#12452;&#12531;&#12479;&#12475;&#12463;&#12471;&#12519;&#12531;&#65292;&#12463;&#12525;&#12473;&#31561;&#12398;&#35079;&#21512;&#12481;&#12455;&#12483;&#12463;&#12434;&#19968;&#24230;&#12395;&#34892;&#12358;&#12398;&#12395;&#65292;&#29305;&#12395;&#20415;&#21033;&#12391;&#12377;&#65294;
+		
+		</p><div class="note" title="&#27880;&#24847;" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[&#27880;&#24847;]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+		&#12472;&#12458;&#12513;&#12488;&#12522;&#12467;&#12524;&#12463;&#12471;&#12519;&#12531;&#12434;&#24341;&#25968;&#12392;&#12375;&#12390;&#21628;&#12400;&#12394;&#12356;&#12391;&#19979;&#12373;&#12356;&#65294;
+		
+		</p></td></tr></table></div><div class="note" title="&#27880;&#24847;" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[&#27880;&#24847;]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+		&#12372;&#27880;&#24847;: &#12371;&#12428;&#12399;&#35542;&#29702;&#20516;&#12434;&#36820;&#12375;&#12390;&#25972;&#25968;&#12434;&#36820;&#12373;&#12394;&#12356;&#12398;&#12364;&#12300;&#35377;&#12373;&#12428;&#12427;&#12301;&#29256;&#12391;&#12377;&#65294;&#12371;&#12428;&#12399;OGC&#20181;&#27096;&#12391;&#23450;&#12417;&#12425;&#12428;&#12390;&#12356;&#12414;&#12377;&#65294;
+		
+		</p></td></tr></table></div><div class="note" title="&#27880;&#24847;" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[&#27880;&#24847;]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+		&#12371;&#12398;&#38306;&#25968;&#12399;&#65292;&#12394;&#12380;&#12363;&#33258;&#21205;&#30340;&#12395;&#12452;&#12531;&#12487;&#12463;&#12473;&#12434;&#21628;&#12403;&#12384;&#12377;&#65292;&#12392;&#12356;&#12358;&#12371;&#12392;&#12399;&#34892;&#12356;&#12414;&#12379;&#12435;&#65294;&#38750;&#25509;&#32154;&#12394;&#12393;&#65292;&#38306;&#36899;&#12364;&#21542;&#23450;&#30340;&#12395;&#12394;&#12427;&#12418;&#12398;&#12364;&#12354;&#12427;&#12383;&#12417;&#12391;&#12377;&#65294;&#12452;&#12531;&#12479;&#12475;&#12463;&#12471;&#12519;&#12531;&#12434;&#24517;&#35201;&#12392;&#12377;&#12427;&#12497;&#12479;&#12540;&#12531;&#12398;&#38306;&#36899;&#12434;&#20351;&#12358;&#12398;&#12391;&#12375;&#12383;&#12425;&#65292;&amp;&amp;&#28436;&#31639;&#23376;&#12434;&#20351;&#29992;&#12375;&#12390;&#19979;&#12373;&#12356;&#65294;
+		
+		</p></td></tr></table></div><p>
+		&#12496;&#12540;&#12472;&#12519;&#12531;2: geomA&#12392;geomB&#12434;&#21462;&#12426;&#65292;<a class="ulink" href="http://docs.codehaus.org/display/GEOTDOC/Point+Set+Theory+and+the+DE-9IM+Matrix#PointSetTheoryandtheDE-9IMMatrix-9IntersectionMatrix" target="_top">DE-9IM (dimensionally extended nine-intersection
+		matrix)</a>&#12434;&#36820;&#12375;&#12414;&#12377;&#65294;
+		
+		</p><div class="note" title="&#27880;&#24847;" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[&#27880;&#24847;]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+		&#12472;&#12458;&#12513;&#12488;&#12522;&#12467;&#12524;&#12463;&#12471;&#12519;&#12531;&#12434;&#24341;&#25968;&#12392;&#12375;&#12390;&#21628;&#12400;&#12394;&#12356;&#12391;&#19979;&#12373;&#12356;&#65294;
+		
+		</p></td></tr></table></div><p>not in OGC spec, but implied. see s2.1.13.2</p><p>
+		&#20001;&#26041;&#12392;&#12418;&#65292;GEOS&#12514;&#12472;&#12517;&#12540;&#12523;&#12391;&#23455;&#29694;&#12375;&#12390;&#12356;&#12414;&#12377;&#65294;
+		
+		</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ &#12371;&#12398;&#12513;&#12477;&#12483;&#12489;&#12399; <a class="ulink" href="http://www.opengeospatial.org/standards/sfs" target="_top">OpenGIS Simple Features Implementation Specification for SQL 1.1.</a>&#12434;&#23455;&#35013;&#12377;&#12427;&#12418;&#12398;&#12391;&#12377;&#65294; s2.1.1.2 // s2.1.13.3</p><p><span class="inlinemediaobject"><img src="images/check.png"></span> &#12371;&#12398;&#12513;&#12477;&#12483;&#12489;&#12399;SQL/MM&#20181;&#27096;&#12398;&#23455;&#35013;&#12391;&#12377;&#65294; SQL-MM 3: 5.1.25</p></div><div class="refsection" title="&#20363;"><a name="id286886558"></a><h2>&#20363;</h2><pre class="programlisting">
+--poly&#12392;&#12452;&#12531;&#12479;&#12475;&#12463;&#12488;&#12363;&#12388;&#38750;&#25509;&#35302;&#12392;&#12394;&#12427;(&#20869;&#37096;&#12391;&#12452;&#12531;&#12479;&#12475;&#12463;&#12488;&#12377;&#12427;)coumpounds&#12398;&#32080;&#26524;&#20840;&#12390;
+SELECT l.* , b.name As poly_name
+FROM polys As b
+	INNER JOIN compounds As l
+	ON (p.the_geom &amp;&amp; b.the_geom
+	AND ST_Relate(l.the_geom, b.the_geom,'T********'));
+
+SELECT ST_Relate(ST_GeometryFromText('POINT(1 2)'), ST_Buffer(ST_GeometryFromText('POINT(1 2)'),2));
+ st_relate
+-----------
+ 0FFFFF212
+
+SELECT ST_Relate(ST_GeometryFromText('LINESTRING(1 2, 3 4)'), ST_GeometryFromText('LINESTRING(5 6, 7 8)'));
+ st_relate
+-----------
+ FF1FF0102
+
+
+SELECT ST_Relate(ST_GeometryFromText('POINT(1 2)'), ST_Buffer(ST_GeometryFromText('POINT(1 2)'),2), '0FFFFF212');
+ st_relate
+-----------
+ t
+
+SELECT ST_Relate(ST_GeometryFromText('POINT(1 2)'), ST_Buffer(ST_GeometryFromText('POINT(1 2)'),2), '*FF*FF212');
+ st_relate
+-----------
+ t
+		</pre></div><div class="refsection" title="&#38306;&#36899;&#24773;&#22577;"><a name="id286886574"></a><h2>&#38306;&#36899;&#24773;&#22577;</h2><p><a class="xref" href="ST_Crosses.html" title="ST_Crosses">ST_Crosses</a>, <a class="xref" href="ST_Disjoint.html" title="ST_Disjoint">ST_Disjoint</a>, <a class="xref" href="ST_Intersects.html" title="ST_Intersects">ST_Intersects</a>, <a class="xref" href="ST_Touches.html" title="ST_Touches">ST_Touches</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_PointOnSurface.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Spatial_Relationships_Measurements">&#19978;&#12395;&#25147;&#12427;</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_ShortestLine.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr><tr><td width="40%" align="left" valign="top">ST_PointOnSurface </td><td width="20%" align="center"><a accesskey="h" href="index.html">&#12507;&#12540;&#12512;</a></td><td width="40%" align="right" valign="top"> ST_ShortestLine</td></tr></table></div></body></html>

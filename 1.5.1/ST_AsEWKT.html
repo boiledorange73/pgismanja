@@ -1,0 +1,37 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>ST_AsEWKT</title><link rel="stylesheet" href="style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.1"><link rel="home" href="index.html" title="PostGIS 1.5.1 &#12510;&#12491;&#12517;&#12450;&#12523; &#26085;&#26412;&#35486;&#35379;"><link rel="up" href="reference.html#Geometry_Outputs" title="7.6. &#12472;&#12458;&#12513;&#12488;&#12522;&#20986;&#21147;"><link rel="prev" href="ST_AsEWKB.html" title="ST_AsEWKB"><link rel="next" href="ST_AsGeoJSON.html" title="ST_AsGeoJSON"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_AsEWKT</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_AsEWKB.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><th width="60%" align="center">7.6. 
+	  &#12472;&#12458;&#12513;&#12488;&#12522;&#20986;&#21147;
+	  
+	  </th><td width="20%" align="right"> <a accesskey="n" href="ST_AsGeoJSON.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr></table><hr></div><div class="refentry" title="ST_AsEWKT"><a name="ST_AsEWKT"></a><div class="titlepage"></div><div class="refnamediv"><h2>&#21517;&#21069;</h2><p>ST_AsEWKT &#8212; 
+			&#12472;&#12458;&#12513;&#12488;&#12522;&#12398;SRID&#12513;&#12479;&#12487;&#12540;&#12479;&#12364;&#20184;&#12356;&#12383;Well-Known Text(WKT)&#34920;&#29694;&#12434;&#36820;&#12375;&#12414;&#12377;&#65294; 
+			
+			</p></div><div class="refsynopsisdiv" title="&#27010;&#35201;"><h2>&#27010;&#35201;</h2><div class="funcsynopsis"><p><code class="funcdef">text <b class="fsfunc">ST_AsEWKT</b>(</code>geometry  <var class="pdparam">g1</var><code>)</code>;</p></div></div><div class="refsection" title="&#35500;&#26126;"><a name="id286868558"></a><h2>&#35500;&#26126;</h2><p>
+			&#12472;&#12458;&#12513;&#12488;&#12522;&#12398;SRID&#12513;&#12479;&#12487;&#12540;&#12479;&#12364;&#21069;&#12395;&#20184;&#12356;&#12383;Well-Known Text(WKT)&#34920;&#29694;&#12434;&#36820;&#12375;&#12414;&#12377;&#65294;
+			
+			</p><div class="note" title="&#27880;&#24847;" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[&#27880;&#24847;]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+			  WKT&#20181;&#27096;&#12391;&#12399;SRID&#12399;&#20837;&#12426;&#12414;&#12379;&#12435;&#65294;SRID&#12434;&#25345;&#12383;&#12394;&#12356;OGC WKT&#12398;&#26360;&#24335;&#12434;&#24471;&#12427;&#12395;&#12399;ST_AsText&#12434;&#20351;&#29992;&#12375;&#12414;&#12377;&#65294;
+			  
+			  </p></td></tr></table></div><p><img src="images/warning.png">
+			WKT&#26360;&#24335;&#12399;&#31934;&#24230;&#12399;&#12354;&#12414;&#12426;&#32173;&#25345;&#12375;&#12414;&#12379;&#12435;&#12398;&#12391;&#65292;&#28014;&#21205;&#23567;&#25968;&#28857;&#25968;&#12398;&#25171;&#12385;&#20999;&#12426;&#12434;&#12373;&#12379;&#12394;&#12356;&#12383;&#12417;&#12395;&#65292;ST_AsBinary&#12363;ST_AsEWKB&#26360;&#24335;&#12434;&#20351;&#29992;&#12375;&#12390;&#36939;&#12435;&#12391;&#19979;&#12373;&#12356;&#65294;
+			
+			</p><div class="note" title="&#27880;&#24847;" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[&#27880;&#24847;]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+			  ST_AsEWKT&#12399;<a class="xref" href="ST_GeomFromEWKT.html" title="ST_GeomFromEWKT">ST_GeomFromEWKT</a>&#12398;&#36870;&#12391;&#12377;&#65294;PostGIS&#12472;&#12458;&#12513;&#12488;&#12522;&#12434;ST_AsEWKT&#34920;&#29694;&#12395;&#22793;&#25563;&#12377;&#12427;&#12395;&#12399;<a class="xref" href="ST_GeomFromEWKT.html" title="ST_GeomFromEWKT">ST_GeomFromEWKT</a>&#12434;&#20351;&#12356;&#12414;&#12377;&#65294;
+			  
+			  </p></td></tr></table></div><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ &#12371;&#12398;&#38306;&#25968;&#12399;&#19977;&#27425;&#20803;&#12434;&#12469;&#12509;&#12540;&#12488;&#12375;&#12414;&#12377;&#65294;Z&#12452;&#12531;&#12487;&#12463;&#12473;&#12434;&#21066;&#38500;&#12375;&#12414;&#12379;&#12435;&#65294;</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ &#12371;&#12398;&#12513;&#12477;&#12483;&#12489;&#12399;&#26354;&#32218;&#12473;&#12488;&#12522;&#12531;&#12464;&#12392;&#26354;&#32218;&#12434;&#12469;&#12509;&#12540;&#12488;&#12375;&#12414;&#12377;&#65294;</p></div><div class="refsection" title="&#20363;"><a name="id286868659"></a><h2>&#20363;</h2><pre class="programlisting">SELECT ST_AsEWKT('0103000020E61000000100000005000000000000
+			000000000000000000000000000000000000000000000000000000
+			F03F000000000000F03F000000000000F03F000000000000F03
+			F000000000000000000000000000000000000000000000000'::geometry);
+
+		   st_asewkt
+--------------------------------
+SRID=4326;POLYGON((0 0,0 1,1 1,1 0,0 0))
+(1 row)
+
+SELECT ST_AsEWKT('0108000080030000000000000060E30A4100000000785C0241000000000000F03F0000000018
+E20A4100000000485F024100000000000000400000000018
+E20A4100000000305C02410000000000000840')
+
+--st_asewkt---
+CIRCULARSTRING(220268 150415 1,220227 150505 2,220227 150406 3)
+</pre></div><div class="refsection" title="&#38306;&#36899;&#24773;&#22577;"><a name="id286868673"></a><h2>&#38306;&#36899;&#24773;&#22577;</h2><p><a class="xref" href="ST_AsBinary.html" title="ST_AsBinary">ST_AsBinary</a><a class="xref" href="ST_AsEWKB.html" title="ST_AsEWKB">ST_AsEWKB</a><a class="xref" href="ST_AsText.html" title="ST_AsText">ST_AsText</a>, <a class="xref" href="ST_GeomFromEWKT.html" title="ST_GeomFromEWKT">ST_GeomFromEWKT</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_AsEWKB.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Geometry_Outputs">&#19978;&#12395;&#25147;&#12427;</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_AsGeoJSON.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr><tr><td width="40%" align="left" valign="top">ST_AsEWKB </td><td width="20%" align="center"><a accesskey="h" href="index.html">&#12507;&#12540;&#12512;</a></td><td width="40%" align="right" valign="top"> ST_AsGeoJSON</td></tr></table></div></body></html>

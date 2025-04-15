@@ -1,0 +1,55 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>ST_Extent</title><link rel="stylesheet" href="style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.1"><link rel="home" href="index.html" title="PostGIS 1.5.1 &#12510;&#12491;&#12517;&#12450;&#12523; &#26085;&#26412;&#35486;&#35379;"><link rel="up" href="reference.html#Miscellaneous_Functions" title="7.12. &#12381;&#12398;&#20182;&#12398;&#38306;&#25968;"><link rel="prev" href="ST_Expand.html" title="ST_Expand"><link rel="next" href="ST_Extent3D.html" title="ST_Extent3D"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Extent</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_Expand.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><th width="60%" align="center">7.12. 
+	&#12381;&#12398;&#20182;&#12398;&#38306;&#25968;
+	
+	</th><td width="20%" align="right"> <a accesskey="n" href="ST_Extent3D.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr></table><hr></div><div class="refentry" title="ST_Extent"><a name="ST_Extent"></a><div class="titlepage"></div><div class="refnamediv"><h2>&#21517;&#21069;</h2><p>ST_Extent &#8212; 
+		&#12472;&#12458;&#12513;&#12488;&#12522;&#12398;&#12496;&#12454;&#12531;&#12487;&#12451;&#12531;&#12464;&#12508;&#12483;&#12463;&#12473;&#12434;&#36820;&#12377;&#38598;&#35336;&#38306;&#25968;&#12391;&#12377;&#65294;
+		
+		</p></div><div class="refsynopsisdiv" title="&#27010;&#35201;"><h2>&#27010;&#35201;</h2><div class="funcsynopsis"><p><code class="funcdef">box3d_extent <b class="fsfunc">ST_Extent</b>(</code>geometry set <var class="pdparam">geomfield</var><code>)</code>;</p></div></div><div class="refsection" title="&#35500;&#26126;"><a name="id286909399"></a><h2>&#35500;&#26126;</h2><p>
+		ST_Extent&#12399;&#65292;&#12472;&#12458;&#12513;&#12488;&#12522;&#12398;&#38598;&#21512;&#12434;&#22258;&#12416;&#12496;&#12454;&#12531;&#12487;&#12451;&#12531;&#12464;&#12508;&#12483;&#12463;&#12473;&#12434;&#36820;&#12375;&#12414;&#12377;&#65294;ST_Extent&#12399;&#65292;PostgreSQL&#29992;&#35486;&#12391;&#35328;&#12358;&#12392;&#12371;&#12429;&#12398;&#12300;&#38598;&#35336;&#38306;&#25968;&#12301;&#12391;&#12377;&#65294;SUM()&#12420;MEAN()&#12392;&#21516;&#12376;&#26041;&#27861;&#12391;&#12487;&#12540;&#12479;&#12522;&#12473;&#12488;&#12398;&#25805;&#20316;&#12434;&#34892;&#12358;&#12371;&#12392;&#12434;&#24847;&#21619;&#12375;&#12414;&#12377;&#65294;		
+		
+			</p><p>
+		&#12496;&#12454;&#12531;&#12487;&#12451;&#12531;&#12464;&#12508;&#12483;&#12463;&#12473;&#12434;&#36820;&#12375;&#12414;&#12377;&#12364;&#65292;&#31354;&#38291;&#21336;&#20301;&#12399;SRID&#12391;&#31034;&#12373;&#12428;&#12383;&#31354;&#38291;&#21442;&#29031;&#31995;&#12398;&#21336;&#20301;&#12391;&#12377;&#65294;
+		
+		</p><p>
+		ST_Extnt&#12399;Oracle Spatial/Locator&#12398;SDO_AGGR_MBR&#12392;&#20284;&#12383;&#30330;&#24819;&#12398;&#12418;&#12398;&#12391;&#12377;&#65294;
+		
+		</p><div class="note" title="&#27880;&#24847;" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[&#27880;&#24847;]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+		  ST_Extent&#12399;&#12496;&#12454;&#12531;&#12487;&#12451;&#12531;&#12464;&#12508;&#12483;&#12463;&#12473;&#12434;&#36820;&#12375;&#12414;&#12377;&#12364;&#65292;SRID&#12513;&#12479;&#12487;&#12540;&#12479;&#12399;&#22833;&#12356;&#12414;&#12377;&#65294;ST_SetSRID&#12434;&#20351;&#12387;&#12390;&#65292;SRID&#12513;&#12479;&#12487;&#12540;&#12479;&#12434;&#12472;&#12458;&#12513;&#12488;&#12522;&#12395;&#24375;&#21046;&#30340;&#12395;&#25147;&#12375;&#12414;&#12377;&#65294;&#24231;&#27161;&#20516;&#12398;&#21336;&#20301;&#12399;&#20803;&#12398;&#12472;&#12458;&#12513;&#12488;&#12522;&#12398;&#31354;&#38291;&#21442;&#29031;&#31995;&#12398;&#21336;&#20301;&#12391;&#12377;&#65294;
+		  
+			</p></td></tr></table></div><div class="note" title="&#27880;&#24847;" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[&#27880;&#24847;]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+		  ST_Extent&#12399;(X,Y,Z)&#12434;&#25345;&#12387;&#12390;&#12356;&#12390;&#12418;&#65292;X&#20516;&#12392;Y&#20516;&#12398;&#12508;&#12483;&#12463;&#12473;&#12434;&#36820;&#12375;&#12414;&#12377;&#65294;
+		  X,Y,Z&#12434;&#32173;&#25345;&#12377;&#12427;&#12395;&#12399;ST_Extent3D&#12434;&#20351;&#12356;&#12414;&#12377;&#65294;
+		  
+		  </p></td></tr></table></div><div class="note" title="&#27880;&#24847;" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[&#27880;&#24847;]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+		  &#21021;&#20986;&#12496;&#12540;&#12472;&#12519;&#12531;: 1.4.0 &#12363;&#12425;box2d&#12398;&#20195;&#12431;&#12426;&#12395;box3d_extent&#12434;&#36820;&#12375;&#12414;&#12377;&#65294;
+		  
+		  </p></td></tr></table></div></div><div class="refsection" title="&#20363;"><a name="id286910371"></a><h2>&#20363;</h2><div class="note" title="&#27880;&#24847;" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[&#27880;&#24847;]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+		&#27425;&#12395;&#31034;&#12377;&#20363;&#12391;&#12399;&#65292;&#12501;&#12451;&#12540;&#12488;&#21336;&#20301;&#12510;&#12469;&#12481;&#12517;&#12540;&#12475;&#12483;&#12484;&#24030;&#24179;&#38754;(SRID=2249)&#12434;&#20351;&#12387;&#12390;&#12356;&#12414;&#12377;&#65294;
+		
+		</p></td></tr></table></div><pre class="programlisting">
+
+SELECT ST_Extent(the_geom) as bextent FROM sometable;
+					 st_bextent
+------------------------------------
+BOX(739651.875 2908247.25,794875.8125 2970042.75)
+
+
+--&#12472;&#12458;&#12513;&#12488;&#12522;&#12398;&#21508;&#12459;&#12486;&#12468;&#12522;&#12398;&#31684;&#22258;&#12434;&#36820;&#12377;
+SELECT ST_Extent(the_geom) as bextent
+FROM sometable
+GROUP BY category ORDER BY category;
+
+					  bextent                       |         name
+----------------------------------------------------+----------------
+ BOX(778783.5625 2951741.25,794875.8125 2970042.75) | A
+ BOX(751315.8125 2919164.75,765202.6875 2935417.25) | B
+ BOX(739651.875 2917394.75,756688.375 2935866)      | C
+
+ --&#12472;&#12458;&#12513;&#12488;&#12522;&#12395;&#25147;&#12375;&#65292;&#12472;&#12458;&#12513;&#12488;&#12522;&#12398;&#25313;&#24373;&#25991;&#23383;&#21015;&#34920;&#29694;&#12434;&#34920;&#31034;
+SELECT ST_SetSRID(ST_Extent(the_geom),2249) as bextent FROM sometable;
+
+				bextent
+--------------------------------------------------------------------------------
+ SRID=2249;POLYGON((739651.875 2908247.25,739651.875 2970042.75,794875.8125 2970042.75,
+ 794875.8125 2908247.25,739651.875 2908247.25))
+		</pre></div><div class="refsection" title="&#38306;&#36899;&#24773;&#22577;"><a name="id286910391"></a><h2>&#38306;&#36899;&#24773;&#22577;</h2><p><a class="xref" href="ST_AsEWKT.html" title="ST_AsEWKT">ST_AsEWKT</a>, <a class="xref" href="ST_Extent3D.html" title="ST_Extent3D">ST_Extent3D</a>, <a class="xref" href="ST_SetSRID.html" title="ST_SetSRID">ST_SetSRID</a>, <a class="xref" href="ST_SRID.html" title="ST_SRID">ST_SRID</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_Expand.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Miscellaneous_Functions">&#19978;&#12395;&#25147;&#12427;</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_Extent3D.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Expand </td><td width="20%" align="center"><a accesskey="h" href="index.html">&#12507;&#12540;&#12512;</a></td><td width="40%" align="right" valign="top"> ST_Extent3D</td></tr></table></div></body></html>

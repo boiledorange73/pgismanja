@@ -1,0 +1,65 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>ST_LongestLine</title><link rel="stylesheet" href="style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.1"><link rel="home" href="index.html" title="PostGIS 1.5.1 &#12510;&#12491;&#12517;&#12450;&#12523; &#26085;&#26412;&#35486;&#35379;"><link rel="up" href="reference.html#Spatial_Relationships_Measurements" title="7.8. &#31354;&#38291;&#38306;&#20418;&#38306;&#25968;&#12392;&#31354;&#38291;&#35336;&#28204;&#38306;&#25968;"><link rel="prev" href="ST_Length3D_Spheroid.html" title="ST_Length3D_Spheroid"><link rel="next" href="ST_OrderingEquals.html" title="ST_OrderingEquals"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_LongestLine</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_Length3D_Spheroid.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><th width="60%" align="center">7.8. 
+	&#31354;&#38291;&#38306;&#20418;&#38306;&#25968;&#12392;&#31354;&#38291;&#35336;&#28204;&#38306;&#25968;
+	
+	</th><td width="20%" align="right"> <a accesskey="n" href="ST_OrderingEquals.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr></table><hr></div><div class="refentry" title="ST_LongestLine"><a name="ST_LongestLine"></a><div class="titlepage"></div><div class="refnamediv"><h2>&#21517;&#21069;</h2><p>ST_LongestLine &#8212; 
+		&#20108;&#12388;&#12398;&#12472;&#12458;&#12513;&#12488;&#12522;&#12398;&#20108;&#27425;&#20803;&#38263;&#12364;&#26368;&#38263;&#12392;&#12394;&#12427;&#12509;&#12452;&#12531;&#12488;&#12434;&#36820;&#12375;&#12414;&#12377;&#65294;&#35211;&#12388;&#12363;&#12387;&#12383;&#26368;&#38263;&#32218;&#12364;&#35079;&#25968;&#12354;&#12427;&#22580;&#21512;&#12399;&#65292;&#26368;&#21021;&#12398;&#12418;&#12398;&#12398;&#12415;&#36820;&#12375;&#12414;&#12377;&#65294;&#36820;&#12373;&#12428;&#12427;&#12521;&#12452;&#12531;&#12399;&#25448;&#12390;&#12395;g1&#20596;&#12434;&#22987;&#28857;&#65292;g2&#20596;&#12434;&#32066;&#28857;&#12392;&#12375;&#12414;&#12377;&#65294;&#12371;&#12398;&#38306;&#25968;&#12364;&#36820;&#12377;&#12521;&#12452;&#12531;&#12398;&#38263;&#12373;&#12399;&#65292;&#24120;&#12395;st_maxdistance&#12392;&#21516;&#12376;&#12395;&#12394;&#12426;&#12414;&#12377;&#65294;
+		
+		</p></div><div class="refsynopsisdiv" title="&#27010;&#35201;"><h2>&#27010;&#35201;</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_LongestLine</b>(</code>geometry 
+			<var class="pdparam">g1</var>, geometry 
+			<var class="pdparam">g2</var><code>)</code>;</p></div></div><div class="refsection" title="&#35500;&#26126;"><a name="id286885459"></a><h2>&#35500;&#26126;</h2><p>
+		&#20108;&#12388;&#12398;&#12472;&#12458;&#12513;&#12488;&#12522;&#12398;&#20108;&#27425;&#20803;&#38263;&#12364;&#26368;&#38263;&#12392;&#12394;&#12427;&#12509;&#12452;&#12531;&#12488;&#12434;&#36820;&#12375;&#12414;&#12377;&#65294;
+		
+		</p><p>
+		&#21021;&#20986;&#12496;&#12540;&#12472;&#12519;&#12531;: 1.5.0
+		
+		</p></div><div class="refsection" title="&#20363;"><a name="id286885477"></a><h2>&#20363;</h2><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td><div class="informalfigure"><div class="mediaobject"><img src="images/st_longestline01.png"><div class="caption"><p>
+							  &#12509;&#12452;&#12531;&#12488;&#12392;&#12521;&#12452;&#12531;&#12398;&#38291;&#12398;&#26368;&#38263;&#12521;&#12452;&#12531;
+							  
+							  </p></div></div></div><p>
+				</p><pre class="programlisting">
+SELECT ST_AsText(
+	ST_LongestLine('POINT(100 100)'::geometry, 
+		'LINESTRING (20 80, 98 190, 110 180, 50 75 )'::geometry)
+	) As lline;
+
+	
+   lline
+-----------------
+LINESTRING(100 100,98 190)
+				</pre><p>
+						  </p></td><td><div class="informalfigure"><div class="mediaobject"><img src="images/st_longestline02.png"><div class="caption"><p>
+							  &#12509;&#12522;&#12468;&#12531;&#12392;&#12509;&#12522;&#12468;&#12531;&#12398;&#38291;&#12398;&#26368;&#38263;&#12521;&#12452;&#12531;
+							  
+							  </p></div></div></div><p>
+				</p><pre class="programlisting">
+SELECT ST_AsText(
+	ST_LongestLine(
+		ST_GeomFromText('POLYGON((175 150, 20 40, 
+			50 60, 125 100, 175 150))'),
+		ST_Buffer(ST_GeomFromText('POINT(110 170)'), 20)
+		) 
+	) As llinewkt;
+		
+   lline
+-----------------
+LINESTRING(20 40,121.111404660392 186.629392246051)
+				</pre><p>
+						</p></td></tr></tbody></table></div><div class="informaltable"><table border="1"><colgroup><col></colgroup><tbody><tr><td><div class="informalfigure"><div class="mediaobject"><img src="images/st_longestline03.png"><div class="caption"><p>
+							  &#32032;&#25973;&#12394;&#37117;&#24066;&#12398;&#12354;&#12427;&#37096;&#20998;&#12363;&#12425;&#20182;&#12398;&#37096;&#20998;&#12395;&#31227;&#21205;&#12377;&#12427;&#12383;&#12417;&#12398;&#26368;&#38263;&#30452;&#32218;&#36317;&#38626;&#65294;&#26368;&#38263;&#36317;&#38626;&#12399;&#12371;&#12398;&#12521;&#12452;&#12531;&#12398;&#38263;&#12373;&#12392;&#21516;&#12376;&#12395;&#12394;&#12426;&#12414;&#12377;&#65294;
+							  
+								</p></div></div></div><p>
+				</p><pre class="programlisting">
+SELECT ST_AsText(ST_LongestLine(c.the_geom, c.the_geom)) As llinewkt, 
+	ST_MaxDistance(c.the_geom,c.the_geom) As max_dist, 
+	ST_Length(ST_LongestLine(c.the_geom, c.the_geom)) As lenll 
+FROM (SELECT ST_BuildArea(ST_Collect(the_geom)) As the_geom
+	FROM (SELECT ST_Translate(ST_SnapToGrid(ST_Buffer(ST_Point(50 ,generate_series(50,190, 50) 
+			),40, 'quad_segs=2'),1), x, 0)  As the_geom 
+			FROM generate_series(1,100,50) As x)  AS foo
+) As c;
+		
+          llinewkt          |     max_dist     |      lenll
+---------------------------+------------------+------------------
+ LINESTRING(23 22,129 178) | 188.605408193933 | 188.605408193933
+				</pre><p>
+						</p></td></tr></tbody></table></div></div><div class="refsection" title="&#38306;&#36899;&#24773;&#22577;"><a name="id286885597"></a><h2>&#38306;&#36899;&#24773;&#22577;</h2><p><a class="xref" href="ST_MaxDistance.html" title="ST_MaxDistance">ST_MaxDistance</a>, <a class="xref" href="ST_ShortestLine.html" title="ST_ShortestLine">ST_ShortestLine</a>, <a class="xref" href="ST_LongestLine.html" title="ST_LongestLine">ST_LongestLine</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_Length3D_Spheroid.html">&#21069;&#12398;&#12506;&#12540;&#12472;</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Spatial_Relationships_Measurements">&#19978;&#12395;&#25147;&#12427;</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_OrderingEquals.html">&#27425;&#12398;&#12506;&#12540;&#12472;</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Length3D_Spheroid </td><td width="20%" align="center"><a accesskey="h" href="index.html">&#12507;&#12540;&#12512;</a></td><td width="40%" align="right" valign="top"> ST_OrderingEquals</td></tr></table></div></body></html>
