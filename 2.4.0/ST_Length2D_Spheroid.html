@@ -1,0 +1,27 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Length2D_Spheroid</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.4.0 マニュアル"><link rel="up" href="reference.html#Spatial_Relationships_Measurements" title="8.9. 空間関係関数と空間計測関数"><link rel="prev" href="ST_Length_Spheroid.html" title="ST_LengthSpheroid"><link rel="next" href="ST_LongestLine.html" title="ST_LongestLine"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Length2D_Spheroid</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_Length_Spheroid.html">戻る</a> </td><th width="60%" align="center">8.9. 空間関係関数と空間計測関数 </th><td width="20%" align="right"> <a accesskey="n" href="ST_LongestLine.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_Length2D_Spheroid"><a name="ST_Length2D_Spheroid"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_Length2D_Spheroid — 回転楕円体上のジオメトリの2次元長/周囲長を計算します。これは、ジオメトリの座標が経度/緯度になっていて、投影変換を行わずに距離を求めたい場合に使います。 </p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">float <b class="fsfunc">ST_Length2D_Spheroid</b>(</code>geometry  <var class="pdparam">a_geometry</var>, spheroid  <var class="pdparam">a_spheroid</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp78875984"></a><h2>説明</h2><p>回転楕円体上のジオメトリの2次元長/周囲長を計算します。これは、ジオメトリの座標が経度/緯度になっていて、投影変換を行わずに距離を求めたい場合に使います。回転楕円体は独立したデータベースタイプで、次のように構成されています。</p><div class="literallayout"><p>SPHEROID[&lt;名称&gt;,&lt;長軸半径&gt;,&lt;扁平率の逆数&gt;]</p></div><div class="literallayout"><p>SPHEROID["GRS_1980",6378137,298.257222101]</p></div><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p><a class="xref" href="ST_Length_Spheroid.html" title="ST_LengthSpheroid">ST_LengthSpheroid</a>によく似ていますが、計算の際にZ座標値が無視される点が異なります。</p></td></tr></table></div></div><div class="refsection" title="例"><a name="idp78879184"></a><h2>例</h2><pre class="programlisting">SELECT ST_Length2D_Spheroid( geometry_column,
+                          'SPHEROID["GRS_1980",6378137,298.257222101]' )
+                          FROM geometry_table;
+
+SELECT ST_Length2D_Spheroid( the_geom, sph_m ) As tot_len,
+ST_Length2D_Spheroid(ST_GeometryN(the_geom,1), sph_m) As len_line1,
+ST_Length2D_Spheroid(ST_GeometryN(the_geom,2), sph_m) As len_line2
+                          FROM (SELECT ST_GeomFromText('MULTILINESTRING((-118.584 38.374,-118.583 38.5),
+        (-71.05957 42.3589 , -71.061 43))') As the_geom,
+CAST('SPHEROID["GRS_1980",6378137,298.257222101]' As spheroid) As sph_m)  as foo;
+        tot_len      |    len_line1     |    len_line2
+------------------+------------------+------------------
+ 85204.5207562955 | 13986.8725229309 | 71217.6482333646
+
+-- 3次元 同じ答になります
+SELECT ST_Length2D_Spheroid( the_geom, sph_m ) As tot_len,
+ST_Length2D_Spheroid(ST_GeometryN(the_geom,1), sph_m) As len_line1,
+ST_Length2D_Spheroid(ST_GeometryN(the_geom,2), sph_m) As len_line2
+                          FROM (SELECT ST_GeomFromEWKT('MULTILINESTRING((-118.584 38.374 20,-118.583 38.5 30),
+        (-71.05957 42.3589 75, -71.061 43 90))') As the_geom,
+CAST('SPHEROID["GRS_1980",6378137,298.257222101]' As spheroid) As sph_m)  as foo;
+
+        tot_len      |    len_line1     |    len_line2
+------------------+------------------+------------------
+ 85204.5207562955 | 13986.8725229309 | 71217.6482333646
+
+</pre></div><div class="refsection" title="関連情報"><a name="idp78880720"></a><h2>関連情報</h2><p><a class="xref" href="ST_GeometryN.html" title="ST_GeometryN">ST_GeometryN</a>, <a class="xref" href="ST_Length_Spheroid.html" title="ST_LengthSpheroid">ST_LengthSpheroid</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_Length_Spheroid.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Spatial_Relationships_Measurements">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_LongestLine.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_LengthSpheroid </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_LongestLine</td></tr></table></div></body></html>

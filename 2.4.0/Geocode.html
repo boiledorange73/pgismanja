@@ -1,0 +1,76 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Geocode</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.4.0 マニュアル"><link rel="up" href="Extras.html#Tiger_Geocoder" title="13.1. Tigerジオコーダ"><link rel="prev" href="Drop_State_Tables_Generate_Script.html" title="Drop_State_Tables_Generate_Script"><link rel="next" href="Geocode_Intersection.html" title="Geocode_Intersection"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Geocode</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="Drop_State_Tables_Generate_Script.html">戻る</a> </td><th width="60%" align="center">13.1. Tigerジオコーダ</th><td width="20%" align="right"> <a accesskey="n" href="Geocode_Intersection.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="Geocode"><a name="Geocode"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>Geocode — 住所を文字列 (もしくは他の正規化された住所)として取り、可能性のある位置の集合を返します。返される集合の要素は、NAD 83経度緯度のポイントジオメトリ、正規化された住所と評価値を持ちます。評価値は低いほど可能性が高いことを示しています。結果は評価値の低い順に並べ替えられます。オプションにmax_result (最大結果数、デフォルトは10)とrestrict_region (制限領域、デフォルトはNULL)を渡すことができます。</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">setof record <b class="fsfunc">geocode</b>(</code>varchar  <var class="pdparam">address</var>, integer  <var class="pdparam">max_results=10</var>, geometry  <var class="pdparam">restrict_region=NULL</var>, norm_addy  <var class="pdparam">OUT addy</var>, geometry  <var class="pdparam">OUT geomout</var>, integer  <var class="pdparam">OUT rating</var><code>)</code>;</p><p><code class="funcdef">setof record <b class="fsfunc">geocode</b>(</code>norm_addy  <var class="pdparam">in_addy</var>, integer  <var class="pdparam">max_results=10</var>, geometry  <var class="pdparam">restrict_region=NULL</var>, norm_addy  <var class="pdparam">OUT addy</var>, geometry  <var class="pdparam">OUT geomout</var>, integer  <var class="pdparam">OUT rating</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp103939536"></a><h2>説明</h2><p>文字列住所 (または正規化された住所)を引数に取り、NAD 83経度緯度のポイントジオメトリ (geomout)、個々の<code class="varname">normalized_address</code> (addy)、評価値 (rating)からなる、可能性のある位置の集合を出力します。評価値が低いほど合致度が高くなります。Tigerデータ (エッジ、フェイス、住所)、PostgreSQLあいまい文字列合致 (soundex,levenshtein)を使い、Tigerデータのエッジに沿った住所の補間のためにPostGIS線補間関数を使用っています。評価値が高いほどジオコードの正確度が低くなります。ジオコードされたポイントは、ストリート住所を中心線から左/右に移動しますが、デフォルトでは10メートルです。</p><p>Enhanced: 2.0.0 Tiger 2010構造のデータに対応しました。実行速度とジオコーディング精度を改善し、ストリート住所の位置を中心線から側線に移動するための改訂を行いました。また、良い結果の数を指定したり、最も良い結果だけを返すようにするのに使う新しいパラメータ<code class="varname">max_results</code>を導入しました。</p></div><div class="refsection" title="例: 基本"><a name="idp103941840"></a><h2>例: 基本</h2><p>下の例は、3.0GHzの単一プロセッサと2GBのメモリを持つWindows 7機で、PostgreSQL 9.1rc1/PostGIS 2.0を走らせて、MA, MN, CA, RI の各州のTigerデータをロードしたものです。</p><p>完全一致は速いです (61ミリ秒)</p><pre class="programlisting">SELECT g.rating, ST_X(g.geomout) As lon, ST_Y(g.geomout) As lat,
+    (addy).address As stno, (addy).streetname As street,
+    (addy).streettypeabbrev As styp, (addy).location As city, (addy).stateabbrev As st,(addy).zip
+    FROM geocode('75 State Street, Boston MA 02109') As g;
+ rating |        lon        |       lat        | stno | street | styp |  city  | st |  zip
+--------+-------------------+------------------+------+--------+------+--------+----+-------
+      0 | -71.0556722990239 | 42.3589914927049 |   75 | State  | St   | Boston | MA | 02109
+</pre><p>郵便番号を渡さない場合でも推測可能です (122-150ミリ秒かかりました)</p><pre class="programlisting">SELECT g.rating, ST_AsText(ST_SnapToGrid(g.geomout,0.00001)) As wktlonlat,
+    (addy).address As stno, (addy).streetname As street,
+    (addy).streettypeabbrev As styp, (addy).location As city, (addy).stateabbrev As st,(addy).zip
+    FROM geocode('226 Hanover Street, Boston, MA',1) As g;
+ rating |         wktlonlat         | stno | street  | styp |  city  | st |  zip
+--------+---------------------------+------+---------+------+--------+----+-------
+      1 | POINT(-71.05528 42.36316) |  226 | Hanover | St   | Boston | MA | 02113
+</pre><p>綴りの誤りを処理して、一つ以上の可能性のある答を評価値付きで提供すると遅くなります (500ミリ秒)。</p><pre class="programlisting">SELECT g.rating, ST_AsText(ST_SnapToGrid(g.geomout,0.00001)) As wktlonlat,
+    (addy).address As stno, (addy).streetname As street,
+    (addy).streettypeabbrev As styp, (addy).location As city, (addy).stateabbrev As st,(addy).zip
+    FROM geocode('31 - 37 Stewart Street, Boston, MA 02116') As g;
+ rating |         wktlonlat         | stno | street | styp |  city  | st |  zip
+--------+---------------------------+------+--------+------+--------+----+-------
+     70 | POINT(-71.06459 42.35113) |   31 | Stuart | St   | Boston | MA | 02116
+    </pre><p>複数住所のジオコードバッチ処理を行います。<code class="varname">max_results=1</code>とすると最も簡単です。まだジオコードを行っていない (評価値が無い)もののみ処理します。</p><pre class="programlisting">CREATE TABLE addresses_to_geocode(addid serial PRIMARY KEY, address text,
+        lon numeric, lat numeric, new_address text, rating integer);
+
+INSERT INTO addresses_to_geocode(address)
+VALUES ('529 Main Street, Boston MA, 02129'),
+ ('77 Massachusetts Avenue, Cambridge, MA 02139'),
+ ('25 Wizard of Oz, Walaford, KS 99912323'),
+ ('26 Capen Street, Medford, MA'),
+ ('124 Mount Auburn St, Cambridge, Massachusetts 02138'),
+ ('950 Main Street, Worcester, MA 01610');
+
+-- 全体のジオコードでは、必ず最後に一度コミットが行われます。
+-- 多数の住所があって、一度に全てを更新したくない場合として、
+-- 最初の三つのアドレスだけ更新します。
+-- (323-704ミリ秒 - キャッシュと共有メモリがあるので、最初のジオコーディングは必ず遅くなります)
+-- この例では、間違った住所の逆ジオコーディングをしなよう、
+-- LEFT JOINで再結合して、合致しないものには-1の評価値を設定しています。
+UPDATE addresses_to_geocode
+  SET  (rating, new_address, lon, lat)
+    = ( COALESCE((g.geo).rating,-1), pprint_addy((g.geo).addy),
+       ST_X((g.geo).geomout)::numeric(8,5), ST_Y((g.geo).geomout)::numeric(8,5) )
+FROM (SELECT addid
+    FROM addresses_to_geocode
+    WHERE rating IS NULL ORDER BY addid LIMIT 3) As a
+    LEFT JOIN (SELECT addid, (geocode(address,1)) As geo
+    FROM addresses_to_geocode As ag
+    WHERE ag.rating IS NULL ORDER BY addid LIMIT 3) As g ON a.addid = g.addid
+WHERE a.addid = addresses_to_geocode.addid;
+
+結果
+-----
+Query returned successfully: 3 rows affected, 480 ms execution time.
+
+SELECT * FROM addresses_to_geocode WHERE rating is not null;
+
+ addid |                   address                    |    lon    |   lat    |                new_address                | rating
+-------+----------------------------------------------+-----------+----------+-------------------------------------------+--------
+     1 | 529 Main Street, Boston MA, 02129            | -71.07181 | 42.38359 | 529 Main St, Boston, MA 02129             |      0
+     2 | 77 Massachusetts Avenue, Cambridge, MA 02139 | -71.09428 | 42.35988 | 77 Massachusetts Ave, Cambridge, MA 02139 |      0
+     3 | 25 Wizard of Oz, Walaford, KS 99912323       |           |          |                                           |     -1
+</pre></div><div class="refsection" title="例: ジオメトリフィルタの使用"><a name="idp103947216"></a><h2>例: ジオメトリフィルタの使用</h2><pre class="programlisting">SELECT g.rating, ST_AsText(ST_SnapToGrid(g.geomout,0.00001)) As wktlonlat,
+    (addy).address As stno, (addy).streetname As street,
+    (addy).streettypeabbrev As styp,
+    (addy).location As city, (addy).stateabbrev As st,(addy).zip
+  FROM geocode('100 Federal Street, MA',
+        3,
+        (SELECT ST_Union(the_geom)
+            FROM place WHERE statefp = '25' AND name = 'Lynn')::geometry
+        ) As g;
+
+ rating |        wktlonlat         | stno | street  | styp | city | st |  zip
+--------+--------------------------+------+---------+------+------+----+-------
+      8 | POINT(-70.96796 42.4659) |  100 | Federal | St   | Lynn | MA | 01905
+Total query runtime: 245 ms.
+          </pre></div><div class="refsection" title="関連情報"><a name="idp103948752"></a><h2>関連情報</h2><p><a class="xref" href="Normalize_Address.html" title="Normalize_Address">Normalize_Address</a>, <a class="xref" href="Pprint_Addy.html" title="Pprint_Addy">Pprint_Addy</a>, <a class="xref" href="ST_AsText.html" title="ST_AsText">ST_AsText</a>, <a class="xref" href="ST_SnapToGrid.html" title="ST_SnapToGrid">ST_SnapToGrid</a>, <a class="xref" href="ST_X.html" title="ST_X">ST_X</a>, <a class="xref" href="ST_Y.html" title="ST_Y">ST_Y</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="Drop_State_Tables_Generate_Script.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="Extras.html#Tiger_Geocoder">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="Geocode_Intersection.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">Drop_State_Tables_Generate_Script </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> Geocode_Intersection</td></tr></table></div></body></html>

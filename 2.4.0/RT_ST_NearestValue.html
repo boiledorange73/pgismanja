@@ -1,0 +1,61 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_NearestValue</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.4.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Pixel_Accessors" title="9.6. ラスタピクセルアクセサとセッター"><link rel="prev" href="RT_ST_Value.html" title="ST_Value"><link rel="next" href="RT_ST_Neighborhood.html" title="ST_Neighborhood"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_NearestValue</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_Value.html">戻る</a> </td><th width="60%" align="center">9.6. ラスタピクセルアクセサとセッター</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_Neighborhood.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_NearestValue"><a name="RT_ST_NearestValue"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_NearestValue — 与えられたバンドの、columnxとrowyで指定されるか、またはラスタと同じ空間参照系で表現されたポイントで指定されたピクセルに最も近い<code class="varname">NODATA</code>でない値を返します。 </p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">double precision <b class="fsfunc">ST_NearestValue</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">bandnum</var>, geometry  <var class="pdparam">pt</var>, boolean  <var class="pdparam">exclude_nodata_value=true</var><code>)</code>;</p><p><code class="funcdef">double precision <b class="fsfunc">ST_NearestValue</b>(</code>raster  <var class="pdparam">rast</var>, geometry  <var class="pdparam">pt</var>, boolean  <var class="pdparam">exclude_nodata_value=true</var><code>)</code>;</p><p><code class="funcdef">double precision <b class="fsfunc">ST_NearestValue</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">bandnum</var>, integer  <var class="pdparam">columnx</var>, integer  <var class="pdparam">rowy</var>, boolean  <var class="pdparam">exclude_nodata_value=true</var><code>)</code>;</p><p><code class="funcdef">double precision <b class="fsfunc">ST_NearestValue</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">columnx</var>, integer  <var class="pdparam">rowy</var>, boolean  <var class="pdparam">exclude_nodata_value=true</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp92928336"></a><h2>説明</h2><p>与えられたバンドの、columnxとrowyで指定されるか、またはラスタと同じ空間参照系で表現されたポイントで指定されたピクセルに最も近い<code class="varname">NODATA</code>でない値を返します。columnx, rowyピクセルまたは指定したジオメトリポイントのピクセルが<code class="varname">NODATA</code>である場合には、この関数は、columnx, rowyピクセルかジオメトリポイントのピクセルから最も近い<code class="varname">NODATA</code>.でないピクセルを探索します。 </p><p>バンド番号は1始まりで、<code class="varname">bandnum</code>が指定されていない場合には、1番と仮定します。<code class="varname">exclude_nodata_value</code>がFALSEに設定された場合には、<code class="varname">NODATA</code>ピクセルを含む全てのピクセルがインタセクトするかが考慮され、値を返します。<code class="varname">exclude_nodata_value</code>を渡さない場合には、ラスタのメタデータから読みます。 </p><p>Availability: 2.1.0</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>ST_NearestValueはST_Valueと交換可能です。 </p></td></tr></table></div></div><div class="refsection" title="例"><a name="idp92933968"></a><h2>例</h2><pre class="programlisting">-- 2,2ピクセルは値を持っています
+SELECT
+        ST_Value(rast, 2, 2) AS value,
+        ST_NearestValue(rast, 2, 2) AS nearestvalue
+FROM (
+        SELECT
+                ST_SetValue(
+                        ST_SetValue(
+                                ST_SetValue(
+                                        ST_SetValue(
+                                                ST_SetValue(
+                                                        ST_AddBand(
+                                                                ST_MakeEmptyRaster(5, 5, -2, 2, 1, -1, 0, 0, 0),
+                                                                '8BUI'::text, 1, 0
+                                                        ),
+                                                        1, 1, 0.
+                                                ),
+                                                2, 3, 0.
+                                        ),
+                                        3, 5, 0.
+                                ),
+                                4, 2, 0.
+                        ),
+                        5, 4, 0.
+                ) AS rast
+) AS foo
+
+ value | nearestvalue
+-------+--------------
+     1 |            1
+                                </pre><pre class="programlisting">-- 2,3ピクセルはNODATAです
+SELECT
+        ST_Value(rast, 2, 3) AS value,
+        ST_NearestValue(rast, 2, 3) AS nearestvalue
+FROM (
+        SELECT
+                ST_SetValue(
+                        ST_SetValue(
+                                ST_SetValue(
+                                        ST_SetValue(
+                                                ST_SetValue(
+                                                        ST_AddBand(
+                                                                ST_MakeEmptyRaster(5, 5, -2, 2, 1, -1, 0, 0, 0),
+                                                                '8BUI'::text, 1, 0
+                                                        ),
+                                                        1, 1, 0.
+                                                ),
+                                                2, 3, 0.
+                                        ),
+                                        3, 5, 0.
+                                ),
+                                4, 2, 0.
+                        ),
+                        5, 4, 0.
+                ) AS rast
+) AS foo
+
+ value | nearestvalue
+-------+--------------
+       |            1
+                                </pre></div><div class="refsection" title="関連情報"><a name="idp92935760"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_Neighborhood.html" title="ST_Neighborhood">ST_Neighborhood</a>, <a class="xref" href="RT_ST_Value.html" title="ST_Value">ST_Value</a> </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_Value.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Pixel_Accessors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_Neighborhood.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Value </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_Neighborhood</td></tr></table></div></body></html>

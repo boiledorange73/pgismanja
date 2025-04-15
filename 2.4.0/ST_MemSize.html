@@ -1,0 +1,30 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_MemSize</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.4.0 マニュアル"><link rel="up" href="reference.html#Miscellaneous_Functions" title="8.15. その他の関数"><link rel="prev" href="Find_SRID.html" title="Find_SRID"><link rel="next" href="ST_Point_Inside_Circle.html" title="ST_PointInsideCircle"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_MemSize</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="Find_SRID.html">戻る</a> </td><th width="60%" align="center">8.15. その他の関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_Point_Inside_Circle.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_MemSize"><a name="ST_MemSize"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_MemSize — ジオメトリが取る容量 (バイト単位)を返します。</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">integer <b class="fsfunc">ST_MemSize</b>(</code>geometry  <var class="pdparam">geomA</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp84071120"></a><h2>説明</h2><p>ジオメトリが取る容量 (バイト単位)を返します。 </p><p>この関数はPostgreSQLビルトイン関数pg_clumn_size, pg_size_pretty, pg_relation_size, pg_total_relation_sizeへのすばらしい賛辞です。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>テーブルのバイト単位のサイズを与えるpg_relation_sizeはST_Mem_Sizeより小さいバイト数が返ります。これはpg_relation_sizeがTOAST化されたテーブルの寄与を追加せず、TOASTテーブルに格納された大きなジオメトリを加えないためです。</p><p>pg_total_relation_size - テーブル、TOASTテーブル、インデクスを含みます。</p><p>pg_column_sizeは、ジオメトリがカラム内で取る領域がどれだけかを、圧縮を考慮して返します。そのため、ST_MemSizeより小さくなることがあります。</p></td></tr></table></div><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports 3d and will not drop the z-index.</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This method supports Circular Strings and Curves</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports Polyhedral surfaces.</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports Triangles and Triangulated Irregular Network Surfaces (TIN).</p><p>Changed: 2.2.0 命名規則に従うためにST_MemSizeに変更しました。以前の版では、この関数はST_Mem_Sizeと呼ばれていました。古い名前は非推奨ですが現在のところは有効です。</p></div><div class="refsection" title="例"><a name="idp84079952"></a><h2>例</h2><pre class="programlisting">-- マサチューセッツ州データセットにおいて
+-- ボストンがどれだけの容量を取るかを返します
+SELECT pg_size_pretty(SUM(ST_MemSize(the_geom))) as totgeomsum,
+pg_size_pretty(SUM(CASE WHEN town = 'BOSTON' THEN ST_MemSize(the_geom) ELSE 0 END)) As bossum,
+CAST(SUM(CASE WHEN town = 'BOSTON' THEN ST_MemSize(the_geom) ELSE 0 END)*1.00 /
+                SUM(ST_MemSize(the_geom))*100 As numeric(10,2)) As perbos
+FROM towns;
+
+totgeomsum        bossum        perbos
+----------        ------        ------
+1522 kB                30 kB        1.99
+
+
+SELECT ST_MemSize(ST_GeomFromText('CIRCULARSTRING(220268 150415,220227 150505,220227 150406)'));
+
+---
+73
+
+-- ジオメトリだけでテーブルの何パーセントを取っているか
+SELECT pg_total_relation_size('public.neighborhoods') As fulltable_size, sum(ST_MemSize(the_geom)) As geomsize,
+sum(ST_MemSize(the_geom))*1.00/pg_total_relation_size('public.neighborhoods')*100 As pergeom
+FROM neighborhoods;
+fulltable_size geomsize  pergeom
+------------------------------------------------
+262144         96238         36.71188354492187500000
+        </pre></div><div class="refsection" title="関連情報"><a name="idp84081488"></a><h2>関連情報</h2><p></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="Find_SRID.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Miscellaneous_Functions">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_Point_Inside_Circle.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">Find_SRID </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_PointInsideCircle</td></tr></table></div></body></html>

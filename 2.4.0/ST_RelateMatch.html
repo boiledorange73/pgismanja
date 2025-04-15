@@ -1,0 +1,19 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_RelateMatch</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.4.0 マニュアル"><link rel="up" href="reference.html#Spatial_Relationships_Measurements" title="8.9. 空間関係関数と空間計測関数"><link rel="prev" href="ST_Relate.html" title="ST_Relate"><link rel="next" href="ST_ShortestLine.html" title="ST_ShortestLine"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_RelateMatch</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_Relate.html">戻る</a> </td><th width="60%" align="center">8.9. 空間関係関数と空間計測関数 </th><td width="20%" align="right"> <a accesskey="n" href="ST_ShortestLine.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_RelateMatch"><a name="ST_RelateMatch"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_RelateMatch — intersectionMattrixPattern1がintersectionMatrixPattern2を含む場合にTRUEを返します。</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">boolean <b class="fsfunc">ST_RelateMatch</b>(</code>text  <var class="pdparam">intersectionMatrix</var>, text  <var class="pdparam">intersectionMatrixPattern</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp79073488"></a><h2>説明</h2><p>intersectionMatrixとintersectionMatrixPatternを取り、intersectionMatrixがintersectionMatrixPatternを満たす場合にTRUEを返します。詳細情報については<a class="xref" href="using_postgis_dbmanagement.html#DE-9IM" title="4.3.6. ここで、Dimensionally Extended 9 Intersection Modelまたは略してDE-9IMを見てみましょう。">「ここで、Dimensionally Extended 9 Intersection Modelまたは略してDE-9IMを見てみましょう。」</a>をご覧下さい。 </p><p>Availability: 2.0.0 - GEOS 3.3.0以上が必要 </p></div><div class="refsection" title="例"><a name="idp79079632"></a><h2>例</h2><pre class="programlisting">SELECT ST_RelateMatch('101202FFF', 'TTTTTTFFF') ;
+-- 結果--
+t
+-- 一般的なインタセクション行列パターンと
+-- 不正なジオメトリ (内部と境界で共有部分を持つラインとポリゴン)を
+-- 含む関係を比較する行列の例
+SELECT mat.name, pat.name, ST_RelateMatch(mat.val, pat.val) As satisfied
+    FROM
+        ( VALUES ('Equality', 'T1FF1FFF1'),
+                ('Overlaps', 'T*T***T**'),
+                ('Within', 'T*F**F***'),
+                ('Disjoint', 'FF*FF****') As pat(name,val)
+        CROSS JOIN
+            (        VALUES ('Self intersections (invalid)', '111111111'),
+                    ('IE2_BI1_BB0_BE1_EI1_EE2', 'FF2101102'),
+                    ('IB1_IE1_BB0_BE0_EI2_EI1_EE2', 'F11F00212')
+            ) As mat(name,val);
+
+                </pre></div><div class="refsection" title="関連情報"><a name="idp79081168"></a><h2>関連情報</h2><p><a class="xref" href="using_postgis_dbmanagement.html#DE-9IM" title="4.3.6. ここで、Dimensionally Extended 9 Intersection Modelまたは略してDE-9IMを見てみましょう。">「ここで、Dimensionally Extended 9 Intersection Modelまたは略してDE-9IMを見てみましょう。」</a>, <a class="xref" href="ST_Relate.html" title="ST_Relate">ST_Relate</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_Relate.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Spatial_Relationships_Measurements">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_ShortestLine.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Relate </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_ShortestLine</td></tr></table></div></body></html>

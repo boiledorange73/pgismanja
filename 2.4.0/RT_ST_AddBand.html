@@ -1,0 +1,83 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_AddBand</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.4.0 マニュアル"><link rel="up" href="RT_reference.html#Raster_Constructors" title="9.3. ラスタコンストラクタ"><link rel="prev" href="RT_CreateOverview.html" title="ST_CreateOverview"><link rel="next" href="RT_ST_AsRaster.html" title="ST_AsRaster"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_AddBand</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_CreateOverview.html">戻る</a> </td><th width="60%" align="center">9.3. ラスタコンストラクタ</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_AsRaster.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_AddBand"><a name="RT_ST_AddBand"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_AddBand — 与えられたタイプで、与えられた初期値にした新しいバンドを、与えられたインデクス位置に追加したラスタを返します。インデクス位置を指定していない場合には、バンドは末尾に追加されます。 </p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">(1) raster <b class="fsfunc">ST_AddBand</b>(</code>raster  <var class="pdparam">rast</var>, addbandarg[]  <var class="pdparam">addbandargset</var><code>)</code>;</p><p><code class="funcdef">(2) raster <b class="fsfunc">ST_AddBand</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">index</var>, text  <var class="pdparam">pixeltype</var>, double precision  <var class="pdparam">initialvalue=0</var>, double precision  <var class="pdparam">nodataval=NULL</var><code>)</code>;</p><p><code class="funcdef">(3) raster <b class="fsfunc">ST_AddBand</b>(</code>raster  <var class="pdparam">rast</var>, text  <var class="pdparam">pixeltype</var>, double precision  <var class="pdparam">initialvalue=0</var>, double precision  <var class="pdparam">nodataval=NULL</var><code>)</code>;</p><p><code class="funcdef">(4) raster <b class="fsfunc">ST_AddBand</b>(</code>raster  <var class="pdparam">torast</var>, raster  <var class="pdparam">fromrast</var>, integer  <var class="pdparam">fromband=1</var>, integer  <var class="pdparam">torastindex=at_end</var><code>)</code>;</p><p><code class="funcdef">(5) raster <b class="fsfunc">ST_AddBand</b>(</code>raster  <var class="pdparam">torast</var>, raster[]  <var class="pdparam">fromrasts</var>, integer  <var class="pdparam">fromband=1</var>, integer  <var class="pdparam">torastindex=at_end</var><code>)</code>;</p><p><code class="funcdef">(6) raster <b class="fsfunc">ST_AddBand</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">index</var>, text  <var class="pdparam">outdbfile</var>, integer[]  <var class="pdparam">outdbindex</var>, double precision  <var class="pdparam">nodataval=NULL</var><code>)</code>;</p><p><code class="funcdef">(7) raster <b class="fsfunc">ST_AddBand</b>(</code>raster  <var class="pdparam">rast</var>, text  <var class="pdparam">outdbfile</var>, integer[]  <var class="pdparam">outdbindex</var>, integer  <var class="pdparam">index=at_end</var>, double precision  <var class="pdparam">nodataval=NULL</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp91953360"></a><h2>説明</h2><p>与えられたタイプで、与えられた初期値にし、与えられたNODATA値を付した新しいバンドを追加したラスタを返します。インデクス位置を指定していない場合には、バンドは末尾に追加されます。<code class="varname">fromband</code>が指定されない場合には、1番バンドと仮定します。ピクセルタイプは<a class="xref" href="RT_ST_BandPixelType.html" title="ST_BandPixelType">ST_BandPixelType</a>で指定されているピクセルタイプの文字列表現です。既存のインデクスが指定された場合には、以降のバンドは全て1以上足されたインデクスになります。初期値としてピクセルタイプの最大値を超えた値が指定された場合には、初期値にピクセルタイプの許容最大値が指定されます。 </p><p><a class="xref" href="addbandarg.html" title="addbandarg">addbandarg</a>の配列を取る版 (一つ目の版)では、指定したaddbandargのインデクス値は、addbandargで示されるバンドがラスタに追加される時のラスタとの相対値です。下の複数バンドの例を参照してください。 </p><p>ラスタの配列を取る版 (五つ目の版)では、<code class="varname">torast</code>がNULLなら、配列内のラスタごとの<code class="varname">fromband</code>のバンドが新しいラスタに集約されます。 </p><p><code class="varname">outdbfile</code>を取る版 (六つ目と七つ目の版)では、値はラスタファイルへのフルパスを含まなければなりません。また、ファイルはPostgreSQLサーバプロセスがアクセス可能でなければなりません。 </p><p>Enhanced: 2.1.0 addbandarg対応が追加されました。</p><p>Enhanced: 2.1.0 out-dbバンドが追加されました。</p></div><div class="refsection" title="例: 単一バンド"><a name="idp91958864"></a><h2>例: 単一バンド</h2><pre class="programlisting">-- 8ビット符号無し整数で初期値200のバンドを追加します
+UPDATE dummy_rast
+    SET rast = ST_AddBand(rast,'8BUI'::text,200)
+WHERE rid = 1;
+                                </pre><pre class="programlisting">-- 100x100単位で左上を0,0とした空のラスタを生成し、
+-- 2個のバンドを追加します (1番バンドは0/1の真偽値、2番バンドは0-15を許容)
+-- addbandargsを使用しています。
+INSERT INTO dummy_rast(rid,rast)
+    VALUES(10, ST_AddBand(ST_MakeEmptyRaster(100, 100, 0, 0, 1, -1, 0, 0, 0),
+        ARRAY[
+                ROW(1, '1BB'::text, 0, NULL),
+                ROW(2, '4BUI'::text, 0, NULL)
+                        ]::addbandarg[]
+     )
+    );
+
+-- output meta data of raster bands to verify all is right --
+SELECT  (bmd).*
+FROM (SELECT ST_BandMetaData(rast,generate_series(1,2)) As bmd
+    FROM dummy_rast WHERE rid = 10) AS foo;
+ --result --
+ pixeltype | nodatavalue | isoutdb | path
+-----------+----------------+-------------+---------+------
+ 1BB       |             | f       |
+ 4BUI      |             | f       |
+
+
+-- ラスタのメタデータの出力 --
+SELECT  (rmd).width, (rmd).height, (rmd).numbands
+FROM (SELECT ST_MetaData(rast) As rmd
+    FROM dummy_rast WHERE rid = 10) AS foo;
+-- 結果 --
+ upperleftx | upperlefty | width | height | scalex | scaley | skewx | skewy | srid | numbands
+------------+------------+-------+--------+------------+------------+-------+-------+------+----------
+          0 |          0 |   100 |    100 |      1 |     -1 |     0 |     0 |   0 |        2
+                                </pre></div><div class="refsection" title="例: 複数の新規バンド"><a name="idp91960656"></a><h2>例: 複数の新規バンド</h2><pre class="programlisting">SELECT
+        *
+FROM ST_BandMetadata(
+        ST_AddBand(
+                ST_MakeEmptyRaster(10, 10, 0, 0, 1, -1, 0, 0, 0),
+                ARRAY[
+                        ROW(NULL, '8BUI', 255, 0),
+                        ROW(NULL, '16BUI', 1, 2),
+                        ROW(2, '32BUI', 100, 12),
+                        ROW(2, '32BF', 3.14, -1)
+                ]::addbandarg[]
+        ),
+        ARRAY[]::integer[]
+);
+
+ bandnum | pixeltype | nodatavalue | isoutdb | path
+---------+-----------+-------------+---------+------
+       1 | 8BUI      |           0 | f       |
+       2 | 32BF      |          -1 | f       |
+       3 | 32BUI     |          12 | f       |
+       4 | 16BUI     |           2 | f       |
+                                </pre><pre class="programlisting">-- 複数のラスタのようなテーブルの1番バンドを集計して単一ラスタに入れます。
+-- test_typeと同じ数のバンドを持つ、マウスの数と同じ行 (新しいラスタ)になります。
+-- ご注意: ORDER BY test_typeは、PostgreSQL 9.0以上でのみ対応します。
+-- 8.4以下では副問い合わせ内の並び順になります (保証もされません)。
+-- 結果ラスタはtest_typeのアルファベット順でtest_typeごとのバンドを持ちます
+-- マウス好きの方へ: この例ではマウスは傷つきませんでした
+SELECT
+        mouse,
+        ST_AddBand(NULL, array_agg(rast ORDER BY test_type), 1) As rast
+FROM mice_studies
+GROUP BY mouse;
+                                </pre></div><div class="refsection" title="例: データベース外のバンド"><a name="idp91962448"></a><h2>例: データベース外のバンド</h2><pre class="programlisting">SELECT
+        *
+FROM ST_BandMetadata(
+        ST_AddBand(
+                ST_MakeEmptyRaster(10, 10, 0, 0, 1, -1, 0, 0, 0),
+                '/home/raster/mytestraster.tif'::text, NULL::int[]
+        ),
+        ARRAY[]::integer[]
+);
+
+ bandnum | pixeltype | nodatavalue | isoutdb | path
+---------+-----------+-------------+---------+------
+       1 | 8BUI      |             | t       | /home/raster/mytestraster.tif
+       2 | 8BUI      |             | t       | /home/raster/mytestraster.tif
+       3 | 8BUI      |             | t       | /home/raster/mytestraster.tif
+                                </pre></div><div class="refsection" title="関連情報"><a name="idp91963856"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_BandMetaData.html" title="ST_BandMetaData">ST_BandMetaData</a>, <a class="xref" href="RT_ST_BandPixelType.html" title="ST_BandPixelType">ST_BandPixelType</a>, <a class="xref" href="RT_ST_MakeEmptyRaster.html" title="ST_MakeEmptyRaster">ST_MakeEmptyRaster</a>, <a class="xref" href="RT_ST_MetaData.html" title="ST_MetaData">ST_MetaData</a>, <a class="xref" href="RT_ST_NumBands.html" title="ST_NumBands">ST_NumBands</a>, <a class="xref" href="RT_ST_Reclass.html" title="ST_Reclass">ST_Reclass</a> </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_CreateOverview.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Constructors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_AsRaster.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_CreateOverview </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_AsRaster</td></tr></table></div></body></html>
