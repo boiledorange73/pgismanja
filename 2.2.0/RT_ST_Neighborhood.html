@@ -1,0 +1,73 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Neighborhood</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.2.0devマニュアル日本語訳"><link rel="up" href="RT_reference.html#Raster_Pixel_Accessors" title="9.6. ラスタピクセルアクセサとセッター"><link rel="prev" href="RT_ST_NearestValue.html" title="ST_NearestValue"><link rel="next" href="RT_ST_SetValue.html" title="ST_SetValue"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Neighborhood</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_NearestValue.html">戻る</a> </td><th width="60%" align="center">9.6. ラスタピクセルアクセサとセッター</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_SetValue.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_Neighborhood"><a name="RT_ST_Neighborhood"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_Neighborhood — 与えられたバンドのcolumnX, columnYか、ラスタと同じ空間参照系のジオメトリポイントで指定されたピクセルの周囲にある非<code class="varname">NODATA</code>の2次元倍精度浮動小数点数配列を返します。 </p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">double precision[][] <b class="fsfunc">ST_Neighborhood</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">bandnum</var>, integer  <var class="pdparam">columnX</var>, integer  <var class="pdparam">rowY</var>, integer  <var class="pdparam">distanceX</var>, integer  <var class="pdparam">distanceY</var>, boolean  <var class="pdparam">exclude_nodata_value=true</var><code>)</code>;</p><p><code class="funcdef">double precision[][] <b class="fsfunc">ST_Neighborhood</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">columnX</var>, integer  <var class="pdparam">rowY</var>, integer  <var class="pdparam">distanceX</var>, integer  <var class="pdparam">distanceY</var>, boolean  <var class="pdparam">exclude_nodata_value=true</var><code>)</code>;</p><p><code class="funcdef">double precision[][] <b class="fsfunc">ST_Neighborhood</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">bandnum</var>, geometry  <var class="pdparam">pt</var>, integer  <var class="pdparam">distanceX</var>, integer  <var class="pdparam">distanceY</var>, boolean  <var class="pdparam">exclude_nodata_value=true</var><code>)</code>;</p><p><code class="funcdef">double precision[][] <b class="fsfunc">ST_Neighborhood</b>(</code>raster  <var class="pdparam">rast</var>, geometry  <var class="pdparam">pt</var>, integer  <var class="pdparam">distanceX</var>, integer  <var class="pdparam">distanceY</var>, boolean  <var class="pdparam">exclude_nodata_value=true</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp88482256"></a><h2>説明</h2><p>与えられたバンドのcolumnX, columnYか、ラスタと同じ空間参照系のジオメトリポイントで指定されたピクセルの周囲にある非<code class="varname">NODATA</code>の2次元倍精度浮動小数点数配列を返します。たとえば、X軸で3ピクセル、Y軸で2ピクセルの距離の全ての値を得るといった場合に、<code class="varname">distanceX</code>と<code class="varname">distanceY</code>引数で、指定ピクセルの周りのX, Yの各軸に沿ったピクセル数を指定します。2次元配列の中心の値はcolumnX, columnYまたはジオメトリポイントで指定したピクセルの値です。 </p><p>バンド番号は1始まりで、<code class="varname">bandnum</code>が指定されていない場合には、1番と仮定します。<code class="varname">exclude_nodata_value</code>がFALSEに設定された場合には、NODATAピクセルを含む全てのピクセルがインタセクトするかが考慮され、値を返します。<code class="varname">exclude_nodata_value</code>を渡さない場合には、ラスタのメタデータから読みます。 </p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>返される2次元配列の各軸の要素数は2 * (<code class="varname">distanceX</code>|<code class="varname">distanceY</code>) + 1です。<code class="varname">distanceX</code>と<code class="varname">distanceY</code>を1にすると、3x3の配列が返ります。 </p></td></tr></table></div><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>2次元配列の出力はST_Min4ma, ST_Sum4ma, ST_Mean4maといったあらゆるラスタ処理関数に渡すことができます。 </p></td></tr></table></div><p>初出: 2.1.0</p></div><div class="refsection" title="例"><a name="idp88497872"></a><h2>例</h2><pre class="programlisting">-- 2,2ピクセルは値を持っています
+SELECT
+        ST_Neighborhood(rast, 2, 2, 1, 1)
+FROM (
+        SELECT
+                ST_SetValues(
+                        ST_AddBand(
+                                ST_MakeEmptyRaster(5, 5, -2, 2, 1, -1, 0, 0, 0),
+                                '8BUI'::text, 1, 0
+                        ),
+                        1, 1, 1, ARRAY[
+                                [0, 1, 1, 1, 1],
+                                [1, 1, 1, 0, 1],
+                                [1, 0, 1, 1, 1],
+                                [1, 1, 1, 1, 0],
+                                [1, 1, 0, 1, 1]
+                        ]::double precision[],
+                        1
+                ) AS rast
+) AS foo
+
+         st_neighborhood         
+---------------------------------
+ {{NULL,1,1},{1,1,NULL},{1,1,1}}
+                                </pre><pre class="programlisting">-- 2,3ピクセルはNODATAです
+SELECT
+        ST_Neighborhood(rast, 2, 3, 1, 1)
+FROM (
+        SELECT
+                ST_SetValues(
+                        ST_AddBand(
+                                ST_MakeEmptyRaster(5, 5, -2, 2, 1, -1, 0, 0, 0),
+                                '8BUI'::text, 1, 0
+                        ),
+                        1, 1, 1, ARRAY[
+                                [0, 1, 1, 1, 1],
+                                [1, 1, 1, 0, 1],
+                                [1, 0, 1, 1, 1],
+                                [1, 1, 1, 1, 0],
+                                [1, 1, 0, 1, 1]
+                        ]::double precision[],
+                        1
+                ) AS rast
+) AS foo
+
+       st_neighborhood        
+------------------------------
+ {{1,1,1},{1,NULL,1},{1,1,1}}
+                                </pre><pre class="programlisting">-- 3,3ピクセルは値を持っています
+-- exclude_nodata_value = FALSE
+SELECT
+        ST_Neighborhood(rast, 3, 3, 1, 1, false)
+FROM (
+                ST_SetValues(
+                        ST_AddBand(
+                                ST_MakeEmptyRaster(5, 5, -2, 2, 1, -1, 0, 0, 0),
+                                '8BUI'::text, 1, 0
+                        ),
+                        1, 1, 1, ARRAY[
+                                [0, 1, 1, 1, 1],
+                                [1, 1, 1, 0, 1],
+                                [1, 0, 1, 1, 1],
+                                [1, 1, 1, 1, 0],
+                                [1, 1, 0, 1, 1]
+                        ]::double precision[],
+                        1
+                ) AS rast
+) AS foo
+
+      st_neighborhood      
+---------------------------
+ {{1,0,1},{1,1,1},{0,1,1}}
+                                </pre></div><div class="refsection" title="関連情報"><a name="idp88500176"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_NearestValue.html" title="ST_NearestValue">ST_NearestValue</a>, <a class="xref" href="RT_ST_Min4ma.html" title="ST_Min4ma">ST_Min4ma</a>, <a class="xref" href="RT_ST_Max4ma.html" title="ST_Max4ma">ST_Max4ma</a>, <a class="xref" href="RT_ST_Sum4ma.html" title="ST_Sum4ma">ST_Sum4ma</a>, <a class="xref" href="RT_ST_Mean4ma.html" title="ST_Mean4ma">ST_Mean4ma</a>, <a class="xref" href="RT_ST_Range4ma.html" title="ST_Range4ma">ST_Range4ma</a>, <a class="xref" href="RT_ST_Distinct4ma.html" title="ST_Distinct4ma">ST_Distinct4ma</a>, <a class="xref" href="RT_ST_StdDev4ma.html" title="ST_StdDev4ma">ST_StdDev4ma</a> </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_NearestValue.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Pixel_Accessors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_SetValue.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_NearestValue </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_SetValue</td></tr></table></div></body></html>

@@ -1,0 +1,299 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>第5章 ラスタデータの管理、クエリ、アプリケーション</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.2.0devマニュアル日本語訳"><link rel="up" href="index.html" title="PostGIS 2.2.0devマニュアル日本語訳"><link rel="prev" href="using_postgis_dbmanagement.html" title="第4章 PostGISを使う: データ管理とクエリ"><link rel="next" href="ch06.html" title="第6章 PostGISを使う: アプリケーションを構築する"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">第5章 ラスタデータの管理、クエリ、アプリケーション</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="using_postgis_dbmanagement.html">戻る</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch06.html">次へ</a></td></tr></table><hr></div><div class="chapter" title="第5章 ラスタデータの管理、クエリ、アプリケーション"><div class="titlepage"><div><div><h2 class="title"><a name="using_raster_dataman"></a>第5章 ラスタデータの管理、クエリ、アプリケーション</h2></div></div></div><div class="toc"><p><b>目次</b></p><dl><dt><span class="sect1"><a href="using_raster_dataman.html#RT_Loading_Rasters">5.1. ラスタのロードと生成</a></span></dt><dd><dl><dt><span class="sect2"><a href="using_raster_dataman.html#RT_Raster_Loader">5.1.1. raster2pgsqlを使ってラスタをロードする</a></span></dt><dt><span class="sect2"><a href="using_raster_dataman.html#RT_Creating_Rasters">5.1.2. PostGISラスタ関数を用いたラスタの生成</a></span></dt></dl></dd><dt><span class="sect1"><a href="using_raster_dataman.html#RT_Raster_Catalog">5.2. ラスタカタログ</a></span></dt><dd><dl><dt><span class="sect2"><a href="using_raster_dataman.html#RT_Raster_Columns">5.2.1. ラスタカラムカタログ</a></span></dt><dt><span class="sect2"><a href="using_raster_dataman.html#RT_Raster_Overviews">5.2.2. ラスタオーバビュー</a></span></dt></dl></dd><dt><span class="sect1"><a href="using_raster_dataman.html#RT_Raster_Applications">5.3. PostGISラスタを使ったカスタムアプリケーションの構築</a></span></dt><dd><dl><dt><span class="sect2"><a href="using_raster_dataman.html#RT_PHP_Output">5.3.1. ST_AsPNG を他の関数とあわせて使った PHP 出力例</a></span></dt><dt><span class="sect2"><a href="using_raster_dataman.html#RT_Net_Output_CS">5.3.2. ST_AsPNGを他の関数とあわせて使ったASP.NET C#出力例</a></span></dt><dt><span class="sect2"><a href="using_raster_dataman.html#RT_Java_Console_App">5.3.3. ラスタクエリを画像ファイルとして出力するJavaコンソールアプリケーション</a></span></dt><dt><span class="sect2"><a href="using_raster_dataman.html#RT_PLPython">5.3.4. PLPython を使って SQL を介して画像をダンプする</a></span></dt><dt><span class="sect2"><a href="using_raster_dataman.html#RasterOutput_PSQL">5.3.5. PSQLでラスタを出力する</a></span></dt></dl></dd></dl></div><div class="sect1" title="5.1. ラスタのロードと生成"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="RT_Loading_Rasters"></a>5.1. ラスタのロードと生成</h2></div></div></div><div class="toc"><dl><dt><span class="sect2"><a href="using_raster_dataman.html#RT_Raster_Loader">5.1.1. raster2pgsqlを使ってラスタをロードする</a></span></dt><dt><span class="sect2"><a href="using_raster_dataman.html#RT_Creating_Rasters">5.1.2. PostGISラスタ関数を用いたラスタの生成</a></span></dt></dl></div><p><code class="varname">raster2pgsql</code>ラスタローダを使ってPostGISラスタを既存のラスタファイルからロードするのは、最もよく行われます。</p><div class="sect2" title="5.1.1. raster2pgsqlを使ってラスタをロードする"><div class="titlepage"><div><div><h3 class="title"><a name="RT_Raster_Loader"></a>5.1.1. raster2pgsqlを使ってラスタをロードする</h3></div></div></div><p><code class="varname">raster2pgsql</code>は、GDALがサポートするラスタ書式をPostGISラスタテーブルにロードするのに適切なSQLにするバイナリファイルです。ラスタのオーバビューの生成だけでなく、ラスタファイルのフォルダのロードも可能です。 </p><p>raster2pgsqlは、ほとんどの場合、PostGISの一部としてコンパイルされます(GDALライブラリをコンパイルしている場合)が、バイナリファイルによってサポートされるラスタタイプは、GDALでコンパイルされたのと同じです。raster2pgsqlがサポートするラスタタイプの一覧を得るには、<code class="varname">-G</code>スイッチを使います。この一覧は、インストールした PostGIS が提供する<a class="xref" href="RT_ST_GDALDrivers.html" title="ST_GDALDrivers">ST_GDALDrivers</a>と同じになるはずです。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>このツールの古い版では、Pythonスクリプトでした。実行ファイルに置き換えられています。Pytonスクリプトが必要な場合は、 <a class="ulink" href="http://trac.osgeo.org/gdal/wiki/frmts_wtkraster.html" target="_top">GDAL PostGIS Raster Driver Usage</a>に、Pythonの例があります。raster2pgsql の Python スクリプトは、今後の PostGIS raster では動作しないかも知れませんし、サポートされませんので、ご注意ください。 </p></td></tr></table></div><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>同じアラインメントを持つラスタの集合から特定の要素のオーバビューを生成する時、オーバビューが同じアラインメントを持たないことがあります。オーバビューが同じアラインメントを持たない例については<a class="ulink" href="http://trac.osgeo.org/postgis/ticket/1764" target="_top">http://trac.osgeo.org/postgis/ticket/1764</a>をご覧下さい。</p></td></tr></table></div><p>使用例: </p><pre class="programlisting">raster2pgsql <code class="varname">raster_options_go_here</code> <code class="varname">raster_file</code> <code class="varname">someschema</code>.<code class="varname">sometable</code> &gt; out.sql</pre><p>
+    </p><div class="variablelist"><dl><dt><span class="term">-?</span></dt><dd><p>ヘルプを表示します。引数を全く指定しない場合にも表示されます。  </p></dd><dt><span class="term">-G</span></dt><dd><p>サポートされているラスタ書式を印字します。  </p></dd><dt><span class="term">(c|a|d|p) 相互に排他的なオプション</span></dt><dd><p>
+              </p><div class="variablelist"><dl><dt><span class="term">-c</span></dt><dd><p>しいテーブルを生成し、ラスタを入れます。<span class="emphasis"><em>これがデフォルトモードです</em></span>。 </p></dd><dt><span class="term">-a</span></dt><dd><p>既存のテーブルにラスタを追加します。  </p></dd><dt><span class="term">-d</span></dt><dd><p>テーブルを削除し、新しいテーブルを生成し、ラスタを入れます。  </p></dd><dt><span class="term">-p</span></dt><dd><p>準備モード、テーブルを作るだけです。 </p></dd></dl></div><p>
+            </p></dd><dt><span class="term">ラスタ処理: ラスタカタログでの適切に登録するための制約の適用</span></dt><dd><p>
+					</p><div class="variablelist"><dl><dt><span class="term">-C </span></dt><dd><p>SRIDやピクセルサイズ等のラスタ制約を適用して、<code class="varname">raster_columns</code>ビューで適切な登録ができるようにします。  </p></dd><dt><span class="term">-x </span></dt><dd><p>制約の最大範囲を無効にします。-Cフラグが使われている場合のみ適用されます。  </p></dd><dt><span class="term">-r </span></dt><dd><p>正規ブロック制約(空間的に一意かつカバレッジタイル)を適用します。-Cフラグが使用されている場合のみ適用されます。  </p></dd></dl></div><p>	    	
+				</p></dd><dt><span class="term">ラスタ処理: 入力ラスタデータセットの操作に使われる追加的なパラメータ</span></dt><dd><p>
+            </p><div class="variablelist"><dl><dt><span class="term">-s &lt;SRID&gt;</span></dt><dd><p>出力ラスタを指定されたSRIDにします。 指定しないか0を師弟した場合、ラスタのメタデータに対して、適切なSRIDを決定するためのチェックを行います。 </p></dd><dt><span class="term">-b BAND</span></dt><dd><p>ラスタから抽出するバンドのインデクス(1はじまり)。1より多いバンドを抽出するには、コンマ(,)で区切ります。指定しない場合、全てのバンドが抽出されます。  </p></dd><dt><span class="term">-t TILE_SIZE</span></dt><dd><p>テーブル行毎に挿入するラスタを切断します。<code class="varname">TILE_SIZE</code>は、「幅x高さ」で表現しますが、"auto"を指定すると、最初のラスタを使って適切なタイルサイズが計算され、全てのラスタに適用されます。 </p></dd><dt><span class="term">-R, --register</span></dt><dd><p>ファイルシステム(データベース外)ラスタとして、ラスタを登録します。</p><p>データベースには、ラスタのメタデータとラスタのファイルパスのみ格納されます(ピクセルは格納されません)。</p></dd><dt><span class="term">-l <code class="varname">OVERVIEW_FACTOR</code></span></dt><dd><p>ラスタのオーバビューを生成します。1つより多い係数を用いる場合は、コンマ (,) で区切ります。オーバビューのテーブル名はo_<code class="varname">overview factor</code>_<code class="varname">table</code>となります。<code class="varname">overview factor</code>にはオーバビュー係数が入り、<code class="varname">table</code>には基底テーブル名が入ります。生成されるオーバビューはデータベースに格納され、-Rは無視されます。生成されたSQLファイルは元データのテーブルとオーバビューテーブルの両方を含むことに注意して下さい。</p></dd><dt><span class="term">-N <code class="varname">NODATA</code></span></dt><dd><p>NODATA値を持たないバンドで使用するNODATA値を設定します。 </p></dd></dl></div><p>
+            </p></dd><dt><span class="term">テータベースオブジェクトの操作に使われる追加的なパラメータ</span></dt><dd><p>
+              </p><div class="variablelist"><dl><dt><span class="term">-q </span></dt><dd><p>PostgreSQL 識別子に引用符を付けます。  </p></dd><dt><span class="term">-f COLUMN</span></dt><dd><p>出力先ラスタカラムの名前を指定します。デフォルトは'rast'です。  </p></dd><dt><span class="term">-F</span></dt><dd><p>ファイル名でカラムを追加します。</p></dd><dt><span class="term">-I</span></dt><dd><p>ラスタカラムにGiSTインデクスを生成します。 </p></dd><dt><span class="term">-M</span></dt><dd><p>ラスタテーブルにVacuum analyzeを行います。 </p></dd><dt><span class="term">-T <code class="varname">tablespace</code></span></dt><dd><p>生成されるテーブルのテーブルスペースを指定します。-Xフラグを併用しない場合には、インデクス(主キーを含む)はデフォルトのテーブルスペースを使用することにご注意ください。  </p></dd><dt><span class="term">-X <code class="varname">tablespace</code></span></dt><dd><p>テーブルの新しいインデックスに使うテーブル空間を指定します。主キーに適用され、-Iフラグがある場合においては空間インデクスにも適用されます。 </p></dd><dt><span class="term">-Y</span></dt><dd><p>INSERT ステートメントでなく COPY ステートメントを使います。</p></dd></dl></div><p>
+            </p></dd><dt><span class="term">-e</span></dt><dd><p>ステートメント毎に実行して、トランザクションを使用しないようにします。</p></dd><dt><span class="term">-E ENDIAN</span></dt><dd><p>生成されるラスタのバイナリ出力のエンディアンを制御します。XDR(訳注: ビッグエンディアン)の場合は0を、NDR(訳注:リトルエンディアン)の場合は1を、それぞれ指定します。デフォルトは1です。現時点ではNDR出力のみサポートします。</p></dd><dt><span class="term">-V <code class="varname">version</code></span></dt><dd><p>出力書式の版を指定します。デフォルトは0です。現時点では0のみサポートします。</p></dd></dl></div><p>ローダを用いて入力ファイルを100x100のタイルで生成して、データベースにアップロードする例は、次の通りです。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p><code class="varname">public.demelevation</code>でなく<code class="varname">demelevation</code> というようにスキーマ名を外すことができます。この場合、ラスタテーブルはデータベースまたユーザの指定するデフォルトのスキーマに生成されます。</p></td></tr></table></div><pre class="programlisting">raster2pgsql -s 4326 -I -C -M *.tif -F -t 100x100 public.demelevation &gt; elev.sql
+psql -d gisdb -f elev.sql</pre><p>変換とアップロードは UNIX のパイプを使って一度に実行できます。</p><pre class="programlisting">raster2pgsql -s 4326 -I -C -M *.tif -F -t 100x100 public.demelevation | psql -d gisdb</pre><p>マサチューセッツ州平面のメートル単位の空中写真タイルを<code class="varname">aerial</code>という名前のスキーマにロードします。 元の画像と2, 4レベルのオーバビューのテーブルとを生成します。 データ格納にCOPYを使用し(データベースに仲介ファイルなくまっすぐ入ります)。 -eでトランザクションを指定しないようにします(待たずにテーブルのデータを見たい場合には良いです)。ラスタを128x128ピクセルのタイルに分解してラスタ制約を適用します。INSERTモードでなくCOPYモードを使用します。-Fで、カラム名をタイル切り出し元ファイルのファイル名にします。</p><pre class="programlisting">raster2pgsql -I -C -e -Y -F -s 26986 -t 128x128  -l 2,4 bostonaerials2008/*.jpg aerials.boston | psql -U postgres -d gisdb -h localhost -p 5432</pre><pre class="programlisting">-- サポートされているラスタタイプの一覧:
+raster2pgsql -G</pre><p>-Gコマンドの出力は次のようになります。 </p><pre class="screen">Available GDAL raster formats:
+  Virtual Raster
+  GeoTIFF
+  National Imagery Transmission Format
+  Raster Product Format TOC format
+  ECRG TOC format
+  Erdas Imagine Images (.img)
+  CEOS SAR Image
+  CEOS Image
+  JAXA PALSAR Product Reader (Level 1.1/1.5)
+  Ground-based SAR Applications Testbed File Format (.gff)
+  ELAS
+  Arc/Info Binary Grid
+  Arc/Info ASCII Grid
+  GRASS ASCII Grid
+  SDTS Raster
+  DTED Elevation Raster
+  Portable Network Graphics
+  JPEG JFIF
+  In Memory Raster
+  Japanese DEM (.mem)
+  Graphics Interchange Format (.gif)
+  Graphics Interchange Format (.gif)
+  Envisat Image Format
+  Maptech BSB Nautical Charts
+  X11 PixMap Format
+  MS Windows Device Independent Bitmap
+  SPOT DIMAP
+  AirSAR Polarimetric Image
+  RadarSat 2 XML Product
+  PCIDSK Database File
+  PCRaster Raster File
+  ILWIS Raster Map
+  SGI Image File Format 1.0
+  SRTMHGT File Format
+  Leveller heightfield
+  Terragen heightfield
+  USGS Astrogeology ISIS cube (Version 3)
+  USGS Astrogeology ISIS cube (Version 2)
+  NASA Planetary Data System
+  EarthWatch .TIL
+  ERMapper .ers Labelled
+  NOAA Polar Orbiter Level 1b Data Set
+  FIT Image
+  GRIdded Binary (.grb)
+  Raster Matrix Format
+  EUMETSAT Archive native (.nat)
+  Idrisi Raster A.1
+  Intergraph Raster
+  Golden Software ASCII Grid (.grd)
+  Golden Software Binary Grid (.grd)
+  Golden Software 7 Binary Grid (.grd)
+  COSAR Annotated Binary Matrix (TerraSAR-X)
+  TerraSAR-X Product
+  DRDC COASP SAR Processor Raster
+  R Object Data Store
+  Portable Pixmap Format (netpbm)
+  USGS DOQ (Old Style)
+  USGS DOQ (New Style)
+  ENVI .hdr Labelled
+  ESRI .hdr Labelled
+  Generic Binary (.hdr Labelled)
+  PCI .aux Labelled
+  Vexcel MFF Raster
+  Vexcel MFF2 (HKV) Raster
+  Fuji BAS Scanner Image
+  GSC Geogrid
+  EOSAT FAST Format
+  VTP .bt (Binary Terrain) 1.3 Format
+  Erdas .LAN/.GIS
+  Convair PolGASP
+  Image Data and Analysis
+  NLAPS Data Format
+  Erdas Imagine Raw
+  DIPEx
+  FARSITE v.4 Landscape File (.lcp)
+  NOAA Vertical Datum .GTX
+  NADCON .los/.las Datum Grid Shift
+  NTv2 Datum Grid Shift
+  ACE2
+  Snow Data Assimilation System
+  Swedish Grid RIK (.rik)
+  USGS Optional ASCII DEM (and CDED)
+  GeoSoft Grid Exchange Format
+  Northwood Numeric Grid Format .grd/.tab
+  Northwood Classified Grid Format .grc/.tab
+  ARC Digitized Raster Graphics
+  Standard Raster Product (ASRP/USRP)
+  Magellan topo (.blx)
+  SAGA GIS Binary Grid (.sdat)
+  Kml Super Overlay
+  ASCII Gridded XYZ
+  HF2/HFZ heightfield raster
+  OziExplorer Image File
+  USGS LULC Composite Theme Grid
+  Arc/Info Export E00 GRID
+  ZMap Plus Grid
+  NOAA NGS Geoid Height Grids</pre></div><div class="sect2" title="5.1.2. PostGISラスタ関数を用いたラスタの生成"><div class="titlepage"><div><div><h3 class="title"><a name="RT_Creating_Rasters"></a>5.1.2. PostGISラスタ関数を用いたラスタの生成</h3></div></div></div><p>データベース内でラスタやラスタテーブルを生成したい場合が多くあります。これを行うための関数が多数あります。一般的な手順は次の通りです。</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>新しいラスタ行を保持するためのラスタカラムを持つテーブルを生成します。次を実行します。</p><pre class="programlisting">CREATE TABLE myrasters(rid serial primary key, rast raster);</pre></li><li class="listitem"><p>この目標で助けとなる関数は多数あります。他のラスタの派生でないラスタを生成する場合、<a class="xref" href="RT_ST_MakeEmptyRaster.html" title="ST_MakeEmptyRaster">ST_MakeEmptyRaster</a>と<a class="xref" href="RT_ST_AddBand.html" title="ST_AddBand">ST_AddBand</a>を順次実行して作業を開始します。</p><p>ジオメトリからラスタを生成することもできます。<a class="xref" href="RT_ST_AsRaster.html" title="ST_AsRaster">ST_AsRaster</a>を使います。<a class="xref" href="RT_ST_Union.html" title="ST_Union">ST_Union</a>や<a class="xref" href="RT_ST_MapAlgebraFct2.html" title="ST_MapAlgebraFct">ST_MapAlgebraFct</a>や、地図解析関数群等といった、他の関数を組み合わせる場合もあります。</p><p>既存テーブルから新しいラスタテーブルを生成するための多数の選択肢があります。たとえば、<a class="xref" href="RT_ST_Transform.html" title="ST_Transform">ST_Transform</a>を使って、既存テーブルから異なる投影法のラスタテーブルを生成します。 </p></li><li class="listitem"><p>はじめにテーブルにデータを入れたら、ラスタカラムに空間インデクスを生成したくなるでしょう。次のようにします。</p><pre class="programlisting">CREATE INDEX myrasters_rast_st_convexhull_idx ON myrasters USING gist( ST_ConvexHull(rast) );</pre><p><a class="xref" href="RT_ST_ConvexHull.html" title="ST_ConvexHull">ST_ConvexHull</a>を使用していることに注意して下さい。多くのラスタ演算子はラスタの凸包を元にしています。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>2.0より前の PostGIS ラスタは、エンベロープを基本にして、凸包ではありませんでした。空間インデクスを適切に働かせるには、エンベロープを基本にしたインデクスを削除して、凸包を元にしたインデクスに置き換えます。</p></td></tr></table></div></li><li class="listitem"><p><a class="xref" href="RT_AddRasterConstraints.html" title="AddRasterConstraints">AddRasterConstraints</a>を用いてラスタ制約を適用します。</p></li></ol></div></div></div><div class="sect1" title="5.2. ラスタカタログ"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="RT_Raster_Catalog"></a>5.2. ラスタカタログ</h2></div></div></div><div class="toc"><dl><dt><span class="sect2"><a href="using_raster_dataman.html#RT_Raster_Columns">5.2.1. ラスタカラムカタログ</a></span></dt><dt><span class="sect2"><a href="using_raster_dataman.html#RT_Raster_Overviews">5.2.2. ラスタオーバビュー</a></span></dt></dl></div><p>PostGISが生成する、2つのラスタカタログのビューがあります。両方ともラスタテーブルの制約の中に埋め込まれる情報を用いています。結果として、カタログビューは、テーブル内のラスタデータに制約が働くため、常にラスタデータとの矛盾がありません。 </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p><code class="varname">raster_columns</code> ラスタタイプのデータベースにおける全てのラスタテーブルカラムのカタログです。</p></li><li class="listitem"><p><code class="varname">raster_overviews</code> データベース内の、より詳細なテーブルのためのオーバビューを提供するラスタテーブルのカラム全てのカタログです。この種のテーブルは、ロード時に<code class="varname">-l</code>を指定した時に生成されます。</p></li></ol></div><div class="sect2" title="5.2.1. ラスタカラムカタログ"><div class="titlepage"><div><div><h3 class="title"><a name="RT_Raster_Columns"></a>5.2.1. ラスタカラムカタログ</h3></div></div></div><p><code class="varname">raster_columns</code>は、ラスタタイプのデータベースにおける全てのラスタテーブルカラムのカタログです。テーブルの制約を使ったビューなので、他のデータベースのバックアップからラスタテーブルをリストアしたとしても、情報は常に矛盾がありません。<code class="varname">raster_columns</code>カタログには次のカラムがあります。</p><p>ローダを使わずにテーブルを生成したり、ロード時に<code class="varname">-C</code> フラグを忘れたりした場合には、事後に<a class="xref" href="RT_AddRasterConstraints.html" title="AddRasterConstraints">AddRasterConstraints</a>で制約を強制でき、<code class="varname">raster_columns</code>カタログは、ラスタタイルの共通の情報を登録します。</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><code class="varname">r_table_catalog</code> テーブルが存在するデータベースです。これは常に現在のデータベースを読みます。</p></li><li class="listitem"><p><code class="varname">r_table_schema</code> ラスタテーブルが属するデータベーススキーマです。</p></li><li class="listitem"><p><code class="varname">r_table_name</code> ラスタテーブルです。</p></li><li class="listitem"><p><code class="varname">r_raster_column</code> スタタイプである<code class="varname">r_table_name</code>テーブル内のカラムです。PostGISには、1つのテーブルに複数のラスタカラムを持つことを妨げません。異なるラスタカラムを持つラスタテーブルが、ラスタカラム毎に複数回出現するテーブルを持つことができます。</p></li><li class="listitem"><p><code class="varname">srid</code> ラスタの空間参照系識別番号です。<a class="xref" href="using_postgis_dbmanagement.html#spatial_ref_sys" title="4.3.1. SPATIAL_REF_SYSテーブルと空間参照系">「SPATIAL_REF_SYSテーブルと空間参照系」</a>にあるエントリであるべきです。</p></li><li class="listitem"><p><code class="varname">scale_x</code> 地理空間座標とピクセルの間の拡大縮小係数です。これは、ラスタカラムのすべてのタイルが同じ<code class="varname">scale_x</code>を持ち、制約が適用されている場合のみ出現します。詳細情報については<a class="xref" href="RT_ST_ScaleX.html" title="ST_ScaleX">ST_ScaleX</a>を参照してください。</p></li><li class="listitem"><p><code class="varname">scale_y</code> 地理空間座標とピクセルの間の拡大縮小係数です。これは、ラスタカラムのすべてのタイルが同じ<code class="varname">scale_y</code>を持ち、制約が適用されている場合のみ出現します。詳細情報については<a class="xref" href="RT_ST_ScaleY.html" title="ST_ScaleY">ST_ScaleY</a>を参照してください。</p></li><li class="listitem"><p><code class="varname">blocksize_x</code> ラスタタイルごとの幅(横方向のピクセル数)です。詳細情報については<a class="xref" href="RT_ST_Width.html" title="ST_Width">ST_Width</a>を参照してください。</p></li><li class="listitem"><p><code class="varname">blocksize_y</code> ラスタタイルごとの高さ(縦方向のピクセル数)です。詳細情報については<a class="xref" href="RT_ST_Height.html" title="ST_Height">ST_Height</a>を参照してください。</p></li><li class="listitem"><p><code class="varname">same_alignment</code> 全てのラスタタイルが同じアラインメントを持っているかを示す真偽値です。詳細情報については<a class="xref" href="RT_ST_SameAlignment.html" title="ST_SameAlignment">ST_SameAlignment</a>を参照してください。</p></li><li class="listitem"><p><code class="varname">regular_blocking</code> ラスタカラムが空間的に一意かつカバレッジタイルの制約を持つなら、TRUEとなります。その他の場合はFALSEになります。。</p></li><li class="listitem"><p><code class="varname">num_bands</code> ラスタ集合のそれぞれのタイルのバンド数。これは<a class="xref" href="RT_ST_NumBands.html" title="ST_NumBands">ST_NumBands</a>で得られる情報と同じです。 <a class="xref" href="RT_ST_NumBands.html" title="ST_NumBands">ST_NumBands</a></p></li><li class="listitem"><p><code class="varname">pixel_types</code> バンドごとのピクセルタイプを定義する配列です。この配列の要素数はバンド数と同じです。pixel_typesは、<a class="xref" href="RT_ST_BandPixelType.html" title="ST_BandPixelType">ST_BandPixelType</a>で定義されるピクセルタイプのひとつを取ります。</p></li><li class="listitem"><p><code class="varname">nodata_values</code> バンド毎の<code class="varname">nodata_value</code>を示す倍精度浮動小数点数の配列です。バンド数と同じ配列数となります。これらの値は、バンド毎のほとんどの処理で無視されるべきピクセル値の定義です。これは<a class="xref" href="RT_ST_BandNoDataValue.html" title="ST_BandNoDataValue">ST_BandNoDataValue</a>で得られる情報と似ています。</p></li><li class="listitem"><p><code class="varname">out_db</code> ラスタバンドデータがデータベース外で維持されているかを示す真偽値の配列です。この配列の添え字はバンド番号と同じです。</p></li><li class="listitem"><p><code class="varname">extent</code> ラスタ集合における全てのラスタ行の範囲です。集合の範囲を変更するデータを別途ロードする予定である場合、ロード前に<a class="xref" href="RT_DropRasterConstraints.html" title="DropRasterConstraints">DropRasterConstraints</a>関数を実行して、ロード後に<a class="xref" href="RT_AddRasterConstraints.html" title="AddRasterConstraints">AddRasterConstraints</a>で制約を再適用します。 </p></li><li class="listitem"><p><code class="varname">spatial_index</code> 空間インデクスを持っているかどうかを示す真偽値です。</p></li></ul></div></div><div class="sect2" title="5.2.2. ラスタオーバビュー"><div class="titlepage"><div><div><h3 class="title"><a name="RT_Raster_Overviews"></a>5.2.2. ラスタオーバビュー</h3></div></div></div><p><code class="varname">raster_overviews</code>は、オーバビューで使われるラスタテーブルカラムに関する情報のカタログで、オーバビューを用いる際に知っておくと便利な情報も持ちます。オーバビューテーブルは<code class="varname">raster_columns</code>と<code class="varname">raster_overviews</code>の両方のカタログに入れられます。オーバビューもラスタのひとつであるのは確かですが、より高い解像度テーブルの解像度を落としたカリカチュアになるという特殊な目的を満たすためでもあるからです。ラスタをロードする際に<code class="varname">-l</code>スイッチを使うと、オーバビューが主ラスタテーブルと一緒に生成されます。</p><p>オーバビューテーブルには、他のラスタテーブルと同じ制約と、オーバビュー特有の制約となる追加情報があります。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p><code class="varname">raster_overviews</code>の情報は<code class="varname">raster_columns</code>とは重複しません。<code class="varname">raster_columns</code>にあるオーバビューテーブルに関する情報が必要な場合は、<code class="varname">raster_overviews</code>と<code class="varname">raster_columns</code>とを結合すると、必要な情報の集合を完全に取得することができます。</p></td></tr></table></div><p>オーバビューの主たる理由は次の2つです。</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>ズームアウトした際の地図表示を早くするために、元のテーブルの低解像度表現が一般的に使われます。</p></li><li class="listitem"><p>レコード数が少なく、ピクセル毎の適用範囲が広いため、高解像度の元テーブルより計算が一般的に早くなります。計算は高解像度テーブルより精度は落ちますが、大まかな計算には十分でありえます。</p></li></ol></div><p><code class="varname">raster_overviews</code>カタログには、次の情報のカラムがあります。</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><code class="varname">o_table_catalog</code> オーバビューテーブルが存在するデータベースです。常に現在のデータベースを読みます。</p></li><li class="listitem"><p><code class="varname">o_table_schema</code> オーバビューラスタテーブルが属するデータベーススキーマです。</p></li><li class="listitem"><p><code class="varname">o_table_name</code> ラスタオーバビューテーブル名です。</p></li><li class="listitem"><p><code class="varname">o_raster_column</code> オーバビューテーブル内のラスタカラムです。</p></li><li class="listitem"><p><code class="varname">r_table_catalog</code> このオーバビューの元となるラスタテーブルのデータベースです。常に現在のデータベースを読みます。</p></li><li class="listitem"><p><code class="varname">r_table_schema</code> このオーバビューの元となるラスタテーブルが属するデータベーススキーマです。</p></li><li class="listitem"><p><code class="varname">r_table_name</code> このオーバビューの元となるラスタテーブルです。</p></li><li class="listitem"><p><code class="varname">r_raster_column</code> このオーバビューの元となるラスタカラムです。</p></li><li class="listitem"><p><code class="varname">overview_factor</code> - オーバビューテーブルのピラミッドレベルです。高い数字ほど解像度が低くなります。raster2pgsqlは、画像のフォルダを渡された場合は、分割して、イメージファイルのオーバビューの計算とロードを行います。レベル1は元ファイルと同じです。レベル2は、元ファイルの4分の1になります。たとえば、5000x5000ピクセルの画像ファイルのフォルダがあるとして、125x125に分ける場合、画像ファイルごとに(5000*5000)/(125*125) = 1600行のレコードを持ち、<code class="varname">o_2</code>テーブル(レベル2)はceiling(1600/Power(2,2)) = 400行、<code class="varname">o_3</code>(レベル3)ではceiling(1600/Power(2,3) ) = 200行のレコードを持ちます。ピクセルがタイルサイズで割り切れない場合、スクラップタイル(完全には値が入っていない)が得られます。raster2pgsqlによって生成される個々のオーバビュータイルは、元となるラスタと同じピクセル数を持ち、個々のピクセルの表現範囲(オリジナルの Power(2,overview_factor)ピクセル分)が低い解像度になっている点に注意して下さい。</p></li></ul></div></div></div><div class="sect1" title="5.3. PostGISラスタを使ったカスタムアプリケーションの構築"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="RT_Raster_Applications"></a>5.3. PostGISラスタを使ったカスタムアプリケーションの構築</h2></div></div></div><div class="toc"><dl><dt><span class="sect2"><a href="using_raster_dataman.html#RT_PHP_Output">5.3.1. ST_AsPNG を他の関数とあわせて使った PHP 出力例</a></span></dt><dt><span class="sect2"><a href="using_raster_dataman.html#RT_Net_Output_CS">5.3.2. ST_AsPNGを他の関数とあわせて使ったASP.NET C#出力例</a></span></dt><dt><span class="sect2"><a href="using_raster_dataman.html#RT_Java_Console_App">5.3.3. ラスタクエリを画像ファイルとして出力するJavaコンソールアプリケーション</a></span></dt><dt><span class="sect2"><a href="using_raster_dataman.html#RT_PLPython">5.3.4. PLPython を使って SQL を介して画像をダンプする</a></span></dt><dt><span class="sect2"><a href="using_raster_dataman.html#RasterOutput_PSQL">5.3.5. PSQLでラスタを出力する</a></span></dt></dl></div><p>PostGISラスタには、対応イメージ書式のラスタをレンダリングするSQL関数があり、レンダリングを行うための多数の選択肢があります。たとえば、<a class="ulink" href="http://www.postgresonline.com/journal/archives/244-Rendering-PostGIS-Raster-graphics-with-LibreOffice-Base-Reports.html" target="_top">Rendering PostGIS Raster graphics with LibreOffice Base Reports</a>で例を挙げている通り、OpenOffice/LibreOfficeを使うことができます。さらに、ここで示すように、幅広い言語で使うことができます。</p><div class="sect2" title="5.3.1. ST_AsPNG を他の関数とあわせて使った PHP 出力例"><div class="titlepage"><div><div><h3 class="title"><a name="RT_PHP_Output"></a>5.3.1. ST_AsPNG を他の関数とあわせて使った PHP 出力例</h3></div></div></div><p>本節では、PHPのPostgreSQLドライバと<a class="xref" href="RT_ST_AsGDALRaster.html" title="ST_AsGDALRaster">ST_AsGDALRaster</a>等の関数を使って、HTML imgタグに埋め込むことができるPHPリクエストストリームにラスタの1、2、3バンドを出力する方法を示します。</p><p>サンプルクエリでは、 指定したWGS84バウンディングボックスにインタセクトするタイルを取って、 <a class="xref" href="RT_ST_Union.html" title="ST_Union">ST_Union</a>でインタセクトしたタイルを結合して全てのバンドを返し、<a class="xref" href="RT_ST_Transform.html" title="ST_Transform">ST_Transform</a>でユーザ指定投影法に変換し、<a class="xref" href="RT_ST_AsPNG.html" title="ST_AsPNG">ST_AsPNG</a>を使ってPNGで結果を出力するためのラスタ関数群全体をまとめる方法を示します。</p><p>次で示すスクリプトは、</p><pre class="programlisting">http://mywebserver/test_raster.php?srid=2249</pre><p>で、マサチューセッツ州平面(フィート単位)のラスタ画像を取得するものです。</p><pre class="programlisting">&lt;?php
+/** test_raster.php コンテント **/
+$conn_str ='dbname=mydb host=localhost port=5432 user=myuser password=mypwd';
+$dbconn = pg_connect($conn_str);
+header('Content-Type: image/png');  
+/** 投影法が指定されたらそれを使います。
+    指定されないなら、マサチューセッツ州平面(メートル) を使います。 **/
+if (!empty( $_REQUEST['srid'] ) &amp;&amp; is_numeric( $_REQUEST['srid']) ){
+                $input_srid = intval($_REQUEST['srid']);
+}
+else { $input_srid = 26986; }
+/** PostgreSQL 9.0以上ではbytea_outputの設定が必要でしょう。
+    8.4 では不要です。 **/
+$sql = "set bytea_output='escape';
+SELECT ST_AsPNG(ST_Transform(
+                        ST_AddBand(ST_Union(rast,1), ARRAY[ST_Union(rast,2),ST_Union(rast,3)])
+                                ,$input_srid) ) As new_rast
+ FROM aerials.boston 
+        WHERE 
+         ST_Intersects(rast, ST_Transform(ST_MakeEnvelope(-71.1217, 42.227, -71.1210, 42.218,4326),26986) )"; 
+$result = pg_query($sql);
+$row = pg_fetch_row($result);
+pg_free_result($result);
+if ($row === false) return;
+echo pg_unescape_bytea($row[0]);
+?&gt;</pre></div><div class="sect2" title="5.3.2. ST_AsPNGを他の関数とあわせて使ったASP.NET C#出力例"><div class="titlepage"><div><div><h3 class="title"><a name="RT_Net_Output_CS"></a>5.3.2. ST_AsPNGを他の関数とあわせて使ったASP.NET C#出力例</h3></div></div></div><p>本節では、Npgsql PostgreSQL .NETドライバと<a class="xref" href="RT_ST_AsGDALRaster.html" title="ST_AsGDALRaster">ST_AsGDALRaster</a>等の関数を使って、HTML imgタグに埋め込むことができるように、ラスタの１、２、３バンドを出力する方法を示します。</p><p>この例ではNpgsql .NET PostgreSQLドライバが必要です。最新版は<a class="ulink" href="http://npgsql.projects.postgresql.org/" target="_top">http://npgsql.projects.postgresql.org/</a>にあります。最新版をダウンロードして、ASP.NET の binフォルダに入れるだけでうまくいきます。</p><p>サンプルクエリでは、 指定したWGS84バウンディングボックスにインタセクトするタイルを取って、 <a class="xref" href="RT_ST_Union.html" title="ST_Union">ST_Union</a>でインタセクトしたタイルを結合して全てのバンドを返し、<a class="xref" href="RT_ST_Transform.html" title="ST_Transform">ST_Transform</a>でユーザ指定投影法に変換し、<a class="xref" href="RT_ST_AsPNG.html" title="ST_AsPNG">ST_AsPNG</a>を使ってPNGで結果を出力するためのラスタ関数群全体をまとめる方法を示します。</p><p>この例はC#で実装している点を除いては<a class="xref" href="using_raster_dataman.html#RT_PHP_Output" title="5.3.1. ST_AsPNG を他の関数とあわせて使った PHP 出力例">「ST_AsPNG を他の関数とあわせて使った PHP 出力例」</a>と同じです。</p><p>次で示すスクリプトは、</p><pre class="programlisting">http://mywebserver/TestRaster.ashx?srid=2249</pre><p>で、マサチューセッツ州平面(フィート単位)のラスタ画像を取得します。</p><pre class="programlisting">-- web.config 接続文字列部 --
+&lt;connectionStrings&gt;
+    &lt;add name="DSN" 
+        connectionString="server=localhost;database=mydb;Port=5432;User Id=myuser;password=mypwd"/&gt;
+&lt;/connectionStrings
+&gt;</pre><pre class="programlisting">// TestRaster.ashxのコード
+&lt;%@ WebHandler Language="C#" Class="TestRaster" %&gt;
+using System;
+using System.Data;
+using System.Web;
+using Npgsql;
+
+public class TestRaster : IHttpHandler
+{
+        public void ProcessRequest(HttpContext context)
+        {
+                
+                context.Response.ContentType = "image/png";
+                context.Response.BinaryWrite(GetResults(context));
+                
+        }
+
+        public bool IsReusable {
+                get { return false; }
+        }
+
+        public byte[] GetResults(HttpContext context)
+        {
+                byte[] result = null;
+                NpgsqlCommand command;
+                string sql = null;
+                int input_srid = 26986;
+        try {
+                    using (NpgsqlConnection conn = new NpgsqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DSN"].ConnectionString)) {
+                            conn.Open();
+
+                if (context.Request["srid"] != null)
+                {
+                    input_srid = Convert.ToInt32(context.Request["srid"]);  
+                }
+                sql = @"SELECT ST_AsPNG(
+                            ST_Transform(
+                                        ST_AddBand(
+                                ST_Union(rast,1), ARRAY[ST_Union(rast,2),ST_Union(rast,3)])
+                                                    ,:input_srid) ) As new_rast 
+                        FROM aerials.boston 
+                                WHERE 
+                                    ST_Intersects(rast, 
+                                    ST_Transform(ST_MakeEnvelope(-71.1217, 42.227, -71.1210, 42.218,4326),26986) )";
+                            command = new NpgsqlCommand(sql, conn);
+                command.Parameters.Add(new NpgsqlParameter("input_srid", input_srid));
+           
+                        
+                            result = (byte[]) command.ExecuteScalar();
+                conn.Close();
+                        }
+
+                }
+        catch (Exception ex)
+        {
+            result = null;
+            context.Response.Write(ex.Message.Trim());
+        }
+                return result;
+        }
+}</pre></div><div class="sect2" title="5.3.3. ラスタクエリを画像ファイルとして出力するJavaコンソールアプリケーション"><div class="titlepage"><div><div><h3 class="title"><a name="RT_Java_Console_App"></a>5.3.3. ラスタクエリを画像ファイルとして出力するJavaコンソールアプリケーション</h3></div></div></div><p>ひとつのイメージを取って指定したファイルに出力する、Javaコンソールアプリケーションです。</p><p>最新のPostgreSQL JDBC ドライバは<a class="ulink" href="http://jdbc.postgresql.org/download.html" target="_top">http://jdbc.postgresql.org/download.html</a>から取得できます。 </p><p>後に示すコードをコンパイルします。コマンドは次の通りです。</p><pre class="programlisting">set env CLASSPATH .:..\postgresql-9.0-801.jdbc4.jar
+javac SaveQueryImage.java
+jar cfm SaveQueryImage.jar Manifest.txt *.class</pre><p>次のようにコマンドラインから呼び出します。</p><pre class="programlisting">java -jar SaveQueryImage.jar "SELECT ST_AsPNG(ST_AsRaster(ST_Buffer(ST_Point(1,5),10, 'quad_segs=2'),150, 150, '8BUI',100));" "test.png" </pre><pre class="programlisting">-- Manifest.txt --
+Class-Path: postgresql-9.0-801.jdbc4.jar
+Main-Class: SaveQueryImage</pre><pre class="programlisting">// SaveQueryImage.javaのコード
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.io.*;
+
+public class SaveQueryImage {
+  public static void main(String[] argv) {
+      System.out.println("Checking if Driver is registered with DriverManager.");
+      
+      try {
+        //java.sql.DriverManager.registerDriver (new org.postgresql.Driver());
+        Class.forName("org.postgresql.Driver");
+      } 
+      catch (ClassNotFoundException cnfe) {
+        System.out.println("Couldn't find the driver!");
+        cnfe.printStackTrace();
+        System.exit(1);
+      }
+      
+      Connection conn = null;
+      
+      try {
+        conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/mydb","myuser", "mypwd");
+        conn.setAutoCommit(false);
+
+        PreparedStatement sGetImg = conn.prepareStatement(argv[0]);
+                
+        ResultSet rs = sGetImg.executeQuery();
+                
+                FileOutputStream fout;
+                try
+                {
+                        rs.next();
+                        /** Output to file name requested by user **/
+                        fout = new FileOutputStream(new File(argv[1]) );
+                        fout.write(rs.getBytes(1));
+                        fout.close();
+                }
+                catch(Exception e)
+                {
+                        System.out.println("Can't create file");
+                        e.printStackTrace();
+                }
+                
+        rs.close();
+                sGetImg.close();
+        conn.close();
+      } 
+      catch (SQLException se) {
+        System.out.println("Couldn't connect: print out a stack trace and exit.");
+        se.printStackTrace();
+        System.exit(1);
+      }   
+  }
+}</pre></div><div class="sect2" title="5.3.4. PLPython を使って SQL を介して画像をダンプする"><div class="titlepage"><div><div><h3 class="title"><a name="RT_PLPython"></a>5.3.4. PLPython を使って SQL を介して画像をダンプする</h3></div></div></div><p>これは、サーバディレクトリ内でレコードごとにファイルを生成するPythonストアド関数です。plpythonが必要です。plpythonuとplpython3uの両方が正しく動作します。</p><pre class="programlisting">CREATE OR REPLACE FUNCTION write_file (param_bytes bytea, param_filepath text)
+RETURNS text
+AS $$
+f = open(param_filepath, 'wb+')
+f.write(param_bytes)
+return param_filepath
+$$ LANGUAGE plpythonu;</pre><pre class="programlisting">-- 5つの画像をPostgreSQLサーバに可変サイズで描きます。
+-- PostgreSQLデーモンのアカウントにフォルダへの書き込み権限が必要ですので
+-- ご注意ください。
+-- 生成されたファイル名をエコーバックします。
+ SELECT write_file(ST_AsPNG(
+        ST_AsRaster(ST_Buffer(ST_Point(1,5),j*5, 'quad_segs=2'),150*j, 150*j, '8BUI',100)),
+         'C:/temp/slices'|| j || '.png')
+         FROM generate_series(1,5) As j;
+         
+     write_file
+---------------------
+ C:/temp/slices1.png
+ C:/temp/slices2.png
+ C:/temp/slices3.png
+ C:/temp/slices4.png
+ C:/temp/slices5.png         
+</pre></div><div class="sect2" title="5.3.5. PSQLでラスタを出力する"><div class="titlepage"><div><div><h3 class="title"><a name="RasterOutput_PSQL"></a>5.3.5. PSQLでラスタを出力する</h3></div></div></div><p>悲しいことに、PSQLから組み込み機能を用いてバイナリを出力するのは簡単ではありません。これは、ちょっとしたハックです。<a class="ulink" href="http://people.planetpostgresql.org/andrew/index.php?/archives/196-Clever-trick-challenge.html" target="_top">Clever Trick Challenge -- Outputting bytea with psql</a>で提案されている概要に基づいています。レガシー気味になっているPostgreSQLラージオブジェクトのサポートに乗っているものです。最初の起動時に、PSQLはデータベースに接続します。  </p><p>この方法はPythonの場合と違い、ローカル機にファイルが生成されます</p><pre class="screen">SELECT oid, lowrite(lo_open(oid, 131072), png) As num_bytes
+ FROM 
+ ( VALUES (lo_create(0), 
+   ST_AsPNG( (SELECT rast FROM aerials.boston WHERE rid=1) ) 
+  ) ) As v(oid,png);
+-- 次のような出力が得られます --
+   oid   | num_bytes
+---------+-----------
+ 2630819 |     74860
+ 
+-- 続いて、oidに注意して'C:/temp/aerial_smap.png'を
+-- ローカル機のファイルパスに置き換えたうえで
+-- 次を実行します。
+ \lo_export 2630819 'C:/temp/aerial_samp.png'
+ 
+-- データベース上のラージオブジェクトストレージから
+-- ファイルを削除します。
+SELECT lo_unlink(2630819);
+                           </pre></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="using_postgis_dbmanagement.html">戻る</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="ch06.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">第4章 PostGISを使う: データ管理とクエリ </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> 第6章 PostGISを使う: アプリケーションを構築する</td></tr></table></div></body></html>

@@ -1,0 +1,20 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_GetFaceEdges</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.2.0devマニュアル日本語訳"><link rel="up" href="Topology.html#Topology_Accessors" title="11.6. トポロジアクセサ"><link rel="prev" href="GetTopologyName.html" title="GetTopologyName"><link rel="next" href="ST_GetFaceGeometry.html" title="ST_GetFaceGeometry"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_GetFaceEdges</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="GetTopologyName.html">戻る</a> </td><th width="60%" align="center">11.6. トポロジアクセサ</th><td width="20%" align="right"> <a accesskey="n" href="ST_GetFaceGeometry.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_GetFaceEdges"><a name="ST_GetFaceEdges"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_GetFaceEdges — 順序番号を含む、<code class="varname">aface</code>の境界となる、整列したエッジの集合を返します。</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">getfaceedges_returntype <b class="fsfunc">ST_GetFaceEdges</b>(</code>varchar  <var class="pdparam">atopology</var>, integer  <var class="pdparam">aface</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp96644560"></a><h2>説明</h2><p>順序番号を含む、<code class="varname">aface</code>の境界となる、整列したエッジの集合を返します。それぞれの出力は、順序番号とエッジ識別番号からなります。順序番号は1から始まります。</p><p>環ごとのエッジの列挙は、識別番号が最も小さいものから始まります。エッジの順序は左手の法則に従います(境界フェイスは各有向辺の左側にあるようにします)。 </p><p>初出: 2.0 </p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ このメソッドはSQL/MM仕様に準拠しています。 SQL-MM 3 Topo-Geo and Topo-Net 3: Routine Details: X.3.5</p></div><div class="refsection" title="例"><a name="idp96648784"></a><h2>例</h2><pre class="programlisting">-- 1番フェイスの境界を返します。
+SELECT (topology.ST_GetFaceEdges('tt', 1)).*;
+-- 結果 --
+ sequence | edge
+----------+------
+        1 |   -4
+        2 |    5
+        3 |    7
+        4 |   -6
+        5 |    1
+        6 |    2
+        7 |    3
+(7 rows)
+</pre><pre class="programlisting">-- 1番フェイスの境界となるエッジの順序番号、識別番号と-- ジオメトリが返ります。
+-- ジオメトリと順序番号が欲しいだけならST_GetFaceGeometryを使います。
+SELECT t.seq, t.edge, geom
+FROM topology.ST_GetFaceEdges('tt',1) As t(seq,edge)
+        INNER JOIN tt.edge AS e ON abs(t.edge) = e.edge_id;
+</pre></div><div class="refsection" title="関連情報"><a name="idp96650832"></a><h2>関連情報</h2><p><a class="xref" href="GetRingEdges.html" title="GetRingEdges">GetRingEdges</a>, <a class="xref" href="AddFace.html" title="AddFace">AddFace</a>, <a class="xref" href="ST_GetFaceGeometry.html" title="ST_GetFaceGeometry">ST_GetFaceGeometry</a> </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="GetTopologyName.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="Topology.html#Topology_Accessors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_GetFaceGeometry.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">GetTopologyName </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_GetFaceGeometry</td></tr></table></div></body></html>

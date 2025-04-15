@@ -1,0 +1,405 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_SetValues</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.2.0devマニュアル日本語訳"><link rel="up" href="RT_reference.html#Raster_Pixel_Accessors" title="9.6. ラスタピクセルアクセサとセッター"><link rel="prev" href="RT_ST_SetValue.html" title="ST_SetValue"><link rel="next" href="RT_ST_DumpValues.html" title="ST_DumpValues"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_SetValues</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_SetValue.html">戻る</a> </td><th width="60%" align="center">9.6. ラスタピクセルアクセサとセッター</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_DumpValues.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_SetValues"><a name="RT_ST_SetValues"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_SetValues — 与えられたバンドに複数の値を設定して、変更されたラスタを返します。</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">raster <b class="fsfunc">ST_SetValues</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">nband</var>, integer  <var class="pdparam">columnx</var>, integer  <var class="pdparam">rowy</var>, double precision[][]  <var class="pdparam">newvalueset</var>, boolean[][]  <var class="pdparam">noset=NULL</var>, boolean  <var class="pdparam">keepnodata=FALSE</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_SetValues</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">nband</var>, integer  <var class="pdparam">columnx</var>, integer  <var class="pdparam">rowy</var>, double precision[][]  <var class="pdparam">newvalueset</var>, double precision  <var class="pdparam">nosetvalue</var>, boolean  <var class="pdparam">keepnodata=FALSE</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_SetValues</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">nband</var>, integer  <var class="pdparam">columnx</var>, integer  <var class="pdparam">rowy</var>, integer  <var class="pdparam">width</var>, integer  <var class="pdparam">height</var>, double precision  <var class="pdparam">newvalue</var>, boolean  <var class="pdparam">keepnodata=FALSE</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_SetValues</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">columnx</var>, integer  <var class="pdparam">rowy</var>, integer  <var class="pdparam">width</var>, integer  <var class="pdparam">height</var>, double precision  <var class="pdparam">newvalue</var>, boolean  <var class="pdparam">keepnodata=FALSE</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_SetValues</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">nband</var>, geomval[]  <var class="pdparam">geomvalset</var>, boolean  <var class="pdparam">keepnodata=FALSE</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp88583760"></a><h2>説明</h2><p>ラスタの列と行またはジオメトリを与えられた指定したバンドでの特定のピクセルの値を新しい値に変更します。 </p><p><code class="varname">keepnodata</code>がTRUEの場合には、NODATA値を持つピクセルは<code class="varname">newvalueset</code>に一致する値に設定しません。 </p><p>1番目の形式では、設定するピクセルを<code class="varname">columnx</code>, <code class="varname">rowy</code>のピクセル座標で決定し、 範囲を<code class="varname">newvalueset</code>配列で決定します。<code class="varname">noset</code>によって、ピクセルを<code class="varname">newvalueset</code>内にある値で、一部を設定されないようにすることができます(PostgreSQLは不調和配列、ジャグ配列を許さないため)。 </p><p>2番目の形式では、1番目の形式と似ていますが、倍精度浮動小数点数のスカラ値である<code class="varname">nosetvalue</code>を<code class="varname">noset</code>配列の代わりに使う点が違います。<code class="varname">nosetvalue</code>の値になる<code class="varname">newvalueset</code>内の要素の設定は行いません。2番目の形式をご覧下さい。 </p><p>3番目の形式では、設定するピクセルを<code class="varname">columnx</code>, <code class="varname">rowy</code>のピクセル座標と<code class="varname">width</code>, <code class="varname">height</code>で決定します。 </p><p>4番目の形式では、<code class="varname">rast</code>の1番目のバンドのピクセルを設定すると仮定する点を除いては、3番目の形式と同じです。 </p><p>5番目の形式では、設定するピクセルを<a class="xref" href="geomval.html" title="geomval">geomval</a>の配列で決定します。配列内の全てのジオメトリのタイプがPOINTまたはMULTIPOINTである場合には、ポイントごとの経度と緯度がピクセルの設定に直接使うためのショートカットに使われます。他の場合には、ジオメトリはラスタに変換され、ひとつずつ渡されます。5番目の形式をご覧下さい。 </p><p>初出: 2.1.0</p></div><div class="refsection" title="例: 1番目の形式"><a name="idp88594384"></a><h2>例: 1番目の形式</h2><pre class="programlisting">/*
+ST_SetValues()は次のように書き換えます
+
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |          | 1 | 1 | 1 |
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |    =
+&gt;    | 1 | 9 | 9 |
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |          | 1 | 9 | 9 |
++ - + - + - +          + - + - + - +
+*/
+SELECT
+        (poly).x,
+        (poly).y,
+        (poly).val
+FROM (
+SELECT
+        ST_PixelAsPolygons(
+                ST_SetValues(
+                        ST_AddBand(
+                                ST_MakeEmptyRaster(3, 3, 0, 0, 1, -1, 0, 0, 0),
+                                1, '8BUI', 1, 0
+                        ),
+                        1, 2, 2, ARRAY[[9, 9], [9, 9]]::double precision[][]
+                )
+        ) AS poly
+) foo
+ORDER BY 1, 2;
+
+ x | y | val 
+---+---+-----
+ 1 | 1 |   1
+ 1 | 2 |   1
+ 1 | 3 |   1
+ 2 | 1 |   1
+ 2 | 2 |   9
+ 2 | 3 |   9
+ 3 | 1 |   1
+ 3 | 2 |   9
+ 3 | 3 |   9
+                                </pre><pre class="programlisting">/*
+ST_SetValues()は次のように書き換えます
+
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |          | 9 | 9 | 9 |
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |    =
+&gt;    | 9 |   | 9 |
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |          | 9 | 9 | 9 |
++ - + - + - +          + - + - + - +
+*/
+SELECT
+        (poly).x,
+        (poly).y,
+        (poly).val
+FROM (
+SELECT
+        ST_PixelAsPolygons(
+                ST_SetValues(
+                        ST_AddBand(
+                                ST_MakeEmptyRaster(3, 3, 0, 0, 1, -1, 0, 0, 0),
+                                1, '8BUI', 1, 0
+                        ),
+                        1, 1, 1, ARRAY[[9, 9, 9], [9, NULL, 9], [9, 9, 9]]::double precision[][]
+                )
+        ) AS poly
+) foo
+ORDER BY 1, 2;
+
+ x | y | val 
+---+---+-----
+ 1 | 1 |   9
+ 1 | 2 |   9
+ 1 | 3 |   9
+ 2 | 1 |   9
+ 2 | 2 |    
+ 2 | 3 |   9
+ 3 | 1 |   9
+ 3 | 2 |   9
+ 3 | 3 |   9
+                                </pre><pre class="programlisting">/*
+ST_SetValues()は次のように書き換えます
+
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |          | 9 | 9 | 9 |
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |    =
+&gt;    | 1 |   | 9 |
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |          | 9 | 9 | 9 |
++ - + - + - +          + - + - + - +
+*/
+SELECT
+        (poly).x,
+        (poly).y,
+        (poly).val
+FROM (
+SELECT
+        ST_PixelAsPolygons(
+                ST_SetValues(
+                        ST_AddBand(
+                                ST_MakeEmptyRaster(3, 3, 0, 0, 1, -1, 0, 0, 0),
+                                1, '8BUI', 1, 0
+                        ),
+                        1, 1, 1,
+                                ARRAY[[9, 9, 9], [9, NULL, 9], [9, 9, 9]]::double precision[][],
+                                ARRAY[[false], [true]]::boolean[][]
+                )
+        ) AS poly
+) foo
+ORDER BY 1, 2;
+
+ x | y | val 
+---+---+-----
+ 1 | 1 |   9
+ 1 | 2 |   1
+ 1 | 3 |   9
+ 2 | 1 |   9
+ 2 | 2 |    
+ 2 | 3 |   9
+ 3 | 1 |   9
+ 3 | 2 |   9
+ 3 | 3 |   9
+                                </pre><pre class="programlisting">/*
+ST_SetValues()は次のように書き換えます
+
++ - + - + - +          + - + - + - +
+|   | 1 | 1 |          |   | 9 | 9 |
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |    =
+&gt;    | 1 |   | 9 |
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |          | 9 | 9 | 9 |
++ - + - + - +          + - + - + - +
+*/
+SELECT
+        (poly).x,
+        (poly).y,
+        (poly).val
+FROM (
+SELECT
+        ST_PixelAsPolygons(
+                ST_SetValues(
+                        ST_SetValue(
+                                ST_AddBand(
+                                        ST_MakeEmptyRaster(3, 3, 0, 0, 1, -1, 0, 0, 0),
+                                        1, '8BUI', 1, 0
+                                ),
+                                1, 1, 1, NULL
+                        ),
+                        1, 1, 1,
+                                ARRAY[[9, 9, 9], [9, NULL, 9], [9, 9, 9]]::double precision[][],
+                                ARRAY[[false], [true]]::boolean[][],
+                                TRUE
+                )
+        ) AS poly
+) foo
+ORDER BY 1, 2;
+
+ x | y | val 
+---+---+-----
+ 1 | 1 |   
+ 1 | 2 |   1
+ 1 | 3 |   9
+ 2 | 1 |   9
+ 2 | 2 |    
+ 2 | 3 |   9
+ 3 | 1 |   9
+ 3 | 2 |   9
+ 3 | 3 |   9
+                                </pre></div><div class="refsection" title="例: 2番目の形式"><a name="idp88597200"></a><h2>例: 2番目の形式</h2><pre class="programlisting">/*
+ST_SetValues()は次のように書き換えます
+
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |          | 1 | 1 | 1 |
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |    =
+&gt;    | 1 | 9 | 9 |
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |          | 1 | 9 | 9 |
++ - + - + - +          + - + - + - +
+*/
+SELECT
+        (poly).x,
+        (poly).y,
+        (poly).val
+FROM (
+SELECT
+        ST_PixelAsPolygons(
+                ST_SetValues(
+                        ST_AddBand(
+                                ST_MakeEmptyRaster(3, 3, 0, 0, 1, -1, 0, 0, 0),
+                                1, '8BUI', 1, 0
+                        ),
+                        1, 1, 1, ARRAY[[-1, -1, -1], [-1, 9, 9], [-1, 9, 9]]::double precision[][], -1
+                )
+        ) AS poly
+) foo
+ORDER BY 1, 2;
+
+ x | y | val 
+---+---+-----
+ 1 | 1 |   1
+ 1 | 2 |   1
+ 1 | 3 |   1
+ 2 | 1 |   1
+ 2 | 2 |   9
+ 2 | 3 |   9
+ 3 | 1 |   1
+ 3 | 2 |   9
+ 3 | 3 |   9
+                                </pre><pre class="programlisting">/*
+この例は上の例と似ていますが、nosetvalueを-1でなくNULLにしています。
+
+ST_SetValues()は次のように書き換えます
+
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |          | 1 | 1 | 1 |
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |    =
+&gt;    | 1 | 9 | 9 |
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |          | 1 | 9 | 9 |
++ - + - + - +          + - + - + - +
+*/
+SELECT
+        (poly).x,
+        (poly).y,
+        (poly).val
+FROM (
+SELECT
+        ST_PixelAsPolygons(
+                ST_SetValues(
+                        ST_AddBand(
+                                ST_MakeEmptyRaster(3, 3, 0, 0, 1, -1, 0, 0, 0),
+                                1, '8BUI', 1, 0
+                        ),
+                        1, 1, 1, ARRAY[[NULL, NULL, NULL], [NULL, 9, 9], [NULL, 9, 9]]::double precision[][], NULL::double precision
+                )
+        ) AS poly
+) foo
+ORDER BY 1, 2;
+
+ x | y | val 
+---+---+-----
+ 1 | 1 |   1
+ 1 | 2 |   1
+ 1 | 3 |   1
+ 2 | 1 |   1
+ 2 | 2 |   9
+ 2 | 3 |   9
+ 3 | 1 |   1
+ 3 | 2 |   9
+ 3 | 3 |   9
+                                </pre></div><div class="refsection" title="例: 3番目の形式"><a name="idp88598992"></a><h2>例: 3番目の形式</h2><pre class="programlisting">/*
+ST_SetValues()は次のように書き換えます
+
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |          | 1 | 1 | 1 |
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |    =
+&gt;    | 1 | 9 | 9 |
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |          | 1 | 9 | 9 |
++ - + - + - +          + - + - + - +
+*/
+SELECT
+        (poly).x,
+        (poly).y,
+        (poly).val
+FROM (
+SELECT
+        ST_PixelAsPolygons(
+                ST_SetValues(
+                        ST_AddBand(
+                                ST_MakeEmptyRaster(3, 3, 0, 0, 1, -1, 0, 0, 0),
+                                1, '8BUI', 1, 0
+                        ),
+                        1, 2, 2, 2, 2, 9
+                )
+        ) AS poly
+) foo
+ORDER BY 1, 2;
+
+ x | y | val 
+---+---+-----
+ 1 | 1 |   1
+ 1 | 2 |   1
+ 1 | 3 |   1
+ 2 | 1 |   1
+ 2 | 2 |   9
+ 2 | 3 |   9
+ 3 | 1 |   1
+ 3 | 2 |   9
+ 3 | 3 |   9
+                                </pre><pre class="programlisting">/*
+ST_SetValues()は次のように書き換えます
+
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |          | 1 | 1 | 1 |
++ - + - + - +          + - + - + - +
+| 1 |   | 1 |    =
+&gt;    | 1 |   | 9 |
++ - + - + - +          + - + - + - +
+| 1 | 1 | 1 |          | 1 | 9 | 9 |
++ - + - + - +          + - + - + - +
+*/
+SELECT
+        (poly).x,
+        (poly).y,
+        (poly).val
+FROM (
+SELECT
+        ST_PixelAsPolygons(
+                ST_SetValues(
+                        ST_SetValue(
+                                ST_AddBand(
+                                        ST_MakeEmptyRaster(3, 3, 0, 0, 1, -1, 0, 0, 0),
+                                        1, '8BUI', 1, 0
+                                ),
+                                1, 2, 2, NULL
+                        ),
+                        1, 2, 2, 2, 2, 9, TRUE
+                )
+        ) AS poly
+) foo
+ORDER BY 1, 2;
+
+ x | y | val 
+---+---+-----
+ 1 | 1 |   1
+ 1 | 2 |   1
+ 1 | 3 |   1
+ 2 | 1 |   1
+ 2 | 2 |    
+ 2 | 3 |   9
+ 3 | 1 |   1
+ 3 | 2 |   9
+ 3 | 3 |   9
+                                </pre></div><div class="refsection" title="例: 5番目の形式"><a name="idp88600784"></a><h2>例: 5番目の形式</h2><pre class="programlisting">WITH foo AS (
+        SELECT 1 AS rid, ST_AddBand(ST_MakeEmptyRaster(5, 5, 0, 0, 1, -1, 0, 0, 0), 1, '8BUI', 0, 0) AS rast
+), bar AS (
+        SELECT 1 AS gid, 'SRID=0;POINT(2.5 -2.5)'::geometry geom UNION ALL
+        SELECT 2 AS gid, 'SRID=0;POLYGON((1 -1, 4 -1, 4 -4, 1 -4, 1 -1))'::geometry geom UNION ALL
+        SELECT 3 AS gid, 'SRID=0;POLYGON((0 0, 5 0, 5 -1, 1 -1, 1 -4, 0 -4, 0 0))'::geometry geom UNION ALL
+        SELECT 4 AS gid, 'SRID=0;MULTIPOINT(0 0, 4 4, 4 -4)'::geometry
+)
+SELECT
+        rid, gid, ST_DumpValues(ST_SetValue(rast, 1, geom, gid))
+FROM foo t1
+CROSS JOIN bar t2
+ORDER BY rid, gid;
+
+ rid | gid |                                                                st_dumpvalues                                                                
+-----+-----+---------------------------------------------------------------------------------------------------------------------------------------------
+   1 |   1 | (1,"{{NULL,NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL,NULL},{NULL,NULL,1,NULL,NULL},{NULL,NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL,NULL}}")
+   1 |   2 | (1,"{{NULL,NULL,NULL,NULL,NULL},{NULL,2,2,2,NULL},{NULL,2,2,2,NULL},{NULL,2,2,2,NULL},{NULL,NULL,NULL,NULL,NULL}}")
+   1 |   3 | (1,"{{3,3,3,3,3},{3,NULL,NULL,NULL,NULL},{3,NULL,NULL,NULL,NULL},{3,NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL,NULL}}")
+   1 |   4 | (1,"{{4,NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL,NULL},{NULL,NULL,NULL,NULL,4}}")
+(4 rows)
+                                </pre><p>次の例では、geomvals内のうしろのジオメトリで前のジオメトリを上書きできることを示しています。</p><pre class="programlisting">WITH foo AS (
+        SELECT 1 AS rid, ST_AddBand(ST_MakeEmptyRaster(5, 5, 0, 0, 1, -1, 0, 0, 0), 1, '8BUI', 0, 0) AS rast
+), bar AS (
+        SELECT 1 AS gid, 'SRID=0;POINT(2.5 -2.5)'::geometry geom UNION ALL
+        SELECT 2 AS gid, 'SRID=0;POLYGON((1 -1, 4 -1, 4 -4, 1 -4, 1 -1))'::geometry geom UNION ALL
+        SELECT 3 AS gid, 'SRID=0;POLYGON((0 0, 5 0, 5 -1, 1 -1, 1 -4, 0 -4, 0 0))'::geometry geom UNION ALL
+        SELECT 4 AS gid, 'SRID=0;MULTIPOINT(0 0, 4 4, 4 -4)'::geometry
+)
+SELECT
+        t1.rid, t2.gid, t3.gid, ST_DumpValues(ST_SetValues(rast, 1, ARRAY[ROW(t2.geom, t2.gid), ROW(t3.geom, t3.gid)]::geomval[]))
+FROM foo t1
+CROSS JOIN bar t2
+CROSS JOIN bar t3
+WHERE t2.gid = 1
+        AND t3.gid = 2
+ORDER BY t1.rid, t2.gid, t3.gid;
+
+ rid | gid | gid |                                                    st_dumpvalues                                                    
+-----+-----+-----+---------------------------------------------------------------------------------------------------------------------
+   1 |   1 |   2 | (1,"{{NULL,NULL,NULL,NULL,NULL},{NULL,2,2,2,NULL},{NULL,2,2,2,NULL},{NULL,2,2,2,NULL},{NULL,NULL,NULL,NULL,NULL}}")
+(1 row)
+                                </pre><p>この例は前の例の逆です。</p><pre class="programlisting">WITH foo AS (
+        SELECT 1 AS rid, ST_AddBand(ST_MakeEmptyRaster(5, 5, 0, 0, 1, -1, 0, 0, 0), 1, '8BUI', 0, 0) AS rast
+), bar AS (
+        SELECT 1 AS gid, 'SRID=0;POINT(2.5 -2.5)'::geometry geom UNION ALL
+        SELECT 2 AS gid, 'SRID=0;POLYGON((1 -1, 4 -1, 4 -4, 1 -4, 1 -1))'::geometry geom UNION ALL
+        SELECT 3 AS gid, 'SRID=0;POLYGON((0 0, 5 0, 5 -1, 1 -1, 1 -4, 0 -4, 0 0))'::geometry geom UNION ALL
+        SELECT 4 AS gid, 'SRID=0;MULTIPOINT(0 0, 4 4, 4 -4)'::geometry
+)
+SELECT
+        t1.rid, t2.gid, t3.gid, ST_DumpValues(ST_SetValues(rast, 1, ARRAY[ROW(t2.geom, t2.gid), ROW(t3.geom, t3.gid)]::geomval[]))
+FROM foo t1
+CROSS JOIN bar t2
+CROSS JOIN bar t3
+WHERE t2.gid = 2
+        AND t3.gid = 1
+ORDER BY t1.rid, t2.gid, t3.gid;
+
+ rid | gid | gid |                                                    st_dumpvalues                                                    
+-----+-----+-----+---------------------------------------------------------------------------------------------------------------------
+   1 |   2 |   1 | (1,"{{NULL,NULL,NULL,NULL,NULL},{NULL,2,2,2,NULL},{NULL,2,1,2,NULL},{NULL,2,2,2,NULL},{NULL,NULL,NULL,NULL,NULL}}")
+(1 row)
+                                </pre></div><div class="refsection" title="関連情報"><a name="idp88612176"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_Value.html" title="ST_Value">ST_Value</a>, <a class="xref" href="RT_ST_SetValue.html" title="ST_SetValue">ST_SetValue</a>, <a class="xref" href="RT_ST_PixelAsPolygons.html" title="ST_PixelAsPolygons">ST_PixelAsPolygons</a> </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_SetValue.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Pixel_Accessors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_DumpValues.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_SetValue </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_DumpValues</td></tr></table></div></body></html>

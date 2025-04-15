@@ -1,0 +1,60 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_SetBandIsNoData</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.2.0devマニュアル日本語訳"><link rel="up" href="RT_reference.html#RasterBand_Editors" title="9.8. ラスタバンドエディタ"><link rel="prev" href="RT_ST_SetBandNoDataValue.html" title="ST_SetBandNoDataValue"><link rel="next" href="RT_ST_Count.html" title="ST_Count"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_SetBandIsNoData</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_SetBandNoDataValue.html">戻る</a> </td><th width="60%" align="center">9.8. ラスタバンドエディタ</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_Count.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_SetBandIsNoData"><a name="RT_ST_SetBandIsNoData"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_SetBandIsNoData — バンドのisnodataフラグをTRUEにします。</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">raster <b class="fsfunc">ST_SetBandIsNoData</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">band=1</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp89047120"></a><h2>説明</h2><p>バンドのisnodataフラグをTRUEにします。バンドを指定しない場合には、1番と仮定します。isnodataフラグが汚れている場合にのみ呼ぶべきものです。<a class="xref" href="RT_ST_BandIsNoData.html" title="ST_BandIsNoData">ST_BandIsNoData</a>の、最後の引数にTRUEを設定した場合の結果と指定しない場合の結果とで異なっている時です。</p><p>初出: 2.0.0</p></div><div class="refsection" title="例"><a name="idp89049168"></a><h2>例</h2><pre class="programlisting">-- ラスタカラムを1つ持つダミーテーブルを生成します
+create table dummy_rast (rid integer, rast raster);
+
+-- 2バンドでバンドごとに1ピクセルを持つラスタを追加します
+-- ひとつめのバンドにはnodatavalueとピクセル値をともに3とし、
+-- ふたつめのバンドにはnodatavalue=13とピクセル値=4とします。
+insert into dummy_rast values(1,
+(
+'01' -- little endian (uint8 ndr)
+|| 
+'0000' -- version (uint16 0)
+||
+'0200' -- nBands (uint16 0)
+||
+'17263529ED684A3F' -- scaleX (float64 0.000805965234044584)
+||
+'F9253529ED684ABF' -- scaleY (float64 -0.00080596523404458)
+||
+'1C9F33CE69E352C0' -- ipX (float64 -75.5533328537098)
+||
+'718F0E9A27A44840' -- ipY (float64 49.2824585505576)
+||
+'ED50EB853EC32B3F' -- skewX (float64 0.000211812383858707)
+||
+'7550EB853EC32B3F' -- skewY (float64 0.000211812383858704)
+||
+'E6100000' -- SRID (int32 4326)
+||
+'0100' -- width (uint16 1)
+||
+'0100' -- height (uint16 1)
+||
+'4' -- hasnodatavalue set to true, isnodata value set to false (when it should be true)
+||
+'2' -- first band type (4BUI) 
+||
+'03' -- novalue==3
+||
+'03' -- pixel(0,0)==3 (same that nodata)
+||
+'0' -- hasnodatavalue set to false
+||
+'5' -- second band type (16BSI)
+||
+'0D00' -- novalue==13
+||
+'0400' -- pixel(0,0)==4
+)::raster
+);
+
+select st_bandisnodata(rast, 1) from dummy_rast where rid = 1; -- Expected false
+select st_bandisnodata(rast, 1, TRUE) from dummy_rast where rid = 1; -- Expected true
+
+-- isnodataフラグが汚れているのでTRUEに設定します
+update dummy_rast set rast = st_setbandisnodata(rast, 1) where rid = 1;
+
+
+select st_bandisnodata(rast, 1) from dummy_rast where rid = 1; -- Expected true
+
+                    </pre></div><div class="refsection" title="関連情報"><a name="idp89050448"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_BandNoDataValue.html" title="ST_BandNoDataValue">ST_BandNoDataValue</a>, <a class="xref" href="RT_ST_NumBands.html" title="ST_NumBands">ST_NumBands</a>, <a class="xref" href="RT_ST_SetBandNoDataValue.html" title="ST_SetBandNoDataValue">ST_SetBandNoDataValue</a>, <a class="xref" href="RT_ST_BandIsNoData.html" title="ST_BandIsNoData">ST_BandIsNoData</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_SetBandNoDataValue.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#RasterBand_Editors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_Count.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_SetBandNoDataValue </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_Count</td></tr></table></div></body></html>

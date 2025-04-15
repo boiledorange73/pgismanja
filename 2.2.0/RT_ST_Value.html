@@ -1,0 +1,120 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Value</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.2.0devマニュアル日本語訳"><link rel="up" href="RT_reference.html#Raster_Pixel_Accessors" title="9.6. ラスタピクセルアクセサとセッター"><link rel="prev" href="RT_ST_PixelAsCentroids.html" title="ST_PixelAsCentroids"><link rel="next" href="RT_ST_NearestValue.html" title="ST_NearestValue"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Value</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_PixelAsCentroids.html">戻る</a> </td><th width="60%" align="center">9.6. ラスタピクセルアクセサとセッター</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_NearestValue.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_Value"><a name="RT_ST_Value"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_Value — 指定したバンドの指定したcolumnx(列)とrowy(行)またはジオメトリポイントに対応するピクセルの値を返します。 バンド番号は1始まりで、指定しない場合には、1番と仮定します。 <code class="varname">exclude_nodata_value</code>がFALSEに設定された場合には、NODATAピクセルを含む全てのピクセルがインタセクトするかが考慮され、値を返します。<code class="varname">exclude_nodata_value</code>を渡さない場合には、ラスタのメタデータから読みます。</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">double precision <b class="fsfunc">ST_Value</b>(</code>raster  <var class="pdparam">rast</var>, geometry  <var class="pdparam">pt</var>, boolean  <var class="pdparam">exclude_nodata_value=true</var><code>)</code>;</p><p><code class="funcdef">double precision <b class="fsfunc">ST_Value</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">bandnum</var>, geometry  <var class="pdparam">pt</var>, boolean  <var class="pdparam">exclude_nodata_value=true</var><code>)</code>;</p><p><code class="funcdef">double precision <b class="fsfunc">ST_Value</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">columnx</var>, integer  <var class="pdparam">rowy</var>, boolean  <var class="pdparam">exclude_nodata_value=true</var><code>)</code>;</p><p><code class="funcdef">double precision <b class="fsfunc">ST_Value</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">bandnum</var>, integer  <var class="pdparam">columnx</var>, integer  <var class="pdparam">rowy</var>, boolean  <var class="pdparam">exclude_nodata_value=true</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp88374992"></a><h2>説明</h2><p>指定したバンドの指定したcolumnx(列)とrowy(行)またはジオメトリポイントに対応するピクセルの値を返します。 バンド番号は1始まりで、指定しない場合には、1番と仮定します。 <code class="varname">exclude_nodata_value</code>がTRUEに設定された場合には、非NODATAピクセルのみが考慮されます。<code class="varname">exclude_nodata_value</code>がFALSEに設定された場合に刃、全てのピクセルが考慮されます。</p><p>機能強化: 2.0.0 任意引数exclude_nodata_valueが追加されました。</p></div><div class="refsection" title="例"><a name="idp88385616"></a><h2>例</h2><pre class="programlisting">-- PostGISジオメトリポイントを指定してラスタの値を得ます
+-- ジオメトリのSRIDはラスタと同じにします
+SELECT rid, ST_Value(rast, foo.pt_geom) As b1pval, ST_Value(rast, 2, foo.pt_geom) As b2pval
+FROM dummy_rast CROSS JOIN (SELECT ST_SetSRID(ST_Point(3427927.77, 5793243.76), 0) As pt_geom) As foo
+WHERE rid=2;
+
+ rid | b1pval | b2pval
+-----+--------+--------
+   2 |    252 |     79
+   
+   
+-- general fictitious example using a real table
+SELECT rid, ST_Value(rast, 3, sometable.geom) As b3pval
+FROM sometable
+WHERE ST_Intersects(rast,sometable.geom);
+                                </pre><pre class="programlisting">SELECT rid, ST_Value(rast, 1, 1, 1) As b1pval, 
+    ST_Value(rast, 2, 1, 1) As b2pval, ST_Value(rast, 3, 1, 1) As b3pval
+FROM dummy_rast
+WHERE rid=2;
+
+ rid | b1pval | b2pval | b3pval
+-----+--------+--------+--------
+   2 |    253 |     78 |     70
+                                </pre><pre class="programlisting">-- 1番、2番、3番バンドの全ての値を得ます
+SELECT x, y, ST_Value(rast, 1, x, y) As b1val, 
+        ST_Value(rast, 2, x, y) As b2val, ST_Value(rast, 3, x, y) As b3val
+FROM dummy_rast CROSS JOIN
+generate_series(1, 1000) As x CROSS JOIN generate_series(1, 1000) As y
+WHERE rid =  2 AND x &lt;= ST_Width(rast) AND y &lt;= ST_Height(rast);
+
+ x | y | b1val | b2val | b3val
+---+---+-------+-------+-------
+ 1 | 1 |   253 |    78 |    70
+ 1 | 2 |   253 |    96 |    80
+ 1 | 3 |   250 |    99 |    90
+ 1 | 4 |   251 |    89 |    77
+ 1 | 5 |   252 |    79 |    62
+ 2 | 1 |   254 |    98 |    86
+ 2 | 2 |   254 |   118 |   108
+ :
+ :
+                                </pre><pre class="programlisting">-- 上の例と同じに、1番、2番、3番バンドの全ての値を得ますが、
+-- ピクセル毎の左上隅のポイントを返します
+SELECT ST_AsText(ST_SetSRID(
+        ST_Point(ST_UpperLeftX(rast) + ST_ScaleX(rast)*x, 
+                ST_UpperLeftY(rast) + ST_ScaleY(rast)*y), 
+                ST_SRID(rast))) As uplpt
+    , ST_Value(rast, 1, x, y) As b1val, 
+        ST_Value(rast, 2, x, y) As b2val, ST_Value(rast, 3, x, y) As b3val
+FROM dummy_rast CROSS JOIN
+generate_series(1,1000) As x CROSS JOIN generate_series(1,1000) As y
+WHERE rid =  2 AND x &lt;= ST_Width(rast) AND y &lt;= ST_Height(rast);
+
+            uplpt            | b1val | b2val | b3val
+-----------------------------+-------+-------+-------
+ POINT(3427929.25 5793245.5) |   253 |    78 |    70
+ POINT(3427929.25 5793247)   |   253 |    96 |    80
+ POINT(3427929.25 5793248.5) |   250 |    99 |    90
+:
+                                </pre><pre class="programlisting">-- 指定した範囲内の値を持ち、指定したポリゴンにインタセクトする、
+-- 全てのピクセルの結合によって形成されるポリゴンを得ます
+SELECT ST_AsText(ST_Union(pixpolyg)) As shadow
+FROM (SELECT ST_Translate(ST_MakeEnvelope(
+                ST_UpperLeftX(rast), ST_UpperLeftY(rast), 
+                        ST_UpperLeftX(rast) + ST_ScaleX(rast),
+                        ST_UpperLeftY(rast) + ST_ScaleY(rast), 0
+                        ), ST_ScaleX(rast)*x, ST_ScaleY(rast)*y
+                ) As pixpolyg, ST_Value(rast, 2, x, y) As b2val
+        FROM dummy_rast CROSS JOIN
+generate_series(1,1000) As x CROSS JOIN generate_series(1,1000) As y
+WHERE rid =  2 
+        AND x &lt;= ST_Width(rast) AND y &lt;= ST_Height(rast)) As foo
+WHERE  
+        ST_Intersects(
+                pixpolyg, 
+                ST_GeomFromText('POLYGON((3427928 5793244,3427927.75 5793243.75,3427928 5793243.75,3427928 5793244))',0)
+                ) AND b2val != 254;
+
+
+                shadow
+------------------------------------------------------------------------------------
+ MULTIPOLYGON(((3427928 5793243.9,3427928 5793243.85,3427927.95 5793243.85,3427927.95 5793243.9,
+ 3427927.95 5793243.95,3427928 5793243.95,3427928.05 5793243.95,3427928.05 5793243.9,3427928 5793243.9)),((3427927.95 5793243.9,3427927.95 579324
+3.85,3427927.9 5793243.85,3427927.85 5793243.85,3427927.85 5793243.9,3427927.9 5793243.9,3427927.9 5793243.95,
+3427927.95 5793243.95,3427927.95 5793243.9)),((3427927.85 5793243.75,3427927.85 5793243.7,3427927.8 5793243.7,3427927.8 5793243.75
+,3427927.8 5793243.8,3427927.8 5793243.85,3427927.85 5793243.85,3427927.85 5793243.8,3427927.85 5793243.75)),
+((3427928.05 5793243.75,3427928.05 5793243.7,3427928 5793243.7,3427927.95 5793243.7,3427927.95 5793243.75,3427927.95 5793243.8,3427
+927.95 5793243.85,3427928 5793243.85,3427928 5793243.8,3427928.05 5793243.8,
+3427928.05 5793243.75)),((3427927.95 5793243.75,3427927.95 5793243.7,3427927.9 5793243.7,3427927.85 5793243.7,
+3427927.85 5793243.75,3427927.85 5793243.8,3427927.85 5793243.85,3427927.9 5793243.85,
+3427927.95 5793243.85,3427927.95 5793243.8,3427927.95 5793243.75)))
+                                </pre><pre class="programlisting">-- 大きなラスタタイルの全てのピクセルをチェックは長時間かかります。
+-- generate_seriesの任意引数stepを使用してサンプリングすることで、
+-- 精度を大きく落としますが、劇的な速度改善が可能です。
+-- 次の例では、前の例と同じことをしていますが、
+-- 4(2x2)ピクセルごとに1度チェックを行い、4ピクセルの値として置いています。
+SELECT ST_AsText(ST_Union(pixpolyg)) As shadow
+FROM (SELECT ST_Translate(ST_MakeEnvelope(
+                ST_UpperLeftX(rast), ST_UpperLeftY(rast), 
+                        ST_UpperLeftX(rast) + ST_ScaleX(rast)*2,
+                        ST_UpperLeftY(rast) + ST_ScaleY(rast)*2, 0
+                        ), ST_ScaleX(rast)*x, ST_ScaleY(rast)*y
+                ) As pixpolyg, ST_Value(rast, 2, x, y) As b2val
+        FROM dummy_rast CROSS JOIN
+generate_series(1,1000,2) As x CROSS JOIN generate_series(1,1000,2) As y
+WHERE rid =  2 
+        AND x &lt;= ST_Width(rast)  AND y &lt;= ST_Height(rast)  ) As foo
+WHERE  
+        ST_Intersects(
+                pixpolyg, 
+                ST_GeomFromText('POLYGON((3427928 5793244,3427927.75 5793243.75,3427928 5793243.75,3427928 5793244))',0)
+                ) AND b2val != 254;
+
+                shadow
+------------------------------------------------------------------------------------
+ MULTIPOLYGON(((3427927.9 5793243.85,3427927.8 5793243.85,3427927.8 5793243.95,
+ 3427927.9 5793243.95,3427928 5793243.95,3427928.1 5793243.95,3427928.1 5793243.85,3427928 5793243.85,3427927.9 5793243.85)),
+ ((3427927.9 5793243.65,3427927.8 5793243.65,3427927.8 5793243.75,3427927.8 5793243.85,3427927.9 5793243.85,
+ 3427928 5793243.85,3427928 5793243.75,3427928.1 5793243.75,3427928.1 5793243.65,3427928 5793243.65,3427927.9 5793243.65)))
+                                </pre></div><div class="refsection" title="関連情報"><a name="idp88389456"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_DumpAsPolygons.html" title="ST_DumpAsPolygons">ST_DumpAsPolygons</a>, <a class="xref" href="RT_ST_NumBands.html" title="ST_NumBands">ST_NumBands</a>, <a class="xref" href="RT_ST_PixelAsPolygon.html" title="ST_PixelAsPolygon">ST_PixelAsPolygon</a>, <a class="xref" href="RT_ST_ScaleX.html" title="ST_ScaleX">ST_ScaleX</a>, , <a class="xref" href="RT_ST_ScaleY.html" title="ST_ScaleY">ST_ScaleY</a>, <a class="xref" href="RT_ST_UpperLeftX.html" title="ST_UpperLeftX">ST_UpperLeftX</a>, <a class="xref" href="RT_ST_UpperLeftY.html" title="ST_UpperLeftY">ST_UpperLeftY</a>, <a class="xref" href="RT_ST_SRID.html" title="ST_SRID">ST_SRID</a>, <a class="xref" href="ST_AsText.html" title="ST_AsText">ST_AsText</a>, , <a class="xref" href="ST_Point.html" title="ST_Point">ST_Point</a>, <a class="xref" href="ST_MakeEnvelope.html" title="ST_MakeEnvelope">ST_MakeEnvelope</a>, <a class="xref" href="ST_Intersects.html" title="ST_Intersects">ST_Intersects</a>, <a class="xref" href="ST_Intersection.html" title="ST_Intersection">ST_Intersection</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_PixelAsCentroids.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Pixel_Accessors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_NearestValue.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_PixelAsCentroids </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_NearestValue</td></tr></table></div></body></html>

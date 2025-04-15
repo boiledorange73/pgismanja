@@ -1,0 +1,22 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_3DDWithin</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.2.0devマニュアル日本語訳"><link rel="up" href="reference.html#Spatial_Relationships_Measurements" title="8.9. 空間関係関数と空間計測関数"><link rel="prev" href="ST_3DDistance.html" title="ST_3DDistance"><link rel="next" href="ST_3DDFullyWithin.html" title="ST_3DDFullyWithin"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_3DDWithin</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_3DDistance.html">戻る</a> </td><th width="60%" align="center">8.9. 空間関係関数と空間計測関数 </th><td width="20%" align="right"> <a accesskey="n" href="ST_3DDFullyWithin.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_3DDWithin"><a name="ST_3DDWithin"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_3DDWithin — 3次元(XYZ)ジオメトリ型について、2つのジオメトリの3次元距離が指定した数の内にある場合にtrueを返します。 </p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">boolean <b class="fsfunc">ST_3DDWithin</b>(</code>geometry  <var class="pdparam">g1</var>, geometry  <var class="pdparam">g2</var>, double precision  <var class="pdparam">distance_of_srid</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp76324048"></a><h2>説明</h2><p>ジオメトリ型について、2つのオブジェクト間の距離が、投影法の単位(空間参照系の単位)でdistance_of_srid内にある場合にtrueを返します。 </p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ この関数は3次元に対応し、Z値を削除しません。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ この関数は多面体サーフェスに対応しています。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ このメソッドはSQL/MM仕様に準拠しています。 SQL-MM ?</p><p>初出: 2.0.0</p></div><div class="refsection" title="例"><a name="idp76330320"></a><h2>例</h2><pre class="programlisting">-- ジオメトリの例 - メートル単位(SRID: 2163 米国ナショナルアトラス正積図法)
+-- (3次元ポイントとラインの距離と、2次元ポイントとラインの距離とを比較)
+-- ご注意: 現在は垂直データムに対応していないので、
+-- Zは変換されずに、最終的に同じであると仮定されます。
+SELECT ST_3DDWithin(
+                        ST_Transform(ST_GeomFromEWKT('SRID=4326;POINT(-72.1235 42.3521 4)'),2163),
+                        ST_Transform(ST_GeomFromEWKT('SRID=4326;LINESTRING(-72.1260 42.45 15, -72.123 42.1546 20)'),2163),
+                        126.8
+                ) As within_dist_3d,
+ST_DWithin(
+                        ST_Transform(ST_GeomFromEWKT('SRID=4326;POINT(-72.1235 42.3521 4)'),2163),
+                        ST_Transform(ST_GeomFromEWKT('SRID=4326;LINESTRING(-72.1260 42.45 15, -72.123 42.1546 20)'),2163),
+                        126.8
+                ) As within_dist_2d;
+
+ within_dist_3d | within_dist_2d
+----------------+----------------
+ f              | t
+</pre></div><div class="refsection" title="関連情報"><a name="idp76331600"></a><h2>関連情報</h2><p><a class="xref" href="ST_3DDistance.html" title="ST_3DDistance">ST_3DDistance</a>, <a class="xref" href="ST_Distance.html" title="ST_Distance">ST_Distance</a>, <a class="xref" href="ST_DWithin.html" title="ST_DWithin">ST_DWithin</a>, <a class="xref" href="ST_3DMaxDistance.html" title="ST_3DMaxDistance">ST_3DMaxDistance</a>, <a class="xref" href="ST_Transform.html" title="ST_Transform">ST_Transform</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_3DDistance.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Spatial_Relationships_Measurements">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_3DDFullyWithin.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_3DDistance </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_3DDFullyWithin</td></tr></table></div></body></html>

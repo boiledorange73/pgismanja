@@ -1,0 +1,145 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_MapAlgebra</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.2.0devマニュアル日本語訳"><link rel="up" href="RT_reference.html#Raster_Processing_MapAlgebra" title="9.11.1. 地図代数"><link rel="prev" href="RT_ST_Intersection.html" title="ST_Intersection"><link rel="next" href="RT_ST_MapAlgebra_expr.html" title="ST_MapAlgebra"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_MapAlgebra</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_Intersection.html">戻る</a> </td><th width="60%" align="center">9.11.1. 地図代数</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_MapAlgebra_expr.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_MapAlgebra"><a name="RT_ST_MapAlgebra"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_MapAlgebra — コールバック関数版 - ひとつ以上の入力ラスタ、バンドインデクスとひとつのユーザ定義コールバック関数から、ひとつのバンドからなるラスタを返します。 </p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">raster <b class="fsfunc">ST_MapAlgebra</b>(</code>rastbandarg[]  <var class="pdparam">rastbandargset</var>, regprocedure  <var class="pdparam">callbackfunc</var>, text  <var class="pdparam">pixeltype=NULL</var>, text  <var class="pdparam">extenttype=INTERSECTION</var>, raster  <var class="pdparam">customextent=NULL</var>, integer  <var class="pdparam">distancex=0</var>, integer  <var class="pdparam">distancey=0</var>, text[]  <var class="pdparam">VARIADIC userargs=NULL</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_MapAlgebra</b>(</code>raster  <var class="pdparam">rast</var>, integer[]  <var class="pdparam">nband</var>, regprocedure  <var class="pdparam">callbackfunc</var>, text  <var class="pdparam">pixeltype=NULL</var>, text  <var class="pdparam">extenttype=FIRST</var>, raster  <var class="pdparam">customextent=NULL</var>, integer  <var class="pdparam">distancex=0</var>, integer  <var class="pdparam">distancey=0</var>, text[]  <var class="pdparam">VARIADIC userargs=NULL</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_MapAlgebra</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">nband</var>, regprocedure  <var class="pdparam">callbackfunc</var>, text  <var class="pdparam">pixeltype=NULL</var>, text  <var class="pdparam">extenttype=FIRST</var>, raster  <var class="pdparam">customextent=NULL</var>, integer  <var class="pdparam">distancex=0</var>, integer  <var class="pdparam">distancey=0</var>, text[]  <var class="pdparam">VARIADIC userargs=NULL</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_MapAlgebra</b>(</code>raster  <var class="pdparam">rast1</var>, integer  <var class="pdparam">nband1</var>, raster  <var class="pdparam">rast2</var>, integer  <var class="pdparam">nband2</var>, regprocedure  <var class="pdparam">callbackfunc</var>, text  <var class="pdparam">pixeltype=NULL</var>, text  <var class="pdparam">extenttype=INTERSECTION</var>, raster  <var class="pdparam">customextent=NULL</var>, integer  <var class="pdparam">distancex=0</var>, integer  <var class="pdparam">distancey=0</var>, text[]  <var class="pdparam">VARIADIC userargs=NULL</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp89998544"></a><h2>説明</h2><p>ひとつ以上の入力ラスタ、バンドインデクスとひとつのユーザ定義コールバック関数から、ひとつのバンドからなるラスタを返します。 </p><div class="variablelist"><dl><dt><span class="term">rast,rast1,rast2, rastbandargset</span></dt><dd><p>地図代数処理が行われるラスタです。</p><p><code class="varname">rastbandargset</code>によって、多数のラスタと多数のバンドにおいて地図代数処理が使用できます。1番目の形式の例を見て下さい。 </p></dd><dt><span class="term">nband, nband1, nband2</span></dt><dd><p>処理を行うラスタのバンド番号です。nbandはバンドを示す整数スカラまたは整数配列です。2ラスタ/2バンドの場合では、nband1はrast1のバンド、nband2はrast2のバンドです。 </p></dd><dt><span class="term">callbackfunc</span></dt><dd><p><code class="varname">callbackfunc</code>引数は、SQLまたはPL/pgSQL関数の名前とシグニチャでなければならず、regprocedureにキャストしなければなりません。PL/pgSQL関数の例は次の通りです。</p><pre class="programlisting">
+CREATE OR REPLACE FUNCTION sample_callbackfunc(value double precision[][][], position integer[][], VARIADIC userargs text[])
+        RETURNS double precision
+        AS $$
+        BEGIN
+                RETURN 0;
+        END;
+        $$ LANGUAGE 'plpgsql' IMMUTABLE;
+                                                                        </pre><p><code class="varname">callbackfunc</code>は、みっつの引数を持たなければなりません。すなわち、3次元倍精度浮動小数点数配列、2次元整数配列、VARIADICの1次元文字列配列です。1番目の引数<code class="varname">value</code>は、全ての入力ラスタからの値(倍精度浮動小数点数)の配列です。3次元(1始まり)は、ラスタ番号、行、列です。2番目の引数<code class="varname">position</code>は、出力ラスタと入力ラスタからのピクセル位置の集合です。ひとつめの次元(0はじまりです)はラスタ番号です。ひとつめの次元が0の場合に指される位置は、出力ラスタのピクセル位置です。ふたつめの次元は、XとYからなるふたつの要素を持ちます。3番目の引数<code class="varname">userargs</code>はユーザ定義関数特有の引数としてそのまま渡されます。 </p><p><span class="type">regprocedure</span>引数をSQL関数に渡すには、完全な関数シグネチャが求められます。<span class="type">regprocedure</span>へのキャストが必要です。上のPL/pgSQL関数を引数として渡すには、引数のSQLは次のようにします。</p><pre class="programlisting">
+'sample_callbackfunc(double precision[], integer[], text[])'::regprocedure
+                                                                        </pre><p>引数は関数名、引数の型を含み、関数名と引数を引用符で括り、<span class="type">regprocedure</span>にキャストすることになりますのでご注意下さい。 </p></dd><dt><span class="term">pixeltype</span></dt><dd><p><code class="varname">pixeltype</code>を渡した場合には、新しいラスタのひとつのバンドが、そのピクセルタイプになります。pixeltypeにNULLを渡したり指定しなかった場合には、新しいラスタのピクセルタイプは、ひとつめのラスタ(extenttypeがINTERSECTION, UNION, FIRST, CUSTOMの場合)か、適切なラスタ(extenttypeがSECOND, LASTの場合)の指定したバンドと同じピクセルタイプになります。疑問を感じたら常に<code class="varname">pixeltype</code>を渡します。 </p><p>出力ラスタのピクセルタイプは、必ず<a class="xref" href="RT_ST_BandPixelType.html" title="ST_BandPixelType">ST_BandPixelType</a>に挙げられたもののひとつになるか、省略されるか、NULLに設定されます。 </p></dd><dt><span class="term">extenttype</span></dt><dd><p>INTERSECTION (デフォルト), UNION, FIRST (ひとつのラスタを取る形式でのデフォルト), SECOND, LAST, CUSTOMのいずれかになります。 </p></dd><dt><span class="term">customextent</span></dt><dd><p><code class="varname">extentype</code>がCUSTOMである場合には、ラスタは<code class="varname">customextent</code>で提供されます。1番目の形式の例4をご覧下さい。 </p></dd><dt><span class="term">distancex</span></dt><dd><p>参照セルからのピクセル単位の距離です。結果として得られる行列の幅は<code class="code">2*distancex + 1</code>となります。指定しない場合には、参照セルが対象となります(0の距離の近隣ピクセル)。 </p></dd><dt><span class="term">distancey</span></dt><dd><p>参照セルからのピクセル単位の距離です。結果として得られる行列の幅は<code class="code">2*distancey + 1</code>となります。指定しない場合には、参照セルが対象となります(0の距離の近隣ピクセル)。 </p></dd><dt><span class="term">userargs</span></dt><dd><p><code class="varname">callbackfunc</code>の3番目の引数は<span class="type">variadic text</span>配列です。全ての文字列引数は指定された<code class="varname">callbackfunc</code>にそのまま渡され、<code class="varname">userargs</code>引数に含まれます。 </p></dd></dl></div><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>VARIADICキーワードに関する詳細情報については、PostgreSQL文書と<a class="ulink" href="http://www.postgresql.org/docs/current/static/xfunc-sql.html" target="_top">Query Language (SQL) Functions</a>(訳注: 日本語版 <a class="ulink" href="http://www.postgresql.jp/document/current/html/xfunc-sql.html" target="_top">問い合わせ言語（SQL）関数</a>)の"SQL Functions with Variable Numbers of Arguments"節を参照して下さい。 </p></td></tr></table></div><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p><code class="varname">callbackfunc</code>への<span class="type">text[]</span>引数は必須ですが、コールバック関数に引数を渡すべきか渡すべきでないかの選択を十分に考慮しなければならないものでもありません。 </p></td></tr></table></div><p>1番目の形式では、多数のラスタやバンドで地図代数演算が使えるようになるための<code class="varname">rastbandarg</code>配列を受け付けます。1番目の形式の例をご覧下さい。 </p><p>2番目と3番目の形式では、ひとつのラスタのけるひとつ以上のバンドでの演算を行います。2番目の形式と3番目の形式の例をご覧下さい。 </p><p>4番目の形式では、ふたつのラスタ内のひとつずつのバンドでの演算を行います。4番目の形式の例をご覧下さい。 </p><p>初出: 2.1.0</p></div><div class="refsection" title="例: 1番目の形式"><a name="idp90028624"></a><h2>例: 1番目の形式</h2><p>ひとつのラスタ、ひとつのバンド</p><pre class="programlisting">WITH foo AS (
+        SELECT 1 AS rid, ST_AddBand(ST_MakeEmptyRaster(2, 2, 0, 0, 1, -1, 0, 0, 0), 1, '16BUI', 1, 0) AS rast
+)
+SELECT
+        ST_MapAlgebra(
+                ARRAY[ROW(rast, 1)]::rastbandarg[],
+                'sample_callbackfunc(double precision[], int[], text[])'::regprocedure
+        ) AS rast
+FROM foo
+                                        </pre><p>ひとつのラスタ、複数のバンド</p><pre class="programlisting">WITH foo AS (
+        SELECT 1 AS rid, ST_AddBand(ST_AddBand(ST_AddBand(ST_MakeEmptyRaster(2, 2, 0, 0, 1, -1, 0, 0, 0), 1, '16BUI', 1, 0), 2, '8BUI', 10, 0), 3, '32BUI', 100, 0) AS rast
+)
+SELECT
+        ST_MapAlgebra(
+                ARRAY[ROW(rast, 3), ROW(rast, 1), ROW(rast, 3), ROW(rast, 2)]::rastbandarg[],
+                'sample_callbackfunc(double precision[], int[], text[])'::regprocedure
+        ) AS rast
+FROM foo
+                                        </pre><p>複数のラスタ、複数のバンド</p><pre class="programlisting">WITH foo AS (
+        SELECT 1 AS rid, ST_AddBand(ST_AddBand(ST_AddBand(ST_MakeEmptyRaster(2, 2, 0, 0, 1, -1, 0, 0, 0), 1, '16BUI', 1, 0), 2, '8BUI', 10, 0), 3, '32BUI', 100, 0) AS rast UNION ALL
+        SELECT 2 AS rid, ST_AddBand(ST_AddBand(ST_AddBand(ST_MakeEmptyRaster(2, 2, 0, 1, 1, -1, 0, 0, 0), 1, '16BUI', 2, 0), 2, '8BUI', 20, 0), 3, '32BUI', 300, 0) AS rast
+)
+SELECT
+        ST_MapAlgebra(
+                ARRAY[ROW(t1.rast, 3), ROW(t2.rast, 1), ROW(t2.rast, 3), ROW(t1.rast, 2)]::rastbandarg[],
+                'sample_callbackfunc(double precision[], int[], text[])'::regprocedure
+        ) AS rast
+FROM foo t1
+CROSS JOIN foo t2
+WHERE t1.rid = 1
+        AND t2.rid = 2
+                                        </pre><p>近隣ピクセルを併用したカバレッジのタイルの完全な例です。クエリはPostgreSQL 9,1以上でのみ動作します。</p><pre class="programlisting">WITH foo AS (
+        SELECT 0 AS rid, ST_AddBand(ST_MakeEmptyRaster(2, 2, 0, 0, 1, -1, 0, 0, 0), 1, '16BUI', 1, 0) AS rast UNION ALL
+        SELECT 1, ST_AddBand(ST_MakeEmptyRaster(2, 2, 2, 0, 1, -1, 0, 0, 0), 1, '16BUI', 2, 0) AS rast UNION ALL
+        SELECT 2, ST_AddBand(ST_MakeEmptyRaster(2, 2, 4, 0, 1, -1, 0, 0, 0), 1, '16BUI', 3, 0) AS rast UNION ALL
+
+        SELECT 3, ST_AddBand(ST_MakeEmptyRaster(2, 2, 0, -2, 1, -1, 0, 0, 0), 1, '16BUI', 10, 0) AS rast UNION ALL
+        SELECT 4, ST_AddBand(ST_MakeEmptyRaster(2, 2, 2, -2, 1, -1, 0, 0, 0), 1, '16BUI', 20, 0) AS rast UNION ALL
+        SELECT 5, ST_AddBand(ST_MakeEmptyRaster(2, 2, 4, -2, 1, -1, 0, 0, 0), 1, '16BUI', 30, 0) AS rast UNION ALL
+
+        SELECT 6, ST_AddBand(ST_MakeEmptyRaster(2, 2, 0, -4, 1, -1, 0, 0, 0), 1, '16BUI', 100, 0) AS rast UNION ALL
+        SELECT 7, ST_AddBand(ST_MakeEmptyRaster(2, 2, 2, -4, 1, -1, 0, 0, 0), 1, '16BUI', 200, 0) AS rast UNION ALL
+        SELECT 8, ST_AddBand(ST_MakeEmptyRaster(2, 2, 4, -4, 1, -1, 0, 0, 0), 1, '16BUI', 300, 0) AS rast
+)
+SELECT
+        t1.rid,
+        ST_MapAlgebra(
+                ARRAY[ROW(ST_Union(t2.rast), 1)]::rastbandarg[],
+                'sample_callbackfunc(double precision[], int[], text[])'::regprocedure,
+                '32BUI',
+                'CUSTOM', t1.rast,
+                1, 1
+        ) AS rast
+FROM foo t1
+CROSS JOIN foo t2
+WHERE t1.rid = 4
+        AND t2.rid BETWEEN 0 AND 8
+        AND ST_Intersects(t1.rast, t2.rast)
+GROUP BY t1.rid, t1.rast
+                                        </pre><p>前の例である近隣ピクセルを併用したカバレッジのタイルに似ていますがPostgreSQL 9.0で動作します。</p><pre class="programlisting">WITH src AS (
+        SELECT 0 AS rid, ST_AddBand(ST_MakeEmptyRaster(2, 2, 0, 0, 1, -1, 0, 0, 0), 1, '16BUI', 1, 0) AS rast UNION ALL
+        SELECT 1, ST_AddBand(ST_MakeEmptyRaster(2, 2, 2, 0, 1, -1, 0, 0, 0), 1, '16BUI', 2, 0) AS rast UNION ALL
+        SELECT 2, ST_AddBand(ST_MakeEmptyRaster(2, 2, 4, 0, 1, -1, 0, 0, 0), 1, '16BUI', 3, 0) AS rast UNION ALL
+
+        SELECT 3, ST_AddBand(ST_MakeEmptyRaster(2, 2, 0, -2, 1, -1, 0, 0, 0), 1, '16BUI', 10, 0) AS rast UNION ALL
+        SELECT 4, ST_AddBand(ST_MakeEmptyRaster(2, 2, 2, -2, 1, -1, 0, 0, 0), 1, '16BUI', 20, 0) AS rast UNION ALL
+        SELECT 5, ST_AddBand(ST_MakeEmptyRaster(2, 2, 4, -2, 1, -1, 0, 0, 0), 1, '16BUI', 30, 0) AS rast UNION ALL
+
+        SELECT 6, ST_AddBand(ST_MakeEmptyRaster(2, 2, 0, -4, 1, -1, 0, 0, 0), 1, '16BUI', 100, 0) AS rast UNION ALL
+        SELECT 7, ST_AddBand(ST_MakeEmptyRaster(2, 2, 2, -4, 1, -1, 0, 0, 0), 1, '16BUI', 200, 0) AS rast UNION ALL
+        SELECT 8, ST_AddBand(ST_MakeEmptyRaster(2, 2, 4, -4, 1, -1, 0, 0, 0), 1, '16BUI', 300, 0) AS rast
+)
+WITH foo AS (
+        SELECT
+                t1.rid,
+                ST_Union(t2.rast) AS rast
+        FROM src t1
+        JOIN src t2
+                ON ST_Intersects(t1.rast, t2.rast)
+                AND t2.rid BETWEEN 0 AND 8
+        WHERE t1.rid = 4
+        GROUP BY t1.rid
+), bar AS (
+        SELECT
+                t1.rid,
+                ST_MapAlgebra(
+                        ARRAY[ROW(t2.rast, 1)]::rastbandarg[],
+                        'raster_nmapalgebra_test(double precision[], int[], text[])'::regprocedure,
+                        '32BUI',
+                        'CUSTOM', t1.rast,
+                        1, 1
+                ) AS rast
+        FROM src t1
+        JOIN foo t2
+                ON t1.rid = t2.rid 
+)
+SELECT
+        rid,
+        (ST_Metadata(rast)),
+        (ST_BandMetadata(rast, 1)),
+        ST_Value(rast, 1, 1, 1)
+FROM bar;
+                                        </pre></div><div class="refsection" title="例: 2番目の形式と3番目の形式"><a name="idp90033872"></a><h2>例: 2番目の形式と3番目の形式</h2><p>ひとつのラスタ、複数のバンド</p><pre class="programlisting">WITH foo AS (
+        SELECT 1 AS rid, ST_AddBand(ST_AddBand(ST_AddBand(ST_MakeEmptyRaster(2, 2, 0, 0, 1, -1, 0, 0, 0), 1, '16BUI', 1, 0), 2, '8BUI', 10, 0), 3, '32BUI', 100, 0) AS rast
+)
+SELECT
+        ST_MapAlgebra(
+                rast, ARRAY[3, 1, 3, 2]::integer[],
+                'sample_callbackfunc(double precision[], int[], text[])'::regprocedure
+        ) AS rast
+FROM foo
+                                        </pre><p>ひとつのラスタ、ひとつのバンド</p><pre class="programlisting">WITH foo AS (
+        SELECT 1 AS rid, ST_AddBand(ST_AddBand(ST_AddBand(ST_MakeEmptyRaster(2, 2, 0, 0, 1, -1, 0, 0, 0), 1, '16BUI', 1, 0), 2, '8BUI', 10, 0), 3, '32BUI', 100, 0) AS rast
+)
+SELECT
+        ST_MapAlgebra(
+                rast, 2,
+                'sample_callbackfunc(double precision[], int[], text[])'::regprocedure
+        ) AS rast
+FROM foo
+                                        </pre></div><div class="refsection" title="例: 4番目の形式"><a name="idp90040656"></a><h2>例: 4番目の形式</h2><p>ふたつのラスタ、ふたつのバンド</p><pre class="programlisting">WITH foo AS (
+        SELECT 1 AS rid, ST_AddBand(ST_AddBand(ST_AddBand(ST_MakeEmptyRaster(2, 2, 0, 0, 1, -1, 0, 0, 0), 1, '16BUI', 1, 0), 2, '8BUI', 10, 0), 3, '32BUI', 100, 0) AS rast UNION ALL
+        SELECT 2 AS rid, ST_AddBand(ST_AddBand(ST_AddBand(ST_MakeEmptyRaster(2, 2, 0, 1, 1, -1, 0, 0, 0), 1, '16BUI', 2, 0), 2, '8BUI', 20, 0), 3, '32BUI', 300, 0) AS rast
+)
+SELECT
+        ST_MapAlgebra(
+                t1.rast, 2,
+                t2.rast, 1,
+                'sample_callbackfunc(double precision[], int[], text[])'::regprocedure
+        ) AS rast
+FROM foo t1
+CROSS JOIN foo t2
+WHERE t1.rid = 1
+        AND t2.rid = 2
+                                        </pre></div><div class="refsection" title="関連情報"><a name="idp90042320"></a><h2>関連情報</h2><p><a class="xref" href="rastbandarg.html" title="rastbandarg">rastbandarg</a>, <a class="xref" href="RT_ST_Union.html" title="ST_Union">ST_Union</a>, <a class="xref" href="RT_ST_MapAlgebra_expr.html" title="ST_MapAlgebra">ST_MapAlgebra</a> </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_Intersection.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Processing_MapAlgebra">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_MapAlgebra_expr.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Intersection </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_MapAlgebra</td></tr></table></div></body></html>

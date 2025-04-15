@@ -1,0 +1,83 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_ValueCount</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.2.0devマニュアル日本語訳"><link rel="up" href="RT_reference.html#RasterBand_Stats" title="9.9. ラスタバンド統計情報と解析"><link rel="prev" href="RT_ST_SummaryStatsAgg.html" title="ST_SummaryStatsAgg"><link rel="next" href="RT_ST_AsBinary.html" title="ST_AsBinary"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_ValueCount</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_SummaryStatsAgg.html">戻る</a> </td><th width="60%" align="center">9.9. ラスタバンド統計情報と解析</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_AsBinary.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_ValueCount"><a name="RT_ST_ValueCount"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_ValueCount — ラスタ(またはラスタカバレッジの)指定されたバンドで、指定した値を持つピクセルを対象として、ピクセルバンド値とピクセル数からなるレコードの集合を返します。バンドを指定しない場合には、1番と仮定します。デフォルトではNODATA値のピクセルは数えられず、ピクセルの他の値は出力され、ピクセルバンド値は最も近い整数に丸められます。</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">SETOF record <b class="fsfunc">ST_ValueCount</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">nband=1</var>, boolean  <var class="pdparam">exclude_nodata_value=true</var>, double precision[]  <var class="pdparam">searchvalues=NULL</var>, double precision  <var class="pdparam">roundto=0</var>, double precision  <var class="pdparam">OUT value</var>, integer  <var class="pdparam">OUT count</var><code>)</code>;</p><p><code class="funcdef">SETOF record <b class="fsfunc">ST_ValueCount</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">nband</var>, double precision[]  <var class="pdparam">searchvalues</var>, double precision  <var class="pdparam">roundto=0</var>, double precision  <var class="pdparam">OUT value</var>, integer  <var class="pdparam">OUT count</var><code>)</code>;</p><p><code class="funcdef">SETOF record <b class="fsfunc">ST_ValueCount</b>(</code>raster  <var class="pdparam">rast</var>, double precision[]  <var class="pdparam">searchvalues</var>, double precision  <var class="pdparam">roundto=0</var>, double precision  <var class="pdparam">OUT value</var>, integer  <var class="pdparam">OUT count</var><code>)</code>;</p><p><code class="funcdef">bigint <b class="fsfunc">ST_ValueCount</b>(</code>raster  <var class="pdparam">rast</var>, double precision  <var class="pdparam">searchvalue</var>, double precision  <var class="pdparam">roundto=0</var><code>)</code>;</p><p><code class="funcdef">bigint <b class="fsfunc">ST_ValueCount</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">nband</var>, boolean  <var class="pdparam">exclude_nodata_value</var>, double precision  <var class="pdparam">searchvalue</var>, double precision  <var class="pdparam">roundto=0</var><code>)</code>;</p><p><code class="funcdef">bigint <b class="fsfunc">ST_ValueCount</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">nband</var>, double precision  <var class="pdparam">searchvalue</var>, double precision  <var class="pdparam">roundto=0</var><code>)</code>;</p><p><code class="funcdef">SETOF record <b class="fsfunc">ST_ValueCount</b>(</code>text  <var class="pdparam">rastertable</var>, text  <var class="pdparam">rastercolumn</var>, integer  <var class="pdparam">nband=1</var>, boolean  <var class="pdparam">exclude_nodata_value=true</var>, double precision[]  <var class="pdparam">searchvalues=NULL</var>, double precision  <var class="pdparam">roundto=0</var>, double precision  <var class="pdparam">OUT value</var>, integer  <var class="pdparam">OUT count</var><code>)</code>;</p><p><code class="funcdef">SETOF record <b class="fsfunc">ST_ValueCount</b>(</code>text  <var class="pdparam">rastertable</var>, text  <var class="pdparam">rastercolumn</var>, double precision[]  <var class="pdparam">searchvalues</var>, double precision  <var class="pdparam">roundto=0</var>, double precision  <var class="pdparam">OUT value</var>, integer  <var class="pdparam">OUT count</var><code>)</code>;</p><p><code class="funcdef">SETOF record <b class="fsfunc">ST_ValueCount</b>(</code>text  <var class="pdparam">rastertable</var>, text  <var class="pdparam">rastercolumn</var>, integer  <var class="pdparam">nband</var>, double precision[]  <var class="pdparam">searchvalues</var>, double precision  <var class="pdparam">roundto=0</var>, double precision  <var class="pdparam">OUT value</var>, integer  <var class="pdparam">OUT count</var><code>)</code>;</p><p><code class="funcdef">bigint<b class="fsfunc">ST_ValueCount</b>(</code>text  <var class="pdparam">rastertable</var>, text  <var class="pdparam">rastercolumn</var>, integer  <var class="pdparam">nband</var>, boolean  <var class="pdparam">exclude_nodata_value</var>, double precision  <var class="pdparam">searchvalue</var>, double precision  <var class="pdparam">roundto=0</var><code>)</code>;</p><p><code class="funcdef">bigint <b class="fsfunc">ST_ValueCount</b>(</code>text  <var class="pdparam">rastertable</var>, text  <var class="pdparam">rastercolumn</var>, double precision  <var class="pdparam">searchvalue</var>, double precision  <var class="pdparam">roundto=0</var><code>)</code>;</p><p><code class="funcdef">bigint <b class="fsfunc">ST_ValueCount</b>(</code>text  <var class="pdparam">rastertable</var>, text  <var class="pdparam">rastercolumn</var>, integer  <var class="pdparam">nband</var>, double precision  <var class="pdparam">searchvalue</var>, double precision  <var class="pdparam">roundto=0</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp89501648"></a><h2>説明</h2><p> ラスタタイルまたはラスタカバレッジの指定したバンドにおけるピクセルバンド値とピクセル数にあたる、<code class="varname">value</code>と<code class="varname">count</code>からなるレコードの集合を返します。 </p><p><code class="varname">nband</code>でバンドを指定しない場合には、1番と仮定します。<code class="varname">searchvalues</code>が指定されていない場合には、ラスタまたはラスタカバレッジで発見した全てのピクセル値が返ります。searchvalueをひとつ指定した場合には、指定したピクセルバンド値を持つピクセルの数を示すレコードでなく、整数を返します。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p><code class="varname">exclude_nodata_value</code>をFALSEに設定している場合には、NODATA値となるピクセルも数えます。</p></td></tr></table></div><p>初出: 2.0.0 </p></div><div class="refsection" title="例"><a name="idp89505872"></a><h2>例</h2><pre class="programlisting">UPDATE dummy_rast SET rast = ST_SetBandNoDataValue(rast,249) WHERE rid=2;
+--Example will count only pixels of band 1 that are not 249. --
+
+SELECT (pvc).*
+FROM (SELECT ST_ValueCount(rast) As pvc
+    FROM dummy_rast WHERE rid=2) As foo
+    ORDER BY (pvc).value;
+                                                                
+ value | count
+-------+-------
+   250 |     2
+   251 |     1
+   252 |     2
+   253 |     6
+   254 |    12
+   
+-- この例では1番バンドの249を含む全てのピクセルを数えます
+SELECT (pvc).*
+FROM (SELECT ST_ValueCount(rast,1,false) As pvc
+    FROM dummy_rast WHERE rid=2) As foo
+    ORDER BY (pvc).value;
+                                    
+ value | count
+-------+-------
+   249 |     2
+   250 |     2
+   251 |     1
+   252 |     2
+   253 |     6
+   254 |    12
+   
+-- 2番バンドのNODATAでないピクセルのみ数えます
+SELECT (pvc).*
+FROM (SELECT ST_ValueCount(rast,2) As pvc
+    FROM dummy_rast WHERE rid=2) As foo
+    ORDER BY (pvc).value;
+ value | count
+-------+-------
+    78 |     1
+    79 |     1
+    88 |     1
+    89 |     1
+    96 |     1
+    97 |     1
+    98 |     1
+    99 |     2
+   112 |     2
+:                                    
+
+                                </pre><pre class="programlisting">-- 現実の例です。空中写真ラスタタイルの2番バンドで、
+-- ジオメトリとインタセクトするピクセル数を数え、
+-- 500を超えるピクセル数があるピクセルバンド値のみ返します。
+SELECT (pvc).value, SUM((pvc).count) As total
+FROM (SELECT ST_ValueCount(rast,2) As pvc
+    FROM o_4_boston 
+        WHERE ST_Intersects(rast, 
+            ST_GeomFromText('POLYGON((224486 892151,224486 892200,224706 892200,224706 892151,224486 892151))',26986)
+             ) 
+        ) As foo
+    GROUP BY (pvc).value
+    HAVING SUM((pvc).count) 
+&gt; 500
+    ORDER BY (pvc).value;
+    
+ value | total
+-------+-----
+    51 | 502
+    54 | 521
+</pre><pre class="programlisting">-- 指定したジオメトリとインタセクトするタイルの
+-- 値が100のピクセルをラスタタイルごとに数えて返します
+SELECT rid, ST_ValueCount(rast,2,100) As count
+    FROM o_4_boston 
+        WHERE ST_Intersects(rast, 
+            ST_GeomFromText('POLYGON((224486 892151,224486 892200,224706 892200,224706 892151,224486 892151))',26986)
+             ) ;
+
+ rid | count
+-----+-------
+   1 |    56
+   2 |    95
+  14 |    37
+  15 |    64
+</pre></div><div class="refsection" title="関連情報"><a name="idp89508176"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_Count.html" title="ST_Count">ST_Count</a>, <a class="xref" href="RT_ST_SetBandNoDataValue.html" title="ST_SetBandNoDataValue">ST_SetBandNoDataValue</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_SummaryStatsAgg.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#RasterBand_Stats">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_AsBinary.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_SummaryStatsAgg </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_AsBinary</td></tr></table></div></body></html>

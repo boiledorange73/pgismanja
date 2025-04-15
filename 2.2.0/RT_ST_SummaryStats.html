@@ -1,0 +1,62 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_SummaryStats</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.2.0devマニュアル日本語訳"><link rel="up" href="RT_reference.html#RasterBand_Stats" title="9.9. ラスタバンド統計情報と解析"><link rel="prev" href="RT_ST_Quantile.html" title="ST_Quantile"><link rel="next" href="RT_ST_SummaryStatsAgg.html" title="ST_SummaryStatsAgg"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_SummaryStats</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_Quantile.html">戻る</a> </td><th width="60%" align="center">9.9. ラスタバンド統計情報と解析</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_SummaryStatsAgg.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_SummaryStats"><a name="RT_ST_SummaryStats"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_SummaryStats — ラスタまたはラスタカバレッジの指定したバンドについて、ピクセル数、合計値、平均値、標準偏差、最小値、最大値からなる統計情報の概要を返します。バンドを指定しない場合には、1番と仮定します。</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">summarystats <b class="fsfunc">ST_SummaryStats</b>(</code>raster  <var class="pdparam">rast</var>, boolean  <var class="pdparam">exclude_nodata_value</var><code>)</code>;</p><p><code class="funcdef">summarystats <b class="fsfunc">ST_SummaryStats</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">nband</var>, boolean  <var class="pdparam">exclude_nodata_value</var><code>)</code>;</p><p><code class="funcdef">summarystats <b class="fsfunc">ST_SummaryStats</b>(</code>text  <var class="pdparam">rastertable</var>, text  <var class="pdparam">rastercolumn</var>, boolean  <var class="pdparam">exclude_nodata_value</var><code>)</code>;</p><p><code class="funcdef">summarystats <b class="fsfunc">ST_SummaryStats</b>(</code>text  <var class="pdparam">rastertable</var>, text  <var class="pdparam">rastercolumn</var>, integer  <var class="pdparam">nband=1</var>, boolean  <var class="pdparam">exclude_nodata_value=true</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp89352912"></a><h2>説明</h2><p>ラスタまたはラスタカバレッジの指定したバンドについて、ピクセル数、合計値、平均値、標準偏差、最小値、最大値からなる<a class="xref" href="summarystats.html" title="summarystats">summarystats</a>による統計情報の概要を返します。nbandでバンドを指定しない場合には、1番と仮定します。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>デフォルトでは、<code class="varname">nodata</code>と同じピクセル値は考慮に入れません。<code class="varname">exclude_nodata_value</code>をFALSEに設定すると全てのピクセルを数えます。</p></td></tr></table></div><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>デフォルトでは、全てのピクセルを見ます。より早い応答を得るには、<code class="varname">sample_percent</code>値を0から1の間で設定します。</p></td></tr></table></div><p>初出: 2.0.0 </p><div class="warning" title="警告" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Warning"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[警告]" src="images/warning.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>ST_SummaryStats(rastertable, rastercolumn, ...)の形式は2.2.0で非推奨になりました。替わりに<a class="xref" href="RT_ST_SummaryStatsAgg.html" title="ST_SummaryStatsAgg">ST_SummaryStatsAgg</a>を使います。 </p></td></tr></table></div></div><div class="refsection" title="例: 単一ラスタタイル"><a name="idp89362512"></a><h2>例: 単一ラスタタイル</h2><pre class="programlisting">SELECT rid, band, (stats).*
+FROM (SELECT rid, band, ST_SummaryStats(rast, band) As stats
+    FROM dummy_rast CROSS JOIN generate_series(1,3) As band
+     WHERE rid=2) As foo;
+                                    
+ rid | band | count | sum  |    mean    |  stddev   | min | max
+-----+------+-------+------+------------+-----------+-----+-----
+   2 |    1 |    23 | 5821 | 253.086957 |  1.248061 | 250 | 254
+   2 |    2 |    25 | 3682 |     147.28 | 59.862188 |  78 | 254
+   2 |    3 |    25 | 3290 |      131.6 | 61.647384 |  62 | 254
+                                </pre></div><div class="refsection" title="例: 対象とする建物とインタセクトするピクセルの概要"><a name="idp89363792"></a><h2>例: 対象とする建物とインタセクトするピクセルの概要</h2><p>この例は、ボストンの建物の全て(102,000件)と空中写真タイル(150x150ピクセルで134,000タイル)とで、Windows 64ビット上のPostGISで計算したところ、574ミリ秒かかりました。</p><pre class="programlisting">WITH 
+-- インタセクトする地物
+   feat AS (SELECT gid As building_id, geom_26986 As geom FROM buildings AS b 
+    WHERE gid IN(100, 103,150)
+   ),
+-- ラスタタイルの2番バンドを建物の境界で切り取って
+-- その範囲の統計情報を得ます
+   b_stats AS
+        (SELECT  building_id, (stats).*
+FROM (SELECT building_id, ST_SummaryStats(ST_Clip(rast,2,geom)) As stats
+    FROM aerials.boston
+                INNER JOIN feat
+        ON ST_Intersects(feat.geom,rast) 
+ ) As foo
+ )
+-- 最後に統計情報の概要を得ます
+SELECT building_id, SUM(count) As num_pixels
+  , MIN(min) As min_pval
+  ,  MAX(max) As max_pval
+  , SUM(mean*count)/SUM(count) As avg_pval
+        FROM b_stats
+ WHERE count 
+&gt; 0
+        GROUP BY building_id
+        ORDER BY building_id;
+ building_id | num_pixels | min_pval | max_pval |     avg_pval
+-------------+------------+----------+----------+------------------
+         100 |       1090 |        1 |      255 | 61.0697247706422
+         103 |        655 |        7 |      182 | 70.5038167938931
+         150 |        895 |        2 |      252 | 185.642458100559</pre></div><div class="refsection" title="例:ラスタカバレッジ"><a name="idp89365456"></a><h2>例:ラスタカバレッジ</h2><pre class="programlisting">-- バンドごとの統計情報 --
+SELECT band, (stats).*
+FROM (SELECT band, ST_SummaryStats('o_4_boston','rast', band) As stats
+    FROM generate_series(1,3) As band) As foo;
+                                    
+ band |  count  |  sum   |       mean       |      stddev      | min | max
+------+---------+--------+------------------+------------------+-----+-----
+    1 | 8450000 | 725799 | 82.7064349112426 | 45.6800222638537 |   0 | 255
+    2 | 8450000 | 700487 | 81.4197705325444 | 44.2161184161765 |   0 | 255
+    3 | 8450000 | 575943 |  74.682739408284 | 44.2143885481407 |   0 | 255
+    
+-- テーブルの場合 -- サンプリング率を100%より低くすると早くなります
+-- 25%に設定して、速く答を得ています
+SELECT band, (stats).*
+FROM (SELECT band, ST_SummaryStats('o_4_boston','rast', band,true,0.25) As stats
+    FROM generate_series(1,3) As band) As foo;
+                                    
+ band |  count  |  sum   |       mean       |      stddev      | min | max
+------+---------+--------+------------------+------------------+-----+-----
+    1 | 2112500 | 180686 | 82.6890480473373 | 45.6961043857248 |   0 | 255
+    2 | 2112500 | 174571 |  81.448503668639 | 44.2252623171821 |   0 | 255
+    3 | 2112500 | 144364 | 74.6765884023669 | 44.2014869384578 |   0 | 255
+                                </pre></div><div class="refsection" title="関連情報"><a name="idp89366736"></a><h2>関連情報</h2><p><a class="xref" href="summarystats.html" title="summarystats">summarystats</a>, <a class="xref" href="RT_ST_SummaryStatsAgg.html" title="ST_SummaryStatsAgg">ST_SummaryStatsAgg</a>, <a class="xref" href="RT_ST_Count.html" title="ST_Count">ST_Count</a>, <a class="xref" href="RT_ST_Clip.html" title="ST_Clip">ST_Clip</a> </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_Quantile.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#RasterBand_Stats">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_SummaryStatsAgg.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Quantile </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_SummaryStatsAgg</td></tr></table></div></body></html>
