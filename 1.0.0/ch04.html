@@ -1,0 +1,320 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>第4章 PostGISを使う</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGISマニュアル"><link rel="up" href="index.html" title="PostGISマニュアル"><link rel="prev" href="ch03.html" title="第3章 よくある質問"><link rel="next" href="ch05.html" title="第5章 性能向上に関する技法"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">第4章 PostGISを使う</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch03.html">戻る</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch05.html">次へ</a></td></tr></table><hr></div><div class="chapter" title="第4章 PostGISを使う"><div class="titlepage"><div><div><h2 class="title"><a name="idp63405640"></a>第4章 PostGISを使う</h2></div></div></div><div class="toc"><p><b>目次</b></p><dl><dt><span class="sect1"><a href="ch04.html#RefObject">4.1. GISオブジェクト</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04.html#idp63407816">4.1.1. OpenGIS WKBとWKT</a></span></dt><dt><span class="sect2"><a href="ch04.html#idp63421384">4.1.2. PostGIS EWKB, EWKTと標準形式</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch04.html#idp63455304">4.2. OpenGIS標準を使う</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04.html#idp63457864">4.2.1. SPATIAL_REF_SYSテーブル</a></span></dt><dt><span class="sect2"><a href="ch04.html#idp63475016">4.2.2. GEOMETRY_COLUMNSテーブル</a></span></dt><dt><span class="sect2"><a href="ch04.html#idp63487048">4.2.3. 空間テーブルを作る</a></span></dt><dt><span class="sect2"><a href="ch04.html#idp63495880">4.2.4. ジオメトリのOpenGIS準拠を確実にする</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch04.html#idp63501256">4.3. GISデータのロード</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04.html#idp63502280">4.3.1. SQLを使う</a></span></dt><dt><span class="sect2"><a href="ch04.html#idp63505736">4.3.2. ローダを使う</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch04.html#idp63524296">4.4. GISデータを検索する</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04.html#idp63525320">4.4.1. SQLを使う</a></span></dt><dt><span class="sect2"><a href="ch04.html#idp63536584">4.4.2. ダンパを使う</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch04.html#idp63570632">4.5. インデックスを構築する</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04.html#idp63574344">4.5.1. GiSTインデックス</a></span></dt><dt><span class="sect2"><a href="ch04.html#idp63598792">4.5.2. インデックスを使う</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch04.html#idp63607496">4.6. 複雑なクエリ</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04.html#idp63608904">4.6.1. インデックスの利点を使う</a></span></dt><dt><span class="sect2"><a href="ch04.html#idp63617480">4.6.2. 空間SQLの例</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch04.html#idp63667400">4.7. MapServerを使う</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04.html#idp63675976">4.7.1. 基本的な使い方</a></span></dt><dt><span class="sect2"><a href="ch04.html#idp63695432">4.7.2. よくある質問</a></span></dt><dt><span class="sect2"><a href="ch04.html#idp63709768">4.7.3. 踏み込んだ使用法</a></span></dt><dt><span class="sect2"><a href="ch04.html#idp63721288">4.7.4. 例</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch04.html#idp63740104">4.8. Javaクライアント (JDBC)</a></span></dt><dt><span class="sect1"><a href="ch04.html#idp63747144">4.9. Cクライアント (libpq)</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04.html#idp63748168">4.9.1. テキストカーソル</a></span></dt><dt><span class="sect2"><a href="ch04.html#idp63749320">4.9.2. バイナリカーソル</a></span></dt></dl></dd></dl></div><div class="sect1" title="4.1. GISオブジェクト"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="RefObject"></a>4.1. GISオブジェクト</h2></div></div></div><p>PostGISでサポートされるGISオブジェクトは、OpenGIS Consortium (OGC)が定義する"Simple Features" のスーパーセットです。 PostGIS 0.9版からOGCの"Simple Features for SQL"仕様で定められた全てのオブジェクトと関数をサポートしています。</p><p>PostGISは標準から拡張して 3DZ, 3DM, 4D 座標 (訳注: それぞれXYZ, XYM, XYZM)をサポートしています。</p><div class="sect2" title="4.1.1. OpenGIS WKBとWKT"><div class="titlepage"><div><div><h3 class="title"><a name="idp63407816"></a>4.1.1. OpenGIS WKBとWKT</h3></div></div></div><p>OpenGIS仕様は空間オブジェクトの表現について二つの標準を定義しています。Well-Knownテキスト (WKT)形式とWell-Knownバイナリ (WKB)形式です。WKTもWKBも、オブジェクトの型とオブジェクトを形成する座標に関する情報を持っています。</p><p>フィーチャーの空間オブジェクトのテキスト表現 (WKT)の例は、次の通りです。</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>POINT(0 0)</p></li><li class="listitem"><p>LINESTRING(0 0,1 1,1 2)</p></li><li class="listitem"><p>POLYGON((0 0,4 0,4 4,0 4,0 0),(1 1, 2 1, 2 2, 1 2,1 1))</p></li><li class="listitem"><p>MULTIPOINT(0 0,1 2)</p></li><li class="listitem"><p>MULTILINESTRING((0 0,1 1,1 2),(2 3,3 2,5 4))</p></li><li class="listitem"><p>MULTIPOLYGON(((0 0,4 0,4 4,0 4,0 0),(1 1,2 1,2 2,1 2,1 1)), ((-1 -1,-1 -2,-2 -2,-2 -1,-1 -1)))</p></li><li class="listitem"><p>GEOMETRYCOLLECTION(POINT(2 3),LINESTRING((2 3,3 4)))</p></li></ul></div><p>OpenGIS仕様では、空間オブジェクトの内部保存書式は空間参照系識別子 (Spatial Referencing System IDentifier, SRID)を含むことも求められます。SRIDはデータベースへの挿入のために空間オブジェクトが生成される時に求められます。</p><p>これらの書式の入出力は次のインタフェースを用いて実現できます。 </p><pre class="programlisting">bytea WKB = asBinary(geometry);
+        text WKT = asText(geometry);
+        geometry = GeomFromWKB(bytea WKB, SRID); 
+        geometry = GeometryFromText(text WKT, SRID);
+        </pre><p>たとえば、OGC空間オブジェクトを生成して挿入する妥当なINSERTステートメントは次の通りです。</p><pre class="programlisting">INSERT INTO SPATIALTABLE ( 
+                  THE_GEOM, 
+                  THE_NAME 
+        ) 
+        VALUES ( 
+                  GeomFromText('POINT(-126.4 45.32)', 312), 
+                  'A Place' 
+        )</pre></div><div class="sect2" title="4.1.2. PostGIS EWKB, EWKTと標準形式"><div class="titlepage"><div><div><h3 class="title"><a name="idp63421384"></a>4.1.2. PostGIS EWKB, EWKTと標準形式</h3></div></div></div><p>OGC書式は2次元ジオメトリしかサポートされておらず、また、入出力の表現においてSRIDは*決して*埋め込まれません。 </p><p>PostGIS拡張書式は現在のところOGC書式のスーパーセットとなっています (全ての妥当なWKB/WKTは妥当なEWKB/EWKTです)。しかし、特にもしOGCがPostGIS拡張と矛盾する新しい書式を出すことがあるなら、これは将来変更されるかも知れません。ゆえにこの機能に頼るべきではありません。 </p><p>PostGIS EWKB/EWKT では 3dm, 3dz, 4d の座標サポートが追加され、SRID情報が埋め込まれます。 </p><p>拡張された空間オブジェクトのテキスト表現 (EWKT)の例は、次の通りです。</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>POINT(0 0 0) -- XYZ</p></li><li class="listitem"><p>SRID=32632;POINT(0 0) -- XY with SRID</p></li><li class="listitem"><p>POINTM(0 0 0) -- XYM</p></li><li class="listitem"><p>POINT(0 0 0 0) -- XYZM</p></li><li class="listitem"><p>SRID=4326;MULTIPOINTM(0 0 0,1 2 1) -- SRID付きXYM</p></li><li class="listitem"><p>MULTILINESTRING((0 0 0,1 1 0,1 2 1),(2 3 1,3 2 1,5 4 1))</p></li><li class="listitem"><p>POLYGON((0 0 0,4 0 0,4 4 0,0 4 0,0 0 0),(1 1 0,2 1 0,2 2 0,1 2 0,1 1 0))</p></li><li class="listitem"><p>MULTIPOLYGON(((0 0 0,4 0 0,4 4 0,0 4 0,0 0 0),(1 1 0,2 1 0,2 2 0,1 2 0,1 1 0)),((-1 -1 0,-1 -2 0,-2 -2 0,-2 -1 0,-1 -1 0)))</p></li><li class="listitem"><p>GEOMETRYCOLLECTIONM(POINTM(2 3 9),LINESTRINGM((2 3 4,3 4 5)))</p></li></ul></div><p>これらの書式の入出力は次のインタフェースを用いて実現できます。 </p><pre class="programlisting">bytea EWKB = asEWKB(geometry);
+        text EWKT = asEWKT(geometry);
+        geometry = GeomFromEWKB(bytea EWKB);
+        geometry = GeomFromEWKT(text EWKT);
+        </pre><p>たとえば、PostGISの空間オブジェクトを作成し挿入する妥当なINSERTステートメントは次の通りです。 </p><pre class="programlisting">INSERT INTO SPATIALTABLE ( 
+                  THE_GEOM, 
+                  THE_NAME 
+        ) 
+        VALUES ( 
+                  GeomFromEWKT('SRID=312;POINTM(-126.4 45.32 15)'), 
+                  'A Place' 
+        )</pre><p>The "canonical forms" of a PostgreSQL type are the representations you get with a simple query (without any function call) and the one which is guaranteed to be accepted with a simple insert, update or copy. For the postgis 'geometry' type these are: </p><pre class="programlisting">- Output -
+        binary: EWKB
+         ascii: HEXEWKB (EWKB in hex form)
+
+        - Input -
+        binary: EWKB
+         ascii: HEXEWKB|EWKT
+        </pre><p>
+</p><p>たとえば、次のステートメントは、標準的なASCII文字列による入出力の処理でEWKTを読み、HEXEWKBを返すものです。 </p><pre class="programlisting">=# SELECT 'SRID=4;POINT(0 0)'::geometry;
+                              geometry
+        ----------------------------------------------------
+         01010000200400000000000000000000000000000000000000
+        (1 row)
+        </pre></div></div><div class="sect1" title="4.2. OpenGIS標準を使う"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idp63455304"></a>4.2. OpenGIS標準を使う</h2></div></div></div><p>OpenGISの「SQL用シンプルフィーチャー仕様」では、標準GISオブジェクト型とこれらを操作するために必要な関数、メタデータテーブルのセットが定義されています。メタデータが一貫性を維持していることを保証するために、空間カラムの生成、消去といった操作はOpenGISで定義されている空間プロシージャを通して実行されます。</p><p>OpenGISメタデータテーブルには<code class="varname">SPATIAL_REF_SYS</code>と<code class="varname">GEOMETRY_COLUMNS</code>の二つがあります。<code class="varname">SPATIAL_REF_SYS</code>テーブルは空間データベースで用いられる座標系の、数字によるIDと文字による説明を持っています。</p><div class="sect2" title="4.2.1. SPATIAL_REF_SYSテーブル"><div class="titlepage"><div><div><h3 class="title"><a name="idp63457864"></a>4.2.1. SPATIAL_REF_SYSテーブル</h3></div></div></div><p><code class="varname">SPATIAL_REF_SYS</code>テーブル定義は次の通りです。</p><pre class="programlisting">CREATE TABLE SPATIAL_REF_SYS ( 
+  SRID INTEGER NOT NULL PRIMARY KEY, 
+  AUTH_NAME VARCHAR(256), 
+  AUTH_SRID INTEGER, 
+  SRTEXT VARCHAR(2048), 
+  PROJ4TEXT VARCHAR(2048)
+)</pre><p><code class="varname">SPATIAL_REF_SYS</code>のカラムは次の通りです。</p><div class="variablelist"><dl><dt><span class="term">SRID</span></dt><dd><p>一意に定められた整数値で、データベースで空間参照系 (SRS)を識別するものです。</p></dd><dt><span class="term">AUTH_NAME</span></dt><dd><p>その参照系の引用元である標準の名前です。たとえば「EPSG」は妥当な<code class="varname">AUTH_NAME</code>です。</p></dd><dt><span class="term">AUTH_SRID</span></dt><dd><p><code class="varname">AUTH_NAME</code>で引用される団体によって定義された空間参照系のIDです。EPSGの場合、EPSG投影コードが入ります。</p></dd><dt><span class="term">SRTEXT</span></dt><dd><p>空間参照系のWell-Knownテキスト表現です。たとえば、WKT SRSの表現は、次のようになります。</p><pre class="programlisting">PROJCS["NAD83 / UTM Zone 10N", 
+  GEOGCS["NAD83",
+    DATUM["North_American_Datum_1983", 
+      SPHEROID["GRS 1980",6378137,298.257222101]
+    ], 
+    PRIMEM["Greenwich",0], 
+    UNIT["degree",0.0174532925199433] 
+  ],
+  PROJECTION["Transverse_Mercator"], 
+  PARAMETER["latitude_of_origin",0],
+  PARAMETER["central_meridian",-123], 
+  PARAMETER["scale_factor",0.9996],
+  PARAMETER["false_easting",500000], 
+  PARAMETER["false_northing",0],
+  UNIT["metre",1] 
+]</pre><p>EPSG投影コードと対応するWKT表現の一覧については<a class="ulink" href="http://www.opengis.org/techno/interop/EPSG2WKT.TXT" target="_top">http://www.opengis.org/techno/interop/EPSG2WKT.TXT</a>をご覧下さい。WKTの一般的な議論については、OpenGISの「座標変換サービス実装仕様」<a class="ulink" href="http://www.opengis.org/techno/specs.htm" target="_top">http://www.opengis.org/techno/specs.htm</a>をご覧下さい。欧州石油調査グループ (European Petroleum Survey Group, EPSG)と EPSG空間参照系のデータベースに関する情報は、<a class="ulink" href="http://epsg.org" target="_top">http://epsg.org</a>をご覧下さい。</p></dd><dt><span class="term">PROJ4TEXT</span></dt><dd><p>PostGISは座標変換機能を提供するためにProj4ライブラリを用いています。 <code class="varname">PROJ4TEXT</code>カラムには、特定のSRIDを示すProj4座標定義文字列が入ります。たとえば次のようになります。</p><pre class="programlisting">+proj=utm +zone=10 +ellps=clrk66 +datum=NAD27 +units=m</pre><p>詳細情報については、Proj4ウェブサイ<a class="ulink" href="http://www.remotesensing.org/proj" target="_top">http://www.remotesensing.org/proj</a>をご覧下さい。<code class="filename">spatial_ref_sys.sql</code>は、全てのEPSG投影のための<code class="varname">SRTEXT</code>と<code class="varname">PROJ4TEXT</code>を持っています。</p></dd></dl></div></div><div class="sect2" title="4.2.2. GEOMETRY_COLUMNSテーブル"><div class="titlepage"><div><div><h3 class="title"><a name="idp63475016"></a>4.2.2. GEOMETRY_COLUMNSテーブル</h3></div></div></div><p><code class="varname">GEOMETRY_COLUMNS</code>テーブルは、次のように定義されています。</p><pre class="programlisting">CREATE TABLE GEOMETRY_COLUMNS ( 
+  F_TABLE_CATALOG VARCHAR(256) NOT NULL, 
+  F_TABLE_SCHEMA VARCHAR(256) NOT NULL, 
+  F_TABLE_NAME VARCHAR(256) NOT NULL, 
+  F_GEOMETRY_COLUMN VARCHAR(256) NOT NULL,
+  COORD_DIMENSION INTEGER NOT NULL, 
+  SRID INTEGER NOT NULL, 
+  TYPE VARCHAR(30) NOT NULL 
+)</pre><p>カラムは次のとおりです。</p><div class="variablelist"><dl><dt><span class="term">F_TABLE_CATALOG, F_TABLE_SCHEMA, F_TABLE_NAME</span></dt><dd><p>ジオメトリカラムを持つフィーチャーテーブルの完全修飾名。"catalog"および"schema"の語はOracle風であることに注意して下さい。"catalog"に類似するものはPostgreSQLになく、このカラムは空白にされます。"schema"についてはPostgreSQLスキーマ名が使われています (<code class="varname">public</code>がデフォルトです)。</p></dd><dt><span class="term">F_GEOMETRY_COLUMN</span></dt><dd><p>フィーチャーテーブル内のジオメトリカラムの名前。</p></dd><dt><span class="term">COORD_DIMENSION</span></dt><dd><p>そのカラムの空間の次元 (2, 3 または 4)。</p></dd><dt><span class="term">SRID</span></dt><dd><p>このテーブルの座標ジオメトリのために使われる空間参照系のID。<code class="varname">SPATIAL_REF_SYS</code>への外部キーになっています。</p></dd><dt><span class="term">TYPE</span></dt><dd><p>空間オブジェクトのタイプ。 空間カラムを単一型に制限するには、 POINT, LINESTRING, POLYGON, MULTIPOINT, MULTILINESTRING, MULTIPOLYGON, GEOMETRYCOLLECTION のうちのいずれかを、また、XYMで使う場合には LINESTRINGM, POLYGONM, MULTIPOINTM, MULTILINESTRINGM, MULTIPOLYGONM, GEOMETRYCOLLECTIONM のうちのいずれかを使います。複数の型が混合するコレクションの場合は "GEOMETRY"タイプとすることができます。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">注記</h3><p>この属性は (おそらく)OpenGIS仕様に入っていませんが、型の同一性を保証するために必要です。</p></div></dd></dl></div></div><div class="sect2" title="4.2.3. 空間テーブルを作る"><div class="titlepage"><div><div><h3 class="title"><a name="idp63487048"></a>4.2.3. 空間テーブルを作る</h3></div></div></div><p>空間データを持つテーブルを生成するには、次の通り二段階で行います。</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>通常の非空間テーブルを生成します。</p><p>たとえば、次のようにします。<span class="command"><strong>CREATE TABLE ROADS_GEOM ( ID int4, NAME varchar(25) )</strong></span></p></li><li class="listitem"><p>OpenGISの"AddGeometryColumn"関数によって空間カラムをテーブルに追加します。</p><p>The syntax is: </p><pre class="programlisting">AddGeometryColumn(&lt;schema_name&gt;, &lt;table_name&gt;,
+            &lt;column_name&gt;, &lt;srid&gt;, &lt;type&gt;,
+            &lt;dimension&gt;)</pre><p> Or, using current schema: </p><pre class="programlisting">AddGeometryColumn(&lt;テーブル名&gt;,
+            &lt;カラム名&gt;, &lt;SRID&gt;, &lt;タイプ&gt;,
+            &lt;次元&gt;)</pre><p>
+	    </p><p>例1: <span class="command"><strong>SELECT AddGeometryColumn('public', 'roads_geom', 'geom', 423, 'LINESTRING', 2)</strong></span></p><p>例2: <span class="command"><strong>SELECT AddGeometryColumn( 'roads_geom', 'geom', 423, 'LINESTRING', 2)</strong></span></p></li></ul></div><p>次はテーブルを作成して空間カラムを作る例です (128というSRIDがあると仮定します)。</p><pre class="programlisting">CREATE TABLE parks ( PARK_ID int4, PARK_NAME varchar(128), PARK_DATE date, PARK_TYPE varchar(2) );
+SELECT AddGeometryColumn('parks', 'park_geom', 128, 'MULTIPOLYGON', 2 );</pre><p>もうひとつ、ジェネリックな「ジオメトリ」型とSRID不明を示す-1を使った例を挙げます。</p><pre class="programlisting">CREATE TABLE roads ( ROAD_ID int4, ROAD_NAME varchar(128) ); 
+SELECT AddGeometryColumn( 'roads', 'roads_geom', -1, 'GEOMETRY', 3 );</pre></div><div class="sect2" title="4.2.4. ジオメトリのOpenGIS準拠を確実にする"><div class="titlepage"><div><div><h3 class="title"><a name="idp63495880"></a>4.2.4. ジオメトリのOpenGIS準拠を確実にする</h3></div></div></div><p>GEOSライブラリで実装される関数のほとんどが、ジオメトリがOpenGIS単純フィーチャー仕様の定義から見て妥当であることが仮定されています。ジオメトリの妥当性のチェックには、<a class="link" href="ch06.html#IsValid">IsValid()</a>関数を使います。例を次に示します。</p><pre class="programlisting">gisdb=# select isvalid('LINESTRING(0 0, 1 1)'), isvalid('LINESTRING(0 0,0 0)');
+ isvalid | isvalid
+---------+---------
+ t       | f</pre><p>デフォルトでは、PostGISはジオメトリ入力に関するこの妥当性チェックを適用しません。複雑なジオメトリの妥当性のチェックはCPU時間を多く必要とするためです。データソースが信用できない場合は、手動でこのチェックを強制するための制約を付けることができます。</p><pre class="programlisting">ALTER TABLE mytable ADD CONSTRAINT geometry_valid_check CHECK (isvalid(the_geom));</pre><p>妥当な入力ジオメトリでPostGIS関数を呼んだのに「GEOS Intersection()がエラーを投げました!」や「JTS Intersection()がエラーを投げました!」というようなメッセージに遭遇したら、それはたぶん、PostGISまたは使用しているライブラリの中のエラーを発見しました。PostGIS開発者に連絡するべきです。PostGIS関数が妥当である入力ジオメトリから妥当でないジオメトリが返る場合も同じです。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">注記</h3><p>厳格にOGCジオメトリに準拠すると、Z値やM値を持てません。<a class="link" href="">ST_IsValid()</a>は高次を考慮に入れません。<a class="link" href="ch06.html#AddGeometryColumn">AddGeometryColumn()</a>を実行するとジオメトリの次元をチェックする制約が加わるので、そこで2を指定すれば十分です。 </p></div></div></div><div class="sect1" title="4.3. GISデータのロード"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idp63501256"></a>4.3. GISデータのロード</h2></div></div></div><p>空間テーブルを作成したら、これでGISデータをデータベースにアップロードする準備ができたことになります。現在、PostGIS/PostgreSQLデータベースにデータをロードするには、SQLステートメントを使う、またはシェープファイルのローダ/ダンパを使う、二つの方法があります。</p><div class="sect2" title="4.3.1. SQLを使う"><div class="titlepage"><div><div><h3 class="title"><a name="idp63502280"></a>4.3.1. SQLを使う</h3></div></div></div><p>データをテキスト表現に変換できるなら、フォーマットされたSQLを使うのがデータをPostGISに入れる最も簡単な方法です。Oracleや他のSQLデータベースを使うように、SQL端末モニタにSQLの"INSERT"ステートメントで一杯になった大きなテキストファイルをパイプで送ることで、大量のデータをロードできます。</p><p>データアップロードファイル (たとえば<code class="filename">roads.sql</code>)は次のようになるでしょう。</p><pre class="programlisting">BEGIN;
+INSERT INTO ROADS_GEOM (ID,GEOM,NAME ) VALUES (1,GeomFromText('LINESTRING(191232 243118,191108 243242)',-1),'Jeff Rd'); 
+INSERT INTO ROADS_GEOM (ID,GEOM,NAME ) VALUES (2,GeomFromText('LINESTRING(189141 244158,189265 244817)',-1),'Geordie Rd'); 
+INSERT INTO ROADS_GEOM (ID,GEOM,NAME ) VALUES (3,GeomFromText('LINESTRING(192783 228138,192612 229814)',-1),'Paul St'); 
+INSERT INTO ROADS_GEOM (ID,GEOM,NAME ) VALUES (4,GeomFromText('LINESTRING(189412 252431,189631 259122)',-1),'Graeme Ave'); 
+INSERT INTO ROADS_GEOM (ID,GEOM,NAME ) VALUES (5,GeomFromText('LINESTRING(190131 224148,190871 228134)',-1),'Phil Tce'); 
+INSERT INTO ROADS_GEOM (ID,GEOM,NAME ) VALUES (6,GeomFromText('LINESTRING(198231 263418,198213 268322)',-1),'Dave Cres');
+COMMIT;</pre><p>データファイルは、次に示す"psql"というSQL端末モニタを使って、簡単にPostgreSQLにパイプで送ることができます。</p><pre class="programlisting">psql -d [データベース名] -f roads.sql</pre></div><div class="sect2" title="4.3.2. ローダを使う"><div class="titlepage"><div><div><h3 class="title"><a name="idp63505736"></a>4.3.2. ローダを使う</h3></div></div></div><p><code class="filename">shp2pgsql</code>データローダは、ESRIシェープファイルをPostGIS/PostgreSQLデータベースに挿入するための適切なSQLに変換します。ローダには、次に示すコマンドラインフラグによって識別される、いくつかの操作モードがあります。</p><div class="variablelist"><dl><dt><span class="term">-d</span></dt><dd><p>シェープファイルにあるデータを持つ新しいテーブルを作成する前にデータベーステーブルを削除します。</p></dd><dt><span class="term">-a</span></dt><dd><p>シェープファイルからデータベーステーブルにデータを追加します。複数のファイルをロードするためにこのオプションを使う場合は、これらのファイルは同じ属性と同じデータ型を持つ必要があります。</p></dd><dt><span class="term">-c</span></dt><dd><p>新しいテーブルの作成とシェープファイルからのデータの読み込みを行います。<span class="emphasis"><em>これがデフォルトモードです</em></span>。</p></dd><dt><span class="term">-p</span></dt><dd><p>テーブル作成のSQLコードを生成するだけで、実際のデータは追加しません。このモードは、テーブル作成とデータロードとを完全に分けたい場合に使用します。</p></dd><dt><span class="term">-D</span></dt><dd><p>出力データにPostgreSQLのダンプ書式を用います。このモードは-a, -c, -dと組み合わせて利用します。デフォルトの"insert"によるSQL書式よりも、大変早くロードできます。大きなデータセットではこちらを使用して下さい。</p></dd><dt><span class="term">-s &lt;SRID&gt;</span></dt><dd><p>指定したSRIDでジオメトリデーブルの作成とデータの読み込みを行います。</p></dd><dt><span class="term">-k</span></dt><dd><p>識別子 (カラム、スキーマおよび属性)の大文字小文字を保持します。シェープファイルの属性は全て大文字であることに注意して下さい。</p></dd><dt><span class="term">-i</span></dt><dd><p>全ての整数を標準の32ビット整数に強制します。DBFヘッダではそれが正当であったとしても、64ビットのbigintを生成しません。</p></dd><dt><span class="term">-w</span></dt><dd><p>古い版 (0.x版)のPostGISのためにWKT書式を出力します。このオプションを使うと、座標変動が発生したり、M値が削除されることに注意して下さい。 </p></dd></dl></div><p>-a, -c, -dおよび-pは互いに排他的であることに注意して下さい。</p><p>ローダを使って入力ファイルを生成してアップロードするセッション例は次の通りです。</p><pre class="programlisting"># shp2pgsql shaperoads myschema.roadstable &gt; roads.sql 
+# psql -d roadsdb -f roads.sql</pre><p>変換とアップロードはUNIXのパイプを使うと一回で実行できます。</p><pre class="programlisting"># shp2pgsql shaperoads myschema.roadstable | psql -d roadsdb</pre></div></div><div class="sect1" title="4.4. GISデータを検索する"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idp63524296"></a>4.4. GISデータを検索する</h2></div></div></div><p>データは、SQLまたはシェープファイルローダ/ダンパを使ってデータベースから抜き出すことができます。SQLに関する節において、空間テーブルでの比較とクエリを行うために用いることができる演算子のいくつかを議論します。</p><div class="sect2" title="4.4.1. SQLを使う"><div class="titlepage"><div><div><h3 class="title"><a name="idp63525320"></a>4.4.1. SQLを使う</h3></div></div></div><p>データベースからデータを引き出す最もストレートな手段は、次のように、SQLのSELECTクエリを使ってカラムを可読なテキストファイルとして出力することです。</p><pre class="programlisting">db=# SELECT id, AsText(geom) AS geom, name FROM ROADS_GEOM; 
+id | geom                                    | name 
+---+-----------------------------------------+-----------
+ 1 | LINESTRING(191232 243118,191108 243242) | Jeff Rd  
+ 2 | LINESTRING(189141 244158,189265 244817) | Geordie Rd 
+ 3 | LINESTRING(192783 228138,192612 229814) | Paul St 
+ 4 | LINESTRING(189412 252431,189631 259122) | Graeme Ave 
+ 5 | LINESTRING(190131 224148,190871 228134) | Phil Tce 
+ 6 | LINESTRING(198231 263418,198213 268322) | Dave Cres 
+ 7 | LINESTRING(218421 284121,224123 241231) | Chris Way 
+(6 rows)</pre><p>しかし、返ってくる結果の数を削るために、なんらかの制限をかけることが重要となるときがあるでしょう。属性ベースの制限の場合、非空間テーブルで使う通常の文法と同じSQLを使うだけです。空間ベースの制限の場合、次の演算子が使用可能であり、便利です。</p><div class="variablelist"><dl><dt><span class="term">&amp;&amp;</span></dt><dd><p>この演算子で、一つのジオメトリのバウンディングボックスが他のバウンディングボックスとインタセクトするかを問い合わせることができます。</p></dd><dt><span class="term">~=</span></dt><dd><p>この演算子で、二つのジオメトリが幾何的に同一であるかを見ることができます。 たとえば、'POLYGON((0 0,1 1,1 0,0 0))' は 'POLYGON((0 0,1 1,1 0,0 0))' と同じかを見ることができます (これは同じとなります)。</p></dd><dt><span class="term">=</span></dt><dd><p>この演算子は他より若干素朴なもので、二つのジオメトリのバウンディングボックスが同じかを見るだけです。</p></dd></dl></div><p>次に、これらの演算子をクエリで使うことができます。SQLコマンドラインからジオメトリとボックスの特定を行うときは、"GeomFromText()"関数で、明示的に文字列表現をジオメトリに変換しなければならないことに注意して下さい。たとえば、次のようになります。</p><pre class="programlisting">SELECT 
+  ID, NAME 
+FROM ROADS_GEOM 
+WHERE 
+  GEOM ~= GeomFromText('LINESTRING(191232 243118,191108 243242)',-1);</pre><p>上のクエリは"ROADS_GEOM"テーブルから、その値と等価である単一のレコードを返します。</p><p>"&amp;&amp;"演算子を使うとき、比較フィーチャーをBOX3DかGEOMETRYかに指定することができます。ただし、GEOMETRYを指定すると、それのバウンディングボックスが比較に使われます。</p><pre class="programlisting">SELECT 
+  ID, NAME 
+FROM ROADS_GEOM 
+WHERE 
+  GEOM &amp;&amp; GeomFromText('POLYGON((191232 243117,191232 243119,191234 243117,191232 243117))',-1);</pre><p>上のクエリでは、比較するためにポリゴンのバウンディングボックスを用いています。</p><p>最も一般的な空間クエリは「フレームベース」のクエリでしょう。これは、表示するためのデータの価値のある「マップフレーム」を取得するために、データブラウザやウェブマッパのようなクライアントソフトウェアに使われます。このフレームで"BOX3D"オブジェクトを使う場合は、次のようなクエリになります。</p><pre class="programlisting">SELECT 
+  AsText(GEOM) AS GEOM 
+FROM ROADS_GEOM 
+WHERE 
+  GEOM &amp;&amp; GeomFromText('BOX3D(191232 243117,191232 243119)'::box3d,-1);</pre><p>ここで、BOX3Dの投影を指定するためにSRIDを使っていることに注意して下さい。SRIDを-1に設定しているのは、SRIDを指定しないということを示しています。</p></div><div class="sect2" title="4.4.2. ダンパを使う"><div class="titlepage"><div><div><h3 class="title"><a name="idp63536584"></a>4.4.2. ダンパを使う</h3></div></div></div><p><code class="filename">pgsql2shp</code>テーブルダンパは、データベースに直接接続して、テーブル (あるいはクエリによって定義されたもの)をシェープファイルに変換するものです。基本的な文法は次の通りです。</p><pre class="programlisting">pgsql2shp [&lt;オプション&gt;] &lt;データベース&gt; [&lt;スキーマ&gt;.]&lt;テーブル&gt;</pre><pre class="programlisting">pgsql2shp [&lt;オプション&gt;] &lt;データベース&gt; &lt;クエリ&gt;</pre><p>コマンドラインオプションは次の通りです。</p><div class="variablelist"><dl><dt><span class="term">-f &lt;ファイル名&gt;</span></dt><dd><p>特定のファイル名に出力を書きこみます。</p></dd><dt><span class="term">-h &lt;ホスト&gt;</span></dt><dd><p>接続先データベースのホスト名。</p></dd><dt><span class="term">-p &lt;ポート&gt;</span></dt><dd><p>接続先データベースのポート。</p></dd><dt><span class="term">-P &lt;パスワード&gt;</span></dt><dd><p>データベースに接続するためのパスワード。</p></dd><dt><span class="term">-u &lt;ユーザ名&gt;</span></dt><dd><p>データベースに接続する際のユーザ名。</p></dd><dt><span class="term">-g &lt;ジオメトリカラム&gt;</span></dt><dd><p>複数のジオメトリカラムを持つテーブルの場合の、シェープファイルの出力に使用するジオメトリカラム。</p></dd><dt><span class="term">-b</span></dt><dd><p>バイナリカーソルを使います。これは、実行時間を短くしますが、テーブルの非ジオメトリ属性がテキストへのキャストを持っていない場合には、動作しません。</p></dd><dt><span class="term">-r</span></dt><dd><p>Rawモード。<code class="varname">gid</code>フィールドを落としたり、カラム名をエスケープしてはいけません。</p></dd><dt><span class="term">-d</span></dt><dd><p>後方互換: 古い (1.0.0より前)のPostGISデータベースからダンプする際に3次元のシェープファイルを出力します (デフォルトでは2次元になります)。 PostGIS 1.0.0以上では、次元は完全に反映されます。 </p></dd></dl></div></div></div><div class="sect1" title="4.5. インデックスを構築する"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idp63570632"></a>4.5. インデックスを構築する</h2></div></div></div><p>インデックスは大きなデータセットを持つ空間データベースの利用を可能にするものです。インデックスなしでは、フィーチャーの検索でデータベースの全レコードを「シーケンシャルスキャン」する必要があります。インデックスをつけることで、データを検索木に組織化して、特定のレコードを発見するための検索をより早くすることができます。 PostgreSQLは、B木、R木、GiSTの3種類のインデックスをデフォルトでサポートしています。</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>B木は、数字、文字、日付といった、一つの軸に沿ってソートできるデータに使用します。 GISデータは合理的に一つの軸に沿ったソートはできません ((0,0)と(0,1)と(1,0)で大きいのはどれでしょう?)ので、B木インデックスは、ここでは使えません。</p></li><li class="listitem"><p>R木はデータを長方形に分割して、さらにその長方形を小さい長方形に分割していったものです。R木はいくつかの空間データベースでGISデータのインデックスに使われますが、PostgreSQLのR木実装は、GiST実装ほどにロバストではありません。</p></li><li class="listitem"><p>GiST (Generalized Search Trees)インデックスはデータを「一方へのもの」 (訳注: 「左側にあるもの」「上側にあるもの」など)、「オーバラップするもの」、「中にあるもの」に分割して、GISデータを含む幅広いデータ型で使えるようにしたものです。PostGISではGISデータにインデックスを付けるためにGiSTの上でR木インデックス実装を使用しています。</p></li></ul></div><div class="sect2" title="4.5.1. GiSTインデックス"><div class="titlepage"><div><div><h3 class="title"><a name="idp63574344"></a>4.5.1. GiSTインデックス</h3></div></div></div><p>GiSTは「汎用的な検索木 (Generalized Search Tree)」の意味で、インデックスの一般化された形式です。GISインデックスに加えて、GiSTは通常のB木インデックスに従わない全ての種類の不規則なデータ構造 (整数配列, スペクトラルデータ等)の検索速度を向上させるために使います。</p><p>ひとたびGISデータテーブルが数千行を超えたら、空間検索の速度向上のためインデックスを構築したくなるでしょう (これは属性検索でない場合です。属性でしたら通常のインデックスを属性フィールドに追加します)。</p><p>GiSTインデックスをジオメトリカラムに追加するための文は次の通りです。</p><pre class="programlisting">CREATE INDEX [indexname] ON [tablename] 
+  USING GIST ( [geometryfield] GIST_GEOMETRY_OPS ); </pre><p>空間インデックスの構築は、計算量を集中させて行われます。100万行のテーブルで、300MHzのSolaris機ではGiSTインデックスの構築に概ね1時間かかりました。インデックスを構築したあとは、クエリプランの最適化に使うため、次のようにPostgreSQLにテーブル統計情報の収集をさせることが重要です。</p><pre class="programlisting">VACUUM ANALYZE [テーブル名] [カラム名];
+-- 次のクエリはPostgreSQL 7.4以前でのみ必要です
+SELECT UPDATE_GEOMETRY_STATS( [テーブル名], [カラム名] );</pre><p>GiSTインデックスはPostgreSQLのR木インデックスと比べて二つの利点を持っています。まず、GiSTインデックスは「NULLセーフ」、すなわちNULL値を含むインデックスカラムで利用できることです。次に、GiSTインデックスはGISオブジェクトがPostgreSQLで8Kのページサイズを超えるサイズを扱う際に重要な「不可逆」の概念を持っていることです。不可逆にすることによって、PostgreSQLは、インデックスにおけるオブジェクトの「重要な」部分、GISオブジェクトの場合にはバウンディングボックスになりますが、これのみを納めることができます。 R木インデックスで8Kを超えるGISオブジェクトのインデックスを構築しようとすると、失敗します。</p></div><div class="sect2" title="4.5.2. インデックスを使う"><div class="titlepage"><div><div><h3 class="title"><a name="idp63598792"></a>4.5.2. インデックスを使う</h3></div></div></div><p>通常、インデックスは見えないところでデータアクセスの速度向上を行います。すなわち、ひとたびインデックスが構築されたら、クエリプランナは透過的に、クエリプランの速度を向上させるためにインデックス情報を使うべき時を判断します。残念なことに、PostgreSQLクエリプランナは、GiSTインデックスの使用について十分に最適化できず、時々、検索で空間インデックスを使用すべきなのに、テーブル全体を順に走査することがあります。</p><p>空間インデックスが使用されていない (または属性インデックスがその問題のために使用されていない)場合、次の二つのことができます。</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>まず、クエリプランナにインデックス使用まわりの判断に利用するためのより良い情報を提供するために、値の数量と分散に関する統計情報が収集されたかを確認してください。PostgreSQL 7.4以前では、<span class="command"><strong>update_geometry_stats([テーブル名], [カラム名])</strong></span> (分散計算)と<span class="command"><strong>VACUUM ANALYZE [テーブル名] [カラム名]</strong></span> (値の数量の計算)とを実行します。PostgreSQL 8.0については、<span class="command"><strong>VACUUM ANALYZE</strong></span>を実行することで同じ動作になります。常に定期的なデータベースへのvacuumを実行すべきです。多くのPostgreSQLのデータベースエージェントは、閑散時のcronジョブとして定期的に<span class="command"><strong>VACUUM</strong></span>を実行します。</p></li><li class="listitem"><p>vacuumが働かないなら、<span class="command"><strong>SET ENABLE_SEQSCAN=OFF</strong></span>コマンドで、プランナにインデックス情報を強制的に使わせることができます。このコマンドは控え目に実行すべきで、かつ、空間インデックスがあるクエリ上でのみ使うべきです。一般的に言うと、通常のB木インデックスを使うべき時に関してあなたが知っていることよりも、プランナはより良く知っています。クエリを実行したら、<code class="varname">ENABLE_SEQSCAN</code>設定を戻して、他のクエリでは通常通りプランナを使用することを考えるべきです。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">注記</h3><p>0.6版では、<code class="varname">ENABLE_SEQSCAN</code>でプランナにインデックスを強制的に使わせることは重要ではありません。</p></div></li><li class="listitem"><p>順に走査する際のコストとインデックスを使う際のコストとを比較してプランナが間違っていることに気付いたら、postgresql.confでrandom_page_costの値を減らしてみるか"SET random_page_cost=#"を使ってみてください。このパラメータのデフォルト値は4ですが、1か2にしてみて下さい。値を減らすことでプランナがよりインデックス検索を行う傾向になります。</p></li></ul></div></div></div><div class="sect1" title="4.6. 複雑なクエリ"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idp63607496"></a>4.6. 複雑なクエリ</h2></div></div></div><p>空間データベース機能の<span class="emphasis"><em>レゾンデートル</em></span>は、通常はデスクトップGISに求める機能を、データベース内部のクエリで実現することです。PostGISを効果的に使用するには、どの空間機能が有効かを知り、また、良い性能を提供する所に適切にインデックスがあることが保証されていることが求められます。</p><div class="sect2" title="4.6.1. インデックスの利点を使う"><div class="titlepage"><div><div><h3 class="title"><a name="idp63608904"></a>4.6.1. インデックスの利点を使う</h3></div></div></div><p>クエリを作成するとき、 &amp;&amp;のようなバウンディングボックスを基準とした演算子によってのみGiST空間インデックスの利点が出てくることだけは覚えておくことが重要です。<code class="varname">distance()</code>のような関数では演算の最適化を行うためにインデックスを使うことができません。 たとえば、次のクエリでは、大きなテーブルでは本当に遅くなります。</p><pre class="programlisting">SELECT the_geom FROM geom_table
+WHERE distance( the_geom, GeomFromText( 'POINT(100000 200000)', -1 ) ) &lt; 100</pre><p>このクエリは、geom_tableにおける (100000, 200000) の点から距離が100単位以内にある全てのジオメトリを選択します。これは、テーブル内にあるそれぞれの点と指定した点との距離を計算する、すなわち、それぞれの行でひとつの<code class="varname">distance()</code>計算を行うため、遅くなるのです。&amp;&amp;演算子を使うと、求められる距離計算の量を減らすことで回避できます。次のようにします。</p><pre class="programlisting">SELECT the_geom FROM geom_table
+WHERE the_geom &amp;&amp; 'BOX3D(90900 190900, 100100 200100)'::box3d
+  AND distance( the_geom, GeomFromText( 'POINT(100000 200000)', -1 ) ) &lt; 100</pre><p>このクエリは、同じジオメトリを選択しますが、より効果的な方法で行われます。the_geomにGiSTインデックスがあると仮定すると、クエリプランナは、<code class="varname">distance()</code>関数の結果を計算する前に行を減らすためにインデックスを使うことができると認識します。&amp;&amp;演算子で使われている<code class="varname">BOX3D</code>ジオメトリは、指定位置を中心とした一辺200単位の正方形です。これが「クエリボックス」です。&amp;&amp;演算子は 結果セットを「クエリボックス」にオーバラップするバウンディングボックスを持つジオメトリだけに素早く減らすためにインデックスを使います。「クエリボックス」がジオメトリテーブル全体の範囲より十分に小さいと仮定すると、行われなければならない距離計算の量は劇的に減少します。</p></div><div class="sect2" title="4.6.2. 空間SQLの例"><div class="titlepage"><div><div><h3 class="title"><a name="idp63617480"></a>4.6.2. 空間SQLの例</h3></div></div></div><p>本節の例では、線型の道、ポリゴンの自治体境界、の二つのテーブルを使います。テーブルの定義をしまします。<code class="varname">bc_roads</code>については次の通りです。</p><pre class="programlisting">Column    |       Type        |   Description
+------------+-------------------+-------------------
+ gid        | integer           | Unique ID
+ name       | character varying | Road Name
+ the_geom   | geometry          | Location Geometry (Linestring)</pre><p><code class="varname">bc_municipality</code>テーブルの定義については次の通りです。</p><pre class="programlisting">Column   |       Type        |   Description
+-----------+-------------------+-------------------
+ gid       | integer           | Unique ID
+ code      | integer           | Unique ID
+ name      | character varying | City / Town Name
+ the_geom  | geometry          | Location Geometry (Polygon)</pre><div class="qandaset" title="よくある質問"><a name="idp63620552"></a><dl><dt></dt><dd><dl><dt>4.6.2.1.1. <a href="ch04.html#idp63621064">道路の総延長はkm表記でいくらになるでしょう?</a></dt><dt>4.6.2.1.2. <a href="ch04.html#idp63623496">プリンスジョージ市の大きさはha表記でいくらになるでしょう?</a></dt><dt>4.6.2.1.3. <a href="ch04.html#idp63626056">県内で最も大きな面積となる自治体はどこでしょう?</a></dt><dt>4.6.2.1.4. <a href="ch04.html#idp63628872">各自治体内に含まれる道路の総延長はいくらでしょう?</a></dt><dt>4.6.2.1.5. <a href="ch04.html#idp63631688">プリンスジョージ市内の全ての道路からなるテーブルを作る</a></dt><dt>4.6.2.1.6. <a href="ch04.html#idp63634120">ビクトリア州の「ダグラス通り」の長さはkm表記でいくらになるでしょう?</a></dt><dt>4.6.2.1.7. <a href="ch04.html#idp63636168">穴を持つ自治体ポリゴンのうち最も大きいのはどれでしょう?</a></dt></dl></dd></dl><table border="0" width="100%" summary="Q and A Set"><col align="left" width="1%"><col><tbody><tr class="toc"><td align="left" valign="top" colspan="2"><dl><dt>4.6.2.1.1. <a href="ch04.html#idp63621064">道路の総延長はkm表記でいくらになるでしょう?</a></dt><dt>4.6.2.1.2. <a href="ch04.html#idp63623496">プリンスジョージ市の大きさはha表記でいくらになるでしょう?</a></dt><dt>4.6.2.1.3. <a href="ch04.html#idp63626056">県内で最も大きな面積となる自治体はどこでしょう?</a></dt><dt>4.6.2.1.4. <a href="ch04.html#idp63628872">各自治体内に含まれる道路の総延長はいくらでしょう?</a></dt><dt>4.6.2.1.5. <a href="ch04.html#idp63631688">プリンスジョージ市内の全ての道路からなるテーブルを作る</a></dt><dt>4.6.2.1.6. <a href="ch04.html#idp63634120">ビクトリア州の「ダグラス通り」の長さはkm表記でいくらになるでしょう?</a></dt><dt>4.6.2.1.7. <a href="ch04.html#idp63636168">穴を持つ自治体ポリゴンのうち最も大きいのはどれでしょう?</a></dt></dl></td></tr><tr class="question" title="4.6.2.1.1."><td align="left" valign="top"><a name="idp63621064"></a><a name="idp63621320"></a><p><b>4.6.2.1.1.</b></p></td><td align="left" valign="top"><p>道路の総延長はkm表記でいくらになるでしょう?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>この問題は、次のようなとても単純なSQLで答を得ることができます。</p><pre class="programlisting">postgis=# SELECT sum(length(the_geom))/1000 AS km_roads FROM bc_roads;
+     km_roads
+------------------
+ 70842.1243039643
+(1 row)</pre></td></tr><tr class="question" title="4.6.2.1.2."><td align="left" valign="top"><a name="idp63623496"></a><a name="idp63623752"></a><p><b>4.6.2.1.2.</b></p></td><td align="left" valign="top"><p>プリンスジョージ市の大きさはha表記でいくらになるでしょう?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>このクエリでは、属性条件 (municipality name, 自治体名)に空間計算 (面積)を併用しています。</p><pre class="programlisting">postgis=# SELECT area(the_geom)/10000 AS hectares FROM bc_municipality 
+          WHERE name = 'PRINCE GEORGE';
+     hectares
+------------------
+ 32657.9103824927
+(1 row) </pre></td></tr><tr class="question" title="4.6.2.1.3."><td align="left" valign="top"><a name="idp63626056"></a><a name="idp63626312"></a><p><b>4.6.2.1.3.</b></p></td><td align="left" valign="top"><p>県内で最も大きな面積となる自治体はどこでしょう?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>このクエリは、空間計測をクエリ条件に持ってきています。この問題へのアプローチの方法はいくつかありますが、最も効率的なのは次の通りです。</p><pre class="programlisting">postgis=# SELECT name, area(the_geom)/10000 AS hectares 
+          FROM bc_municipality 
+          ORDER BY hectares DESC 
+          LIMIT 1;
+     name      |    hectares
+---------------+-----------------
+ TUMBLER RIDGE | 155020.02556131
+(1 row)</pre><p>このクエリの答を出すためには、全てのポリゴンの面積を求める必要があることに注意して下さい。このクエリを多く実行する場合、性能向上のためにテーブルにareaカラムを追加して、別のインデックスを追加することができるようにするのは、意義のあることです。結果を距離について降順に並べ替え、PostgreSQLの"LIMIT"コマンドを用いることで、max()のような集約関数を使わずに、簡単に最も大きい値を得ることができます。</p></td></tr><tr class="question" title="4.6.2.1.4."><td align="left" valign="top"><a name="idp63628872"></a><a name="idp63629128"></a><p><b>4.6.2.1.4.</b></p></td><td align="left" valign="top"><p>各自治体内に含まれる道路の総延長はいくらでしょう?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>これは、二つのテーブルからデータを持ち込んで (結合して)いるので「空間結合」の例です。しかし、結合の条件として共通キーの上で接続するという普通のリレーションのやり方でなく空間インタラクション条件 (「含む」)を使っています。</p><pre class="programlisting">postgis=# SELECT m.name, sum(length(r.the_geom))/1000 as roads_km 
+          FROM bc_roads AS r,bc_municipality AS m 
+          WHERE r.the_geom &amp;&amp; m.the_geom 
+          AND contains(m.the_geom,r.the_geom) 
+          GROUP BY m.name 
+          ORDER BY roads_km;
+
+            name            |     roads_km
+----------------------------+------------------
+ SURREY                     | 1539.47553551242
+ VANCOUVER                  | 1450.33093486576
+ LANGLEY DISTRICT           | 833.793392535662
+ BURNABY                    | 773.769091404338
+ PRINCE GEORGE              |  694.37554369147
+ ...</pre><p>このクエリは、テーブル内の全ての道路の合計を最終結果 (この例での話ですが約250Kmの道です)にまとめられるので、少し時間がかかります。より小さいオーバレイ (数百の道路で数千のレコード)の場合、応答はもっと早くなりえます。</p></td></tr><tr class="question" title="4.6.2.1.5."><td align="left" valign="top"><a name="idp63631688"></a><a name="idp63631944"></a><p><b>4.6.2.1.5.</b></p></td><td align="left" valign="top"><p>プリンスジョージ市内の全ての道路からなるテーブルを作る</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>これは「オーバレイ」の例です。つまり、二つのテーブルを取得して、空間的に切り取られた結果からなる新しいテーブルを出力します。上で示した「空間結合」と違い、このクエリは実際に新しいジオメトリを生成します。生成されたオーバレイはターボのかかった空間結合みたいなもので、より確かな解析作業に便利です。</p><pre class="programlisting">postgis=# CREATE TABLE pg_roads as
+          SELECT intersection(r.the_geom, m.the_geom) AS intersection_geom, 
+                 length(r.the_geom) AS rd_orig_length, 
+                 r.* 
+          FROM bc_roads AS r, bc_municipality AS m 
+          WHERE r.the_geom &amp;&amp; m.the_geom 
+          AND intersects(r.the_geom, m.the_geom) 
+          AND m.name = 'PRINCE GEORGE';</pre></td></tr><tr class="question" title="4.6.2.1.6."><td align="left" valign="top"><a name="idp63634120"></a><a name="idp63634376"></a><p><b>4.6.2.1.6.</b></p></td><td align="left" valign="top"><p>ビクトリア州の「ダグラス通り」の長さはkm表記でいくらになるでしょう?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><pre class="programlisting">postgis=# SELECT sum(length(r.the_geom))/1000 AS kilometers 
+          FROM bc_roads r, bc_municipality m 
+          WHERE r.the_geom &amp;&amp; m.the_geom 
+          AND r.name = 'Douglas St' 
+          AND m.name = 'VICTORIA';
+    kilometers
+------------------
+ 4.89151904172838
+(1 row)</pre></td></tr><tr class="question" title="4.6.2.1.7."><td align="left" valign="top"><a name="idp63636168"></a><a name="idp63636424"></a><p><b>4.6.2.1.7.</b></p></td><td align="left" valign="top"><p>穴を持つ自治体ポリゴンのうち最も大きいのはどれでしょう?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><pre class="programlisting">postgis=# SELECT gid, name, area(the_geom) AS area 
+          FROM bc_municipality 
+          WHERE nrings(the_geom) &gt; 1 
+          ORDER BY area DESC LIMIT 1;
+ gid |     name     |       area
+-----+--------------+------------------
+  12 | SPALLUMCHEEN | 257374619.430216
+(1 row)</pre></td></tr></tbody></table></div></div></div><div class="sect1" title="4.7. MapServerを使う"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idp63667400"></a>4.7. MapServerを使う</h2></div></div></div><p>Minnesota MapServerはOpenGIS Web Mapping Server仕様を満たすウェブマッピングサーバです。</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>MapServerのウェブページは<a class="ulink" href="http://mapserver.gis.umn.edu" target="_top">http://mapserver.gis.umn.edu</a>にあります (訳注: 現在は <a class="ulink" href="http://mapserver.org/" target="_top">http://mapserver.org/</a>にあります)。</p></li><li class="listitem"><p>OpenGISウェブマップ仕様は<a class="ulink" href="http://www.opengis.org/techno/specs/01-047r2.pdf" target="_top">http://www.opengis.org/techno/specs/01-047r2.pdf</a>にあります。</p></li></ul></div><div class="sect2" title="4.7.1. 基本的な使い方"><div class="titlepage"><div><div><h3 class="title"><a name="idp63675976"></a>4.7.1. 基本的な使い方</h3></div></div></div><p>MapServerでPostGISを使うには、MapServerのコンフィギュレーション方法についての知識が必要ですが、この文書の範囲外です。この節では、PostGIS特有の問題とコンフィギュレーション詳細について記載します。</p><p>MapServerでPostGISを使うには、次のものが必要です。</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>PostGIS 0.6以上</p></li><li class="listitem"><p>MapServer 3.5以上</p></li></ul></div><p>MapServerは、他のPostgreSQLクライアントのように、<code class="filename">libpq</code>を使ってPostGIS/PostgreSQLデータにアクセスします。これは、システムがPostgreSQLクライアントライブラリである<code class="filename">libpq</code>を持っている限りは、PostGISサーバへのネットワークアクセスを持つあらゆる機械にMapServerをインストールできるということを示しています。</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>"--with-postgis"と好きなconfigureオプションを付けてMpaserverのコンパイルとインストールを行います。</p></li><li class="listitem"><p>MapServerのmapファイルの中に、PostGISレイヤを追加します。たとえば次のようになります。</p><pre class="programlisting">LAYER
+  CONNECTIONTYPE postgis
+  NAME "widehighways"
+  # リモートの空間データベースに接続します
+  CONNECTION "user=dbuser dbname=gisdatabase host=bigserver"
+  # 'roads'テーブルの'geom'カラムからラインを取得します
+  DATA "geom from roads"
+  STATUS ON
+  TYPE LINE
+  # 範囲内のラインのうち、広い高速道路のみ描画します
+  FILTER "type = 'highway' and numlanes &gt;= 4"
+  CLASS
+    # 非常に広い高速道路はより明るい色かつ2ピクセル幅にします
+    EXPRESSION ([numlanes] &gt;= 6)
+    COLOR 255 22 22      
+    SYMBOL "solid"
+    SIZE 2
+  END
+  CLASS
+    # 残りは、暗い色かつ1ピクセル幅です
+    EXPRESSION ([numlanes] &lt; 6)
+    COLOR 205 92 82      
+  END
+END</pre><p>上の例におけるPostGIS特有のディレクティブは次の通りです。</p><div class="variablelist"><dl><dt><span class="term">CONNECTIONTYPE</span></dt><dd><p>PostGISレイヤでは常に"postgis"とします。</p></dd><dt><span class="term">CONNECTION</span></dt><dd><p>データベース接続は「接続文字列」によって制御されます。接続文字列は、次に示すような標準的なキーと値からなります(&lt;&gt;内はデフォルト値)。</p><p>user=&lt;ユーザ名&gt; password=&lt;パスワード&gt; dbname=&lt;ユーザ名&gt; hostname=&lt;サーバ&gt; port=&lt;5432&gt;</p><p>空の接続文字列も妥当とされますし、あらゆるキーと値のペアは省略できます。接続するためには一般的にはdbnameとusernameとが最少で与えるものとなります。</p></dd><dt><span class="term">DATA</span></dt><dd><p>このパラメータの形式は "&lt;カラム名&gt; from &lt;テーブル名&gt;"となります。ここで、カラム名は地図に描画したい空間カラムを指します。</p></dd><dt><span class="term">FILTER</span></dt><dd><p>フィルタは、妥当なSQL文字列でなければなりません。この文字列は、通常はSQLクエリにおける"WHERE"に続く論理式に対応します。たとえば、6レーン以上の道路だけを描画する場合には、"num_lanes &gt;= 6"というフィルタを使います。</p></dd></dl></div></li><li class="listitem"><p>空間データベースにおいては、空間 (GiST)インデックスを、マップに描かれるレイヤ全てに構築していることを保証して下さい。</p><pre class="programlisting">CREATE INDEX [インデックス名]
+  ON [テーブル名] 
+  USING GIST ( [ジオメトリカラム] GIST_GEOMETRY_OPS );</pre></li><li class="listitem"><p>MapServerを使ってレイヤにクエリを発行する場合は、「oidインデックス」も必要です (訳注: PostgreSQL 8.1以降は、oidはデフォルトでは追加されなくなりました。替わりにSERIAL型フィールドを生成して使うべきです。テーブル生成時に"WITH OID"を付けるとoid付きテーブルが生成されます)。</p><p>MapServerからは、クエリを実行するときに、それぞれの空間レコードを識別する一意な識別子が求められ、MapServerのPostGISモジュールはPostgreSQLの<code class="varname">oid</code>値を一意な識別子に使います。これの副作用はクエリ内のレコードのランダムアクセスを早く行うのに<code class="varname">oid</code>インデックスが必要となることです。</p><p>「oidインデックス」を構築するには、次のようなSQLを実行します。</p><pre class="programlisting">CREATE INDEX [インデックス名] ON [テーブル名] ( oid );</pre></li></ol></div></div><div class="sect2" title="4.7.2. よくある質問"><div class="titlepage"><div><div><h3 class="title"><a name="idp63695432"></a>4.7.2. よくある質問</h3></div></div></div><div class="qandaset" title="よくある質問"><a name="idp63696072"></a><dl><dt></dt><dd><dl><dt>4.7.2.1.1. <a href="ch04.html#idp63696584">EXPRESSIONをマップファイルで使う時に、値がテーブルにあるのを確認しているのに条件がtrueになりません。</a></dt><dt>4.7.2.1.2. <a href="ch04.html#idp63699656">シェープファイルで使っているFILTERが、同じデータを持つPostGISテーブルでは動作しません。</a></dt><dt>4.7.2.1.3. <a href="ch04.html#idp63702216">PostGISレイヤの描画がシェープファイルより遅くなりますが、これが普通なのでしょうか?</a></dt><dt>4.7.2.1.4. <a href="ch04.html#idp63705032">PostGISレイヤはちゃんと描けましたが、クエリが本当に遅いです。何が問題なのですか?</a></dt></dl></dd></dl><table border="0" width="100%" summary="Q and A Set"><col align="left" width="1%"><col><tbody><tr class="toc"><td align="left" valign="top" colspan="2"><dl><dt>4.7.2.1.1. <a href="ch04.html#idp63696584">EXPRESSIONをマップファイルで使う時に、値がテーブルにあるのを確認しているのに条件がtrueになりません。</a></dt><dt>4.7.2.1.2. <a href="ch04.html#idp63699656">シェープファイルで使っているFILTERが、同じデータを持つPostGISテーブルでは動作しません。</a></dt><dt>4.7.2.1.3. <a href="ch04.html#idp63702216">PostGISレイヤの描画がシェープファイルより遅くなりますが、これが普通なのでしょうか?</a></dt><dt>4.7.2.1.4. <a href="ch04.html#idp63705032">PostGISレイヤはちゃんと描けましたが、クエリが本当に遅いです。何が問題なのですか?</a></dt></dl></td></tr><tr class="question" title="4.7.2.1.1."><td align="left" valign="top"><a name="idp63696584"></a><a name="idp63696840"></a><p><b>4.7.2.1.1.</b></p></td><td align="left" valign="top"><p><code class="varname">EXPRESSION</code>をマップファイルで使う時に、値がテーブルにあるのを確認しているのに条件がtrueになりません。</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>EXPRESIONで使うフィールド名は、シェープファイルと違ってPostGISの場合<span class="emphasis"><em>小文字</em></span>になります。</p><pre class="programlisting">EXPRESSION ([numlanes] &gt;= 6)</pre></td></tr><tr class="question" title="4.7.2.1.2."><td align="left" valign="top"><a name="idp63699656"></a><a name="idp63699912"></a><p><b>4.7.2.1.2.</b></p></td><td align="left" valign="top"><p>シェープファイルで使っているFILTERが、同じデータを持つPostGISテーブルでは動作しません。</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>シェープファイルと違い、PostGISレイヤのフィルタはSQL構文を使います (PostGISコネクタがMapServerでレイヤを描画するために生成するSQLステートメントに追加されます)。</p><pre class="programlisting">FILTER "type = 'highway' and numlanes &gt;= 4"</pre></td></tr><tr class="question" title="4.7.2.1.3."><td align="left" valign="top"><a name="idp63702216"></a><a name="idp63702472"></a><p><b>4.7.2.1.3.</b></p></td><td align="left" valign="top"><p>PostGISレイヤの描画がシェープファイルより遅くなりますが、これが普通なのでしょうか?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>一般的に、PostGISレイヤは同等のシェープファイルレイヤより10%遅いと考えて下さい。 データベースとMapServerとの間で発生するデータベース接続、データの変換と転送によってオーバヘッドが増えるためです。</p><p>重大な描画性能の問題があるようでしたら、テーブルにある空間インデックスを構築していないというのがありそうです。</p><pre class="programlisting">postgis# CREATE INDEX geotable_gix ON geotable USING GIST ( geocolumn );
+postgis# SELECT update_geometry_stats();  -- PostgreSQL 8.0より後
+postgis# VACUUM ANALYZE;                  -- PostgreSQL 8.0以前</pre></td></tr><tr class="question" title="4.7.2.1.4."><td align="left" valign="top"><a name="idp63705032"></a><a name="idp63705288"></a><p><b>4.7.2.1.4.</b></p></td><td align="left" valign="top"><p>PostGISレイヤはちゃんと描けましたが、クエリが本当に遅いです。何が問題なのですか?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>クエリを早くするには、空間テーブルに一意なキーを持たせ、そのキーにインデックスを持たせなければなりません。</p><p><code class="varname">DATA</code>行の<code class="varname">USING UNIQUE</code>節で、MapServerで使用する一意なキーをどれにするか指定することができます。</p><pre class="programlisting">DATA "the_geom FROM geotable USING UNIQUE gid"</pre><p>テーブルに明示的に一意なカラムが無い場合は、PostgreSQLの行"oid"を用いて一意なカラムを「模造する」ことができます。"oid"は、宣言していないなら、デフォルトの一意なカラムです。ですから、クエリ速度を強化するには、空間テーブルのoid値にインデックスを構築することです (訳注: PostgreSQL 8.1以降は、oidはデフォルトでは追加されなくなりました)。</p><pre class="programlisting">postgis# CREATE INDEX geotable_oid_idx ON geotable (oid);</pre></td></tr></tbody></table></div></div><div class="sect2" title="4.7.3. 踏み込んだ使用法"><div class="titlepage"><div><div><h3 class="title"><a name="idp63709768"></a>4.7.3. 踏み込んだ使用法</h3></div></div></div><p><code class="varname">USING</code>疑似SQL節を使ってMapServerがより複雑なクエリの結果を理解できるようにするための情報を追加します。より詳しく言うと、ビューまたは副問い合わせが元テーブル (<code class="varname">DATA</code>定義で"FROM"の右にあるもの)として使われる時、MapServerが自動的に一意な識別子がそれぞれの行にあるか、また、SRIDがテーブルにあるかを判別するのは困難です。<code class="varname">USING</code>節によって、MapServerがこれらの情報を得ることができます。例を次に挙げます。</p><pre class="programlisting">DATA "the_geom FROM (SELECT table1.the_geom AS the_geom, table1.oid AS oid, table2.data AS data
+ FROM table1 LEFT JOIN table2 ON table1.id = table2.id) AS new_table USING UNIQUE oid USING SRID=-1"</pre><div class="variablelist"><dl><dt><span class="term">USING UNIQUE &lt;uniqueid&gt;</span></dt><dd><p>MapServerは、マップクエリを実行する際、行識別のために、それぞれの行に一意な識別子を求めます。 通常なら、oidを一意な識別子として使えますが、ビューや副問い合わせでは、自動的にoidを持つことができません。MapServerのクエリ機能を使いたいなら、一意性のあるカラムをビューまたは副問い合わせに追加する必要があり、<code class="varname">USING UNIQUE</code>宣言を付ける必要があります。たとえば、この目的のための主キー値のテーブルでのカラム名や、結果セットで一意性が保障されたカラムを明示的にSELECTに入れることができます。</p><p>マップクエリを実行する場合には、<code class="varname">USING</code>ステートメントは単純な<code class="varname">DATA</code>ステートメントに対しても便利なものになります。マップクエリの速度性能向上のために、クエリ実行可能なレイヤで使われるテーブルのoidカラムにインデックスを追加することを、前に推奨しました。しかしながら、USINGを使うと、MapServerがテーブルのプライマリキーをマップクエリの識別子に使うことができ、インデックスを追加する必要はもうありません。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">注記</h3><p>「マップクエリ」はマップ上でクリックして、その場所におけるフィーチャーに関する情報を問い合わせる動作です。「マップクエリ」と<code class="varname">DATA</code>定義におけるSQLクエリと混同しないで下さい。</p></div></dd><dt><span class="term">USING SRID=&lt;srid&gt;</span></dt><dd><p>PostGISは、MapServerに正しいデータを返すために、ジオメトリがどの空間参照系を使っているかを知る必要があります。通常は、この情報はPostGISデータベースの"geometry_columns"テーブルから得ることができます。しかし、副問い合わせやビューのような一時テーブルでは、この方法は不可能です。そこで、<code class="varname">USING SRID=</code>オプションを使って、正しいSRIDが<code class="varname">DATA</code>定義で使われるように指定します。</p></dd></dl></div><div class="warning" title="警告" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">警告</h3><p>MapserverのPostGISレイヤのパーサは、かなり原始的で、大文字小文字を区別するところが2,3あります。全てのSQLキーワードと全ての<code class="varname">USING</code>節が大文字であることを保証し、<code class="varname">USING UNIQUE</code>節が<code class="varname">USING SRID</code>節より前に来るようにして下さい。</p></div></div><div class="sect2" title="4.7.4. 例"><div class="titlepage"><div><div><h3 class="title"><a name="idp63721288"></a>4.7.4. 例</h3></div></div></div><p>簡単な例から始めて、ステップアップしていきましょう。次のMapServerレイヤ定義を考えて下さい。</p><pre class="programlisting">LAYER
+ CONNECTIONTYPE postgis
+ NAME "roads"
+ CONNECTION "user=theuser password=thepass dbname=thedb host=theserver"
+ DATA "the_geom FROM roads"
+ STATUS ON
+ TYPE LINE
+ CLASS
+  COLOR 0 0 0
+ END
+END</pre><p>このレイヤは"roads"テーブルにある道路ジオメトリの全部を黒線で表示するものです。</p><p>では、少なくとも1:100000にズームするまでは高速道路だけを表示したい、としましょう。次の二つのレイヤで、その効果が実現できます。</p><pre class="programlisting">LAYER
+ CONNECTION "user=theuser password=thepass dbname=thedb host=theserver"
+ DATA "the_geom FROM roads"
+ MINSCALE 100000
+ STATUS ON
+ TYPE LINE
+ FILTER "road_type = 'highway'"
+ CLASS
+  COLOR 0 0 0
+ END
+END
+
+LAYER
+ CONNECTION "user=theuser password=thepass dbname=thedb host=theserver"
+ DATA "the_geom FROM roads"
+ MAXSCALE 100000
+ STATUS ON
+ TYPE LINE
+ CLASSITEM road_type
+ CLASS
+  EXPRESSION "highway"
+  SIZE 2
+  COLOR 255 0 0
+ END
+ CLASS
+  COLOR 0 0 0
+ END
+END</pre><p>一つ目のレイヤはスケールが1:100000以上であるときに使われ、道路タイプが"highway"である道路のみ黒線で表示されます。<code class="varname">FILTER</code>オプションによって、道路タイプが"highway"の場合のみ表示することになります。</p><p>二つ目のレイヤはスケールが1:100000未満である時に使われ、"highway"は赤い二重細線で表示され、他の道路は黒線で表示されます。</p><p>さて、MapServerの機能を使うだけで、二つのおもしろいことを実行しました。しかし、<code class="varname">DATA</code>のSQLステートメントは、単純なままです。道路名が (どういう理由かは知りませんが)他のテーブルに収められていて、それのデータを取得するためにテーブルを連結して、道路のラベルを取る必要がある、とします。</p><pre class="programlisting">LAYER
+ CONNECTION "user=theuser password=thepass dbname=thedb host=theserver"
+ DATA "the_geom FROM (SELECT roads.oid AS oid, roads.the_geom AS the_geom, road_names.name as name
+   FROM roads LEFT JOIN road_names ON roads.road_name_id = road_names.road_name_id) AS named_roads
+   USING UNIQUE oid USING SRID=-1"
+ MAXSCALE 20000
+ STATUS ON
+ TYPE ANNOTATION
+ LABELITEM name
+ CLASS
+  LABEL
+   ANGLE auto
+   SIZE 8
+   COLOR 0 192 0
+   TYPE truetype
+   FONT arial
+  END
+ END
+END</pre><p>このANNOTAIONレイヤでは、縮尺が1:20000以下のときに、全ての道路に緑色のラベルを表示します。また、この例は、<code class="varname">DATA</code>定義で、SQLのJOINを使用する方法も示しています。</p></div></div><div class="sect1" title="4.8. Javaクライアント (JDBC)"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idp63740104"></a>4.8. Javaクライアント (JDBC)</h2></div></div></div><p>Javaクライアントは、直接的にテキスト表現として、またはPostGISに同梱されているJDBC拡張オブジェクトを使用して、PostgreSQLデータベース内にある、PostGISの"geometry"オブジェクトにアクセスできます。JDBC拡張オブジェクトを使うためには、"postgis.jar"ファイルを、JDBCドライバパッケージの"postgresql.jar"とともに、 CLASSPATHに置く必要があります。</p><pre class="programlisting">import java.sql.*; 
+import java.util.*; 
+import java.lang.*; 
+import org.postgis.*; 
+
+public class JavaGIS { 
+  public static void main(String[] args) 
+  { 
+    java.sql.Connection conn; 
+    try 
+    { 
+      /* 
+      * JDBCドライバをロードして接続を確立します。
+      */  
+      Class.forName("org.postgresql.Driver"); 
+      String url = "jdbc:postgresql://localhost:5432/database"; 
+      conn = DriverManager.getConnection(url, "postgres", ""); 
+    
+      /*
+      * ジオメトリ型を接続に追加します。
+      * ご注意 : addDateType()を呼ぶ前に
+      *   接続をpgsql特有の接続実装にキャストしなければなりません。
+      */
+      ((org.postgresql.Connection)conn).addDataType("geometry","org.postgis.PGgeometry");
+      ((org.postgresql.Connection)conn).addDataType("box3d","org.postgis.PGbox3d");
+
+      /*
+      * ステートメントの生成とSELECTクエリの実行を行います。
+      */
+      Statement s = conn.createStatement(); 
+      ResultSet r = s.executeQuery("select AsText(geom) as geom,id from geomtable"); 
+      while( r.next() ) 
+      { 
+        /*
+        * ジオメトリをオブジェクトとして検索してジオメトリ型にキャストします。
+        * オブジェクトを印字します
+        */
+        PGgeometry geom = (PGgeometry)r.getObject(1); 
+        int id = r.getInt(2);
+        System.out.println("Row " + id + ":"); 
+        System.out.println(geom.toString()); 
+      }
+      s.close(); 
+      conn.close(); 
+    } 
+    catch( Exception e ) 
+    { 
+      e.printStackTrace(); 
+    }  
+  }
+}</pre><p>"PGeometry"オブジェクトは、Point、LineString、Polygon、MultiPoint、MultiLineString、MultiPolygonの各型に依存する、特定のトポロジカルジオメトリオブジェクト ("Geometory"抽象クラスの子クラス)を持つラッパオブジェクトです。</p><pre class="programlisting">PGgeometry geom = (PGgeometry)r.getObject(1); 
+if( geom.getType() = Geometry.POLYGON ) 
+{ 
+  Polygon pl = (Polygon)geom.getGeometry();
+  for( int r = 0; r &lt; pl.numRings(); r++ ) 
+  { 
+    LinearRing rng = pl.getRing(r);
+    System.out.println("Ring: " + r); 
+    for( int p = 0; p &lt; rng.numPoints(); p++ ) 
+    { 
+      Point pt = rng.getPoint(p); 
+      System.out.println("Point: " + p);
+      System.out.println(pt.toString()); 
+    } 
+  } 
+}</pre><p>幾何オブジェクトのさまざまなデータアクセサ関数に関する参照情報については、拡張オブジェクトのJavaDocをご覧下さい。</p></div><div class="sect1" title="4.9. Cクライアント (libpq)"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="idp63747144"></a>4.9. Cクライアント (libpq)</h2></div></div></div><p>...</p><div class="sect2" title="4.9.1. テキストカーソル"><div class="titlepage"><div><div><h3 class="title"><a name="idp63748168"></a>4.9.1. テキストカーソル</h3></div></div></div><p>...</p></div><div class="sect2" title="4.9.2. バイナリカーソル"><div class="titlepage"><div><div><h3 class="title"><a name="idp63749320"></a>4.9.2. バイナリカーソル</h3></div></div></div><p>...</p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch03.html">戻る</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="ch05.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">第3章 よくある質問 </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> 第5章 性能向上に関する技法</td></tr></table></div></body></html>
