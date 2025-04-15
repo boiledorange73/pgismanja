@@ -1,0 +1,14 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>GetRingEdges</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.0.0マニュアル日本語訳"><link rel="up" href="Topology.html#Topology_Accessors" title="11.6. トポロジアクセサ"><link rel="prev" href="ST_GetFaceGeometry.html" title="ST_GetFaceGeometry"><link rel="next" href="GetNodeEdges.html" title="GetNodeEdges"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">GetRingEdges</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_GetFaceGeometry.html">戻る</a> </td><th width="60%" align="center">11.6. トポロジアクセサ</th><td width="20%" align="right"> <a accesskey="n" href="GetNodeEdges.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="GetRingEdges"><a name="GetRingEdges"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>GetRingEdges — 
+与えられたエッジで環を形成するエッジの集合を整列して返します。
+				</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">getfaceedges_returntype <b class="fsfunc">GetRingEdges</b>(</code>varchar  <var class="pdparam">atopology</var>, integer  <var class="pdparam">aring</var>, integer  <var class="pdparam">max_edges=null</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="id287199106"></a><h2>説明</h2><p>
+与えられたエッジで環を形成するエッジの集合を整列して返します。
+出力は、連続する、正負符号を持つエッジ識別番号からなります。
+連続番号は1始まりです。
+エッジ識別番号が負の場合、与えられたエッジは後方に向かうことを意味しています。
+後ろ向きに歩きはじめるために負数のエッジを使うことができます。
+		</p><p>
+<code class="varname">max_edges</code>がNULLでないとき、返されるレコードを超えることはありません。これは、不正なトポロジを扱うときの安全確保のためのパラメータであることを意味します。
+		</p><p>初出: 2.0 </p></div><div class="refsection" title="関連情報"><a name="id287199472"></a><h2>関連情報</h2><p>
+<a class="xref" href="ST_GetFaceEdges.html" title="ST_GetFaceEdges">ST_GetFaceEdges</a>,
+<a class="xref" href="GetNodeEdges.html" title="GetNodeEdges">GetNodeEdges</a>
+				</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_GetFaceGeometry.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="Topology.html#Topology_Accessors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="GetNodeEdges.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_GetFaceGeometry </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> GetNodeEdges</td></tr></table></div></body></html>

@@ -1,0 +1,48 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Collect</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.0.0マニュアル日本語訳"><link rel="up" href="reference.html#Geometry_Processing" title="8.9. ジオメトリ処理関数"><link rel="prev" href="ST_BuildArea.html" title="ST_BuildArea"><link rel="next" href="ST_ConcaveHull.html" title="ST_ConcaveHull"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Collect</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_BuildArea.html">戻る</a> </td><th width="60%" align="center">8.9. ジオメトリ処理関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_ConcaveHull.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_Collect"><a name="ST_Collect"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_Collect — 他のジオメトリのコレクションから、指定したST_Geometry値を返します。</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_Collect</b>(</code>geometry set <var class="pdparam">g1field</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_Collect</b>(</code>geometry <var class="pdparam">g1</var>, geometry <var class="pdparam">g2</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_Collect</b>(</code>geometry[] <var class="pdparam">g1_array</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="id287078692"></a><h2>説明</h2><p>出力タイプはMULTI系またはGEOMETRYCOLLECTIONです。2つの形式があります。 ひとつめは、2つのジオメトリをまとめるものです。ふたつめは、ジオメトリの集合を取って単一のST_Geometryにまとめる集計関数です。</p><p>集計関数版: この関数は、ジオメトリの集合からGEOMETRYCOLLECTIONまたはMULTI系を返します。ST_Collect()関数はPostgreSQL用語で言うところの「集計関数」です。SUM()やMEAN()と同じ方法でデータ行での操作を行うことを意味します。たとえば、"SELECT ST_Collect(GEOM) FROM GEOMTABLE GROUP BY ATTRCOLUMN"はATTRCOLUMNの異なった値ごとに、別々のGEOMETRYCOLLECTIONを返します。</p><p>非集計関数版: この関数は、2つの入力ジオメトリをまとめたジオメトリを返します。出力タイプはMULTI系またはGEOMETRYCOLLECTIONです。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>ST_CollectとST_Unionはしばしば交換して使うことができます。ST_Collectは境界を更新しようとしないので、一般的にST_Unionよりも桁違いに早く動きます。ST_Collectは、単に、シングルジオメトリをMULTI系ジオメトリに巻き込み、MULTI系ジオメトリまたはジオメトリ型混在の集合をジオメトリコレクションに巻き込む、ということを行っているだけです。不幸なことに、GISツールはジオメトリコレクションを十分にサポートしていません。MULTI系ジオメトリを集める時にST_Collectがジオメトリコレクションを返すのを防ぐために、次に示すように、<a class="xref" href="ST_Dump.html" title="ST_Dump">ST_Dump</a>でMULTI系ジオメトリをシングルジオメトリに展開したうえで再グループ化するというトリックを使うことができます。</p></td></tr></table></div><p>初出: 1.4.0 - ST_Collect(geometry)が導入されました。ST_Collectがより多くのジオメトリをより早く扱えるよう強化されました。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ この関数は3次元に対応しています。Zインデクスを削除しません。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ このメソッドは曲線ストリングと曲線に対応しています このメソッドは曲線ストリングと曲線をサポートします。 ただし、MULTICURVEまたはMULTI系は期待するように返ることはなく、PostGISは現在のところこれに対応していません。</p></div><div class="refsection" title="例"><a name="id287078742"></a><h2>例</h2><p>集計関数の例(<a class="ulink" href="http://postgis.refractions.net/pipermail/postgis-users/2008-June/020331.html" target="_top">http://postgis.refractions.net/pipermail/postgis-users/2008-June/020331.html</a>)</p><pre class="programlisting">SELECT stusps,
+	   ST_Multi(ST_Collect(f.the_geom)) as singlegeom
+	 FROM (SELECT stusps, (ST_Dump(the_geom)).geom As the_geom
+				FROM
+				somestatetable ) As f
+GROUP BY stusps</pre><p>非集計関数の例</p><pre class="programlisting">SELECT ST_AsText(ST_Collect(ST_GeomFromText('POINT(1 2)'),
+	ST_GeomFromText('POINT(-2 3)') ));
+
+st_astext
+----------
+MULTIPOINT(1 2,-2 3)
+
+-- 2次元ポイント
+SELECT ST_AsText(ST_Collect(ST_GeomFromText('POINT(1 2)'),
+		ST_GeomFromText('POINT(1 2)') ) );
+
+st_astext
+----------
+MULTIPOINT(1 2,1 2)
+
+-- 3次元ポイント
+SELECT ST_AsEWKT(ST_Collect(ST_GeomFromEWKT('POINT(1 2 3)'),
+		ST_GeomFromEWKT('POINT(1 2 4)') ) );
+
+		st_asewkt
+-------------------------
+ MULTIPOINT(1 2 3,1 2 4)
+
+ -- 曲線の例
+SELECT ST_AsText(ST_Collect(ST_GeomFromText('CIRCULARSTRING(220268 150415,220227 150505,220227 150406)'),
+ST_GeomFromText('CIRCULARSTRING(220227 150406,2220227 150407,220227 150406)')));
+																st_astext
+------------------------------------------------------------------------------------
+ GEOMETRYCOLLECTION(CIRCULARSTRING(220268 150415,220227 150505,220227 150406),
+ CIRCULARSTRING(220227 150406,2220227 150407,220227 150406))
+
+-- ST_Collect配列の生成
+SELECT ST_Collect(ARRAY(SELECT the_geom FROM sometable));
+
+SELECT ST_AsText(ST_Collect(ARRAY[ST_GeomFromText('LINESTRING(1 2, 3 4)'),
+			ST_GeomFromText('LINESTRING(3 4, 4 5)')])) As wktcollect;
+
+-- wkt collect --
+MULTILINESTRING((1 2,3 4),(3 4,4 5))
+
+</pre></div><div class="refsection" title="関連情報"><a name="id287078768"></a><h2>関連情報</h2><p><a class="xref" href="ST_Dump.html" title="ST_Dump">ST_Dump</a>, <a class="xref" href="ST_Union.html" title="ST_Union">ST_Union</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_BuildArea.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Geometry_Processing">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_ConcaveHull.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_BuildArea </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_ConcaveHull</td></tr></table></div></body></html>

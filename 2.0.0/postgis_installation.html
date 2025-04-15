@@ -1,0 +1,319 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>第2章 インストール</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.0.0マニュアル日本語訳"><link rel="up" href="index.html" title="PostGIS 2.0.0マニュアル日本語訳"><link rel="prev" href="postgis_introduction.html" title="第1章 導入"><link rel="next" href="PostGIS_FAQ.html" title="第3章 PostGIS よくある質問"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">第2章 インストール</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="postgis_introduction.html">戻る</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="PostGIS_FAQ.html">次へ</a></td></tr></table><hr></div><div class="chapter" title="第2章 インストール"><div class="titlepage"><div><div><h2 class="title"><a name="postgis_installation"></a>第2章 インストール</h2></div></div></div><div class="toc"><p><b>目次</b></p><dl><dt><span class="sect1"><a href="postgis_installation.html#id286977831">2.1. 簡略版</a></span></dt><dt><span class="sect1"><a href="postgis_installation.html#id286977918">2.2. 必要なもの</a></span></dt><dt><span class="sect1"><a href="postgis_installation.html#id286978326">2.3. ソースの取得</a></span></dt><dt><span class="sect1"><a href="postgis_installation.html#PGInstall">2.4. インストール</a></span></dt><dd><dl><dt><span class="sect2"><a href="postgis_installation.html#installation_configuration">2.4.1. コンフィギュレーション</a></span></dt><dt><span class="sect2"><a href="postgis_installation.html#id286978835">2.4.2. ビルド</a></span></dt><dt><span class="sect2"><a href="postgis_installation.html#make_install_postgis_extensions">2.4.3. PostGIS EXTENSIONのビルドとデプロイ</a></span></dt><dt><span class="sect2"><a href="postgis_installation.html#id286979083">2.4.4. テスト</a></span></dt><dt><span class="sect2"><a href="postgis_installation.html#id286979143">2.4.5. インストール</a></span></dt></dl></dd><dt><span class="sect1"><a href="postgis_installation.html#create_new_db">2.5. PostgreSQL 9.1より前での空間データベースの作成</a></span></dt><dt><span class="sect1"><a href="postgis_installation.html#create_new_db_extensions">2.6. EXTENSIONを使った空間データベースの生成</a></span></dt><dt><span class="sect1"><a href="postgis_installation.html#loading_extras_tiger_geocoder">2.7. Tigerジオコーダのインストールとアップグレードとデータロード</a></span></dt><dd><dl><dt><span class="sect2"><a href="postgis_installation.html#install_tiger_geocoder">2.7.1. TigerジオコーダをPostGISデータベースで有効にする</a></span></dt><dt><span class="sect2"><a href="postgis_installation.html#upgrade_tiger_geocoder">2.7.2. Tigerジオコーダのアップデート</a></span></dt><dt><span class="sect2"><a href="postgis_installation.html#tiger_geocoder_loading_data">2.7.3. Tigerデータのロード</a></span></dt></dl></dd><dt><span class="sect1"><a href="postgis_installation.html#templatepostgis">2.8. 空間データベースをテンプレートから生成する</a></span></dt><dt><span class="sect1"><a href="postgis_installation.html#upgrading">2.9. アップグレード</a></span></dt><dd><dl><dt><span class="sect2"><a href="postgis_installation.html#soft_upgrade">2.9.1. ソフトアップグレード </a></span></dt><dt><span class="sect2"><a href="postgis_installation.html#hard_upgrade">2.9.2. ハードアップグレード</a></span></dt></dl></dd><dt><span class="sect1"><a href="postgis_installation.html#id286982433">2.10. 共通の問題</a></span></dt><dt><span class="sect1"><a href="postgis_installation.html#id286982510">2.11. JDBC</a></span></dt><dt><span class="sect1"><a href="postgis_installation.html#id286982567">2.12. ローダ/ダンパ </a></span></dt></dl></div><p>本章では、PostGISのインストールに必要な手順について説明します。</p><div class="sect1" title="2.1. 簡略版"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id286977831"></a>2.1. 簡略版</h2></div></div></div><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>ラスタ機能は現在は選択可能ですが、デフォルトではインストールされます。PostgreSQL 9.1以上のエクステンションモデルを使ってインストールするには必須です。PostgreSQL 9.1以上を使用する場合は<a class="xref" href="postgis_installation.html#make_install_postgis_extensions" title="2.4.3. PostGIS EXTENSIONのビルドとデプロイ">「PostGIS EXTENSIONのビルドとデプロイ」</a>を参照してください。</p></td></tr></table></div><p>全ての.sqlファイルは、PostgreSQLのインストール先の share/contrib/postgis-2.0.0 フォルダにインストールされます。</p><p><code class="varname">postgis_comments.sql</code>, <code class="varname">raster_comments.sql</code>, <code class="varname">topology_comments.sql</code> は、関数ごとの簡易説明を生成するもので、pgAdmin IIIまたはpsqlを介してアクセスできます。psqlでは<code class="varname">\dd ST_SetPoint</code>等のコマンドを使います。</p><pre class="programlisting">tar xvfz postgis-2.0.0.tar.gz
+cd postgis-2.0.0
+./configure --with-raster --with-topology --with-gui
+make
+make install
+createdb yourdatabase
+createlang plpgsql yourdatabase
+psql -d yourdatabase -f postgis.sql
+psql -d yourdatabase -f postgis_comments.sql
+psql -d yourdatabase -f spatial_ref_sys.sql
+psql -d yourdatabase -f rtpostgis.sql
+psql -d yourdatabase -f raster_comments.sql
+psql -d yourdatabase -f topology/topology.sql
+psql -d yourdatabase -f doc/topology_comments.sql
+
+</pre><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>topology_comments.sqlは選択機能ですのでmake installまたはmake comments installでインストールされません。しかし<code class="varname">make comments</code>または<code class="varname">make topology_comments.sql</code>を実行すると、docsフォルダに生成されます。</p></td></tr></table></div><p>本章の残りで、上記のステップそれぞれの説明をします。</p></div><div class="sect1" title="2.2. 必要なもの"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id286977918"></a>2.2. 必要なもの</h2></div></div></div><p>
+	  PostGISには、ビルド、利用するために、次のものが必要です。
+	</p><p>
+	  <span class="bold"><strong>必須</strong></span>
+	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>PostgreSQL 8.4以上。PostgreSQLの完全なインストール(サーバヘッダを含む)が必要です。PostgreSQLは<a class="ulink" href="http://www.postgresql.org/" target="_top">http://www.postgresql.org/</a>にあります。</p><p>完全なPosgreSQL/PostGIS対応表とPostGIS/GEOS対応表については<a class="ulink" href="http://trac.osgeo.org/postgis/wiki/UsersWikiPostgreSQLPostGIS" target="_top">http://trac.osgeo.org/postgis/wiki/UsersWikiPostgreSQLPostGIS</a>をご覧ください。</p></li><li class="listitem"><p>GNU Cコンパイラ(<code class="filename">gcc</code>)。ANSI Cコンパイラの中には、PostGISをコンパイルできるものもありますが、<code class="filename">gcc</code>でコンパイルするのが最も問題が少ないと見ています。</p></li><li class="listitem"><p>GNU Make (<code class="filename">gmake</code> または <code class="filename">make</code>)。多くのシステムで、GNU <code class="filename">make</code>がデフォルトのmakeになっています。<code class="filename">make -v</code>を実行して版を確認して下さい。他版のmakeでは、PostGISの<code class="filename">Makefile</code>を完全に処理しきれないかもしれません。</p></li><li class="listitem"><p>投影変換ライブラリ Proj4 の 4.6.0版以上。Proj4ライブラリは、PostGISの座標系投影変換機能に使われます。Proj4は、<a class="ulink" href="http://trac.osgeo.org/proj/" target="_top">http://trac.osgeo.org/proj/</a>からダウンロードできます。</p></li><li class="listitem"><p>ジオメトリライブラリGEOSの3.2.2版以上。GEOS 3.3.2以上を推奨します。GEOS 3.3以外では、トポロジ例外処理やジオメトリ評価の改善、ST_ValidDetailやST_MakeValidといったジオメトリ評価等の主要な強化が使えません。また、GEOS 3.3.2以上はトポロジ機能に必須です。GEOSは<a class="ulink" href="http://trac.osgeo.org/geos/" target="_top">http://trac.osgeo.org/geos/</a>からダウンロードできます。3.3以上は古い版との後方互換があるのでアップグレードはかなり安全です。</p></li><li class="listitem"><p>LibXML2の2.5.x以上。LibXML2は現在取り込み関数 (ST_GeomFromGMLとST_GeomFromKML)で使っています。LibXML2は<a class="ulink" href="http://xmlsoft.org/downloads.html" target="_top">http://xmlsoft.org/downloads.html</a>からダウンロード可能です。</p></li><li class="listitem"><p>JSON-C 0.9以上。JSON-Cは現在、ST_GeomFromGeoJsonによるGeoJSONの取り込みに使われます。JSON-Cは<a class="ulink" href="http://oss.metaparadigm.com/json-c/" target="_top">http://oss.metaparadigm.com/json-c/</a>からダウンロード可能です。</p></li><li class="listitem"><p>GDAL 1.6以上 (古い版では一部機能が働かないので1.9以上が望ましいです)。ラスタ機能に必要で、PostGIS 2.0の最終リリースには必須になります。<a class="ulink" href="http://trac.osgeo.org/gdal/wiki/DownloadSource" target="_top">http://trac.osgeo.org/gdal/wiki/DownloadSource</a>からダウンロード可能です。</p></li></ul></div><p>
+	  <span class="bold"><strong>オプション</strong></span>
+	</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>GTK (GTK+2.0が必要)。シェープファイルのローダであるshp2pgsql-guiのコンパイル用。<a class="ulink" href="http://www.gtk.org/" target="_top">http://www.gtk.org/</a>。</p></li><li class="listitem"><p>CUnit (<code class="filename">CUnit</code>)。レグレッションテスト用。<a class="ulink" href="http://cunit.sourceforge.net/" target="_top">http://cunit.sourceforge.net/</a>。</p></li><li class="listitem"><p>javaディレクトリ下のドライバのビルドを行うにはApache Ant (<code class="filename">ant</code>)が必要です。Antは<a class="ulink" href="http://ant.apache.org/" target="_top">http://ant.apache.org/</a>からダウンロード可能です。</p></li><li class="listitem"><p>文書のビルドにはDocBook (<code class="filename">xsltproc</code>)が必要です。Docbookは<a class="ulink" href="http://www.docbook.org/" target="_top">http://www.docbook.org/</a>にあります。</p></li><li class="listitem"><p>文書をPDFでビルドするにはDBLatex (d<code class="filename">blatex</code>)が必要です。DBLatexは<a class="ulink" href="http://dblatex.sourceforge.net/" target="_top">http://dblatex.sourceforge.net/</a>にあります。</p></li><li class="listitem"><p>文書で使う画像を生成するにはImageMagick (<code class="filename">convert</code>)が必要です。ImageMagixは<a class="ulink" href="http://www.imagemagick.org/" target="_top">http://www.imagemagick.org/</a>にあります。</p></li></ul></div></div><div class="sect1" title="2.3. ソースの取得"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id286978326"></a>2.3. ソースの取得</h2></div></div></div><p>ダウンロードサイト<a class="ulink" href="http://www.postgis.org/download/postgis-2.0.0.tar.gz" target="_top">http://www.postgis.org/download/postgis-2.0.0.tar.gz</a>から、ソースのアーカイブを入手します。</p><pre class="programlisting">wget http://www.postgis.org/download/postgis-2.0.0.tar.gz
+tar -xvzf postgis-2.0.0.tar.gz</pre><p>これで、カレントディレクトリの下に<code class="varname">postgis-2.0.0</code>ができます。</p><p>もしくは<a class="ulink" href="http://subversion.apache.org/" target="_top">svn</a>レポジトリ<a class="ulink" href="http://svn.osgeo.org/postgis/trunk/" target="_top">http://svn.osgeo.org/postgis/trunk/</a>からチェックアウトします。</p><pre class="programlisting">svn checkout http://svn.osgeo.org/postgis/trunk/ postgis-2.0.0</pre><p>新しく作られた<code class="varname">postgis-2.0.0</code>ディレクトトリに移動して、インストールを続けます。</p></div><div class="sect1" title="2.4. インストール"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="PGInstall"></a>2.4. インストール</h2></div></div></div><div class="toc"><dl><dt><span class="sect2"><a href="postgis_installation.html#installation_configuration">2.4.1. コンフィギュレーション</a></span></dt><dt><span class="sect2"><a href="postgis_installation.html#id286978835">2.4.2. ビルド</a></span></dt><dt><span class="sect2"><a href="postgis_installation.html#make_install_postgis_extensions">2.4.3. PostGIS EXTENSIONのビルドとデプロイ</a></span></dt><dt><span class="sect2"><a href="postgis_installation.html#id286979083">2.4.4. テスト</a></span></dt><dt><span class="sect2"><a href="postgis_installation.html#id286979143">2.4.5. インストール</a></span></dt></dl></div><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>多くのOSでは、ビルドされたPostgreSQL/PostGISパッケージがあります。 多くの場合、コンパイルが必要なのは、最もひどい最先端の版が欲しい場合やパッケージメンテナンスを行う人ぐらいです。</p><p>
+本節では、一般的なコンパイル手順を示します。Windows用や他のOS用等にコンパイルするなら、<a class="ulink" href="http://trac.osgeo.org/postgis/wiki/DevWikiMain" target="_top">PostGIS Dev Wiki</a>(コンパイルとインストールガイドの節)で、より詳細な助けを見つけるかも知れません。</p><p>Windowsユーザの場合、安定的なビルドをスタックビルダまたは<a class="ulink" href="http://www.postgis.org/download/windows/" target="_top">PostGIS Windows download site</a>で入手できます。また、<a class="ulink" href="http://www.postgis.org/download/windows/experimental.php" target="_top">とてもひどい最先端の版のビルド</a>もあり、週1, 2回ビルドしていますし、刺激的なことが発生した際は随時ビルドしています。PostGISの開発中の版で試験する際に使えます。</p></td></tr></table></div><p>PostGISモジュールは、PostgreSQLバックエンドサーバの拡張です。PostGIS 2.0.0では、コンパイルのために、完全なPostgreSQLサーバヘッダが<span class="emphasis"><em>必要です</em></span>。PostgreSQL 8.4以上でビルドできます。古い版のPostgreSQLは<span class="emphasis"><em>サポートされません</em></span>。</p><p>PostgreSQLをインストールしていないならPostgreSQLインストールガイドを参照して下さい。<a class="ulink" href="http://www.postgresql.org/" target="_top">http://www.postgresql.org/</a>にあります。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>GEOS機能を有効にするために、PostgreSQLをインストールするときに明示的に標準C++ライブラリに対する明示的なリンクが必要になる場合があります。</p><pre class="programlisting">LDFLAGS=-lstdc++ ./configure [YOUR OPTIONS HERE]</pre><p>これは、古い開発ツールとインチキC++例外との対話のための応急処置です。怪しい問題(望んでいないのにバックエンドが閉じたりそれに近い挙動を起こす)を経験したなら、このトリックを試してみて下さい。もちろん、これを行うにはPostgreSQLをはじめからコンパイルし直す必要があります。</p></td></tr></table></div><p>次のステップでは、PostGISソースのコンフィギュレーションとコンパイルに概要を記述します。 これらは、Linuxユーザ用に書いてありますので、WindowsやMacでは動作しません。</p><div class="sect2" title="2.4.1. コンフィギュレーション"><div class="titlepage"><div><div><h3 class="title"><a name="installation_configuration"></a>2.4.1. コンフィギュレーション</h3></div></div></div><p>ほとんどのLinuxのインストールと同様に、最初のステップでは、ソースコードのビルドに使われる Makefile を生成します。これは、シェルスクリプトで行います。</p><p>
+		<span class="command"><strong>./configure</strong></span>
+	  </p><p>パラメータを付けない場合には、このコマンドは自動で、PostGISのソースコードのビルドを行うのに必要なコンポーネントやライブラリをシステム上で探します。<span class="command"><strong>./configure</strong></span>とするのが一般的な使い方ですが、標準的でない位置に必要なライブラリやプログラムを置いてある場合のために、いくつかのパラメータを受け付けます。</p><p>次のリストで、共通して使われるパラメータを示します。 完全なリストについては、<span class="command"><strong>--help</strong></span>または<span class="command"><strong>--help=short</strong></span>パラメータを使って下さい。</p><div class="variablelist"><dl><dt><span class="term"><span class="command"><strong>--prefix=PREFIX</strong></span></span></dt><dd><p>PostGISライブラリとSQLスクリプトのインストール先を指定します。 デフォルトでは、検出されたPostgreSQLのインストール先と同じになります。</p><div class="caution" title="注意" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Caution"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注意]" src="images/caution.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>このパラメータは現在のところ壊れていて、PostgreSQLのインストール先にしかインストールされません。このバグのトラックについては<a class="ulink" href="http://trac.osgeo.org/postgis/ticket/635" target="_top">http://trac.osgeo.org/postgis/ticket/635</a>をご覧ください。</p></td></tr></table></div></dd><dt><span class="term"><span class="command"><strong>--with-pgconfig=FILE</strong></span></span></dt><dd><p>PostgreSQLは、PostGISなどの拡張に対してPostgreSQLのインストール先ディレクトリを伝える<span class="command"><strong>pg_config</strong></span>というユーティリティを持っています。PostGISの対象とするPostgreSQLインストール先を手動で指定する場合は、このパラメータ(<span class="command"><strong>--with-pgconfig=/path/to/pg_config</strong></span>)を使います。</p></dd><dt><span class="term"><span class="command"><strong>--with-gdalconfig=FILE</strong></span></span></dt><dd><p>必須ライブラリであるGDALはラスタ機能に必要な機能を提供します。GDALインストール先ディレクトリをインストールスクリプトに伝える<span class="command"><strong>gdal-config</strong></span>を提供しています。PostGISのビルドに使う特定のGDALを手動で指定する場合は、このパラメータ(<span class="command"><strong>--with-gdalconfig=/path/to/gdal-config</strong></span>)を使います。</p></dd><dt><span class="term"><span class="command"><strong>--with-geosconfig=FILE</strong></span></span></dt><dd><p>必須のジオメトリライブラリであるGEOSは、ソフトウェアのインストール時にGEOSのインストール先ディレクトリを伝える<span class="command"><strong>geos-config</strong></span>というユーティリティを持っています。PostGISのビルドに使う特定のGEOSを手動で指定する場合は、このパラメータ(<span class="command"><strong>--with-geosconfig=/path/to/geos-config</strong></span>)を使います。</p></dd><dt><span class="term"><span class="command"><strong>--with-xml2config=FILE</strong></span></span></dt><dd><p>LibXMLはGeomFromKML/GML処理を行うのに必須のライブラリです。通常はlibxmlをインストールしているなら発見されますが、発見できない場合や特定の版を使用したい場合は、PostGISに<code class="filename">xml2-config</code>を指定してインストールスクリプトにLibXMLのインストール先ディレクトリを伝えます。PostGISのビルドに使う特定のLibXMLを手動で指定する場合は、このパラメータ(<span class="command"><strong>--with-xml2config=/path/to/xml2-config</strong></span>)を使います。</p></dd><dt><span class="term"><span class="command"><strong>--with-projdir=DIR</strong></span></span></dt><dd><p>Proj4はPostGISに必須の投影変換ライブラリです。PostGISのビルドに使う特定のProj4のディレクトリを手動で指定する場合は、このパラメータ(<span class="command"><strong>--with-projdir=/path/to/projdir</strong></span>)を使います。</p></dd><dt><span class="term"><span class="command"><strong>--with-libiconv=DIR</strong></span></span></dt><dd><p>iconvのインストール先ディレクトリを指定します。</p></dd><dt><span class="term"><span class="command"><strong>--with-jsondir=DIR</strong></span></span></dt><dd><p><a class="ulink" href="http://oss.metaparadigm.com/json-c/" target="_top">JSON-C</a>は、MITライセンスのJSONライブラリで、PostGISのST_GeomFromJSON機能に必須です。PostGISのビルドに使う特定のJSON-Cを手動で指定する場合は、このパラメータ(<span class="command"><strong>--with-jsondir=/path/to/jsondir</strong></span>)を使います。</p></dd><dt><span class="term"><span class="command"><strong>--with-gui</strong></span></span></dt><dd><p>データインポートGUI(GTK+2.0が必要)をコンパイルします。このパラメータによって、shp2pgsql-guiという、shp2pgsqlのグラフィカルユーザインタフェースが作成されます。</p></dd><dt><span class="term"><span class="command"><strong>--with-raster</strong></span></span></dt><dd><p>ラスタ機能付きでコンパイルします。これによりrtpostgis-2.0.0ライブラリとrtpostgis.sqlファイルが生成されます。最終リリースでは、デフォルトでラスタ機能付きにする予定ですので、このパラメータ自体は不要になる可能性があります。</p></dd><dt><span class="term"><span class="command"><strong>--with-topology</strong></span></span></dt><dd><p>トポロジ機能付きでコンパイルします。これによりtopology.sqlファイルが生成されます。トポロジに必要なロジックは全てpostgis-2.0.0ライブラリ内に作られるので、関連ライブラリはありません。</p></dd><dt><span class="term"><span class="command"><strong>--with-gettext=no</strong></span></span></dt><dd><p>デフォルトでは、gettextの検出とこれを用いたコンパイルを試みますが、ローダ破損を引き起こす非互換性問題下で実行する場合には、このコマンドで無効にできます。これを使ったコンフィギュレーションによって解決する問題の例は<a class="ulink" href="http://trac.osgeo.org/postgis/ticket/748" target="_top">http://trac.osgeo.org/postgis/ticket/748</a>にあります。ご注意: これを切ることで多くを逃すわけではありません。まだ文書化されていなくて試験段階であるGUIローダにおける内部のヘルプ/ラベル機能に使われています。</p></dd></dl></div><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>PostGISをSVN<a class="ulink" href="http://svn.osgeo.org/postgis/trunk/" target="_top">レポジトリ</a>から得る場合には、はじめに次のスクリプトを実行します。</p><p>
+		  <span class="command"><strong>./autogen.sh</strong></span>
+		</p><p>このスクリプトによって<span class="command"><strong>configure</strong></span>スクリプトが生成されます。これはPostGISのインストールに関するカスタマイズに使われます。</p><p>PostGISをアーカイブファイルとして入手する場合には、<span class="command"><strong>configure</strong></span>が既に生成されているので<span class="command"><strong>./autogen.sh</strong></span>は不要です。</p></td></tr></table></div></div><div class="sect2" title="2.4.2. ビルド"><div class="titlepage"><div><div><h3 class="title"><a name="id286978835"></a>2.4.2. ビルド</h3></div></div></div><p>Makefileが生成されたら、PostGISのビルドは、次のコマンドを実行するだけです。</p><p>
+		<span class="command"><strong>make</strong></span>
+	  </p><p>出力の最後の行が "<code class="code">PostGIS was built successfully. Ready to install.</code>" と出れば終わりです。</p><p>PostGIS 1.4.0版からは、全ての関数に文書から生成されるコメントが付きます。これらのコメントを後ほどインストールするには、次のコマンドを実行しますが、docbookが必要です。アーカイブファイルからインストールする場合は、postgis_comments.sql, raster_comments.sql, topology_comments.sqlは、docフォルダにあるので、コメントを作成する必要はありません。</p><p>
+		<span class="command"><strong>make comments</strong></span>
+	  </p><p>PostGIS 2.0で導入されました。早見表や学習中の方のハンドアウトに適しているHTMLチートシートを生成します。xsltprocが必要で、<code class="filename">topology_cheatsheet.html</code>, <code class="filename">tiger_geocoder_cheatsheet.html</code>, <code class="filename">raster_cheatsheet.html</code>, <code class="filename">postgis_cheatsheet.html</code>の4ファイルが生成されます。</p><p>HTMLとPDFのビルド済みのものは<a class="ulink" href="http://www.postgis.us/study_guides" target="_top">PostGIS / PostgreSQL Study Guides</a>にあります。</p><p>
+		<span class="command"><strong>make cheatsheets</strong></span>
+	  </p></div><div class="sect2" title="2.4.3. PostGIS EXTENSIONのビルドとデプロイ"><div class="titlepage"><div><div><h3 class="title"><a name="make_install_postgis_extensions"></a>2.4.3. PostGIS EXTENSIONのビルドとデプロイ</h3></div></div></div><p>PostGIS EXTENSIONはPostgreSQL 9.1以上で使えます。extensionsフォルダに移動してmake installを実行するとビルドできます。この処理は将来的に、9.1を対象としてコンパイルする時に自動化され、ビルド処理の中に完全に統合されます。</p><p>ソースレポジトリからビルドしている場合は、関数の記述を最初にビルドする必要があります。</p><pre class="programlisting">make comments</pre><p>アーカイブファイルからのビルドの場合は、ビルド済みのものがあるので、コメントのビルドは必須ではありません。</p><p>PostgreSQL 9.1を対象にビルドしている場合は、extensionsは自動的にmake install処理の一部としてビルドするべきです。必要ならextensionsフォルダからビルドできますし、他のサーバで必要ならファイルの複製ができます。</p><pre class="programlisting">cd extensions
+cd postgis
+make clean
+make 
+make install
+cd ..
+cd postgis_topology
+make clean
+make 
+make install
+	  </pre><p>EXTENSIONファイルは、OSに関係なく、常に同じ版のPostGISと同じです。PostGISバイナリを既にインストールしている限りは、EXTENSIONファイルを上をあるOSから別のものに複写して大丈夫です。</p><p>開発用と異なる別のサーバでEXTENSIONを手動でインストールしたい場合は、次のファイルをEXTENSIONフォルダからPostgreSQLインストール先の<code class="filename">PostgreSQL / share / extension</code>フォルダに複写します。通常のPostGISで、サーバに無い場合に必要になるバイナリと同じです。</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>指定されていない場合のインストールするextensionの版等の情報を示す制御ファイル<code class="filename">postgis.control</code>, <code class="filename">postgis_topology.control</code>。</p></li><li class="listitem"><p>EXTENSION毎の/sqlフォルダにあるファイル全て。PostgreSQLのshare/extensionフォルダである<code class="filename">extensions/postgis/sql/*.sql</code>, <code class="filename">extensions/postgis_topology/sql/*.sql</code>の最上位に複写する必要があることに注意して下さい。</p></li></ul></div><p>実行すると、PgAdmin-&gt;extensionで<code class="varname">postgis</code>, <code class="varname">postgis_topology</code>が有効なEXTENSIONとして見えます。</p><p>psqlを使う場合は、次のクエリを実行してEXTENSIONがインストールされていることを確認できます。</p><pre class="programlisting">SELECT name, default_version,installed_version 
+FROM pg_available_extensions WHERE name LIKE 'postgis%' ;
+      name       | default_version | installed_version
+-----------------+-----------------+-------------------
+postgis          | 2.0.0     | 2.0.0
+postgis_topology | 2.0.0      | </pre><p>クエリを行ったデータベースにEXTENSIONがインストールされている場合は、<code class="varname">installed_version</code>カラムに記載が見えます。
+レコードブロックが無い場合は、PostGIS EXTENSIONがインストールされていないことになります。PgAdmin III 1.4以上では、データベースブラウザツリーの<code class="varname">extensions</code>セクションで提供されていて、右クリックでアップグレードまたアンインストールできます。</p><p>有効なEXTENSIONがある場合、pgAdmin EXTENSIONインタフェースまたは次のSQLの実行によって選択したデータベースにPostGIS EXTENSIONをインストールできます。</p><pre class="programlisting">CREATE EXTENSION postgis;
+CREATE EXTENSION postgis_topology;</pre><p>この素晴らしいEXTENSION機能を使わずに2.0.0をインストールした場合でもEXTENSIONベースに変更することができます。まず<code class="filename">postgis_upgrade_20_minor.sql</code>, <code class="filename">raster_upgrade_20_minor.sql</code>, <code class="filename">topology_upgrade_20_minor.sql</code>のアップグレードスクリプトを実行して最新版にアップグレードします。</p><p>ラスタ機能無しでPostGISをインストールした場合には、最初にラスタ機能をインストールする必要があります(<code class="filename">rtpostgis.sql</code>を使います)。</p><p>それから、次のコマンドを実行して、個々のEXTENSIONの関数をEXTENSION形式に更新します。</p><pre class="programlisting">CREATE EXTENSION postgis FROM unpackaged;
+CREATE EXTENSION postgis_topology FROM unpackaged;</pre></div><div class="sect2" title="2.4.4. テスト"><div class="titlepage"><div><div><h3 class="title"><a name="id286979083"></a>2.4.4. テスト</h3></div></div></div><p>PostGISのテストを行うには、次のコマンドを実行します。</p><p>
+		<span class="command"><strong>make check</strong></span>
+	  </p><p>このコマンドで、実際のPostgreSQLデータベースに対して生成したライブラリを使用した、様々なチェックとレグレッションテストを行います。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>PostgreSQL, GEOS または Proj4 を標準の位置にインストールしていない場合には、環境変数LD_LIBRARY_PATHに、ライブラリの位置を追加する必要があるかも知れません。</p></td></tr></table></div><div class="caution" title="注意" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Caution"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注意]" src="images/caution.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>現在のところ<span class="command"><strong>make check</strong></span>は、チェックを行う際に 環境変数<code class="code">PATH</code>と<code class="code">PGPORT</code>によっています。コンフィギュレーションパラメータ<span class="command"><strong>--with-pgconfig</strong></span>を使って特定したPostgreSQL<span class="emphasis"><em>ではありません</em></span>。PATHを編集して、コンフィギュレーションの際に検出したPostgreSQLと一致するようにして下さい。もしくは、間もなく襲ってくる頭痛の準備をしておいて下さい。</p></td></tr></table></div><p>成功した場合は、テストの出力は次のようなかんじになります。</p><pre class="programlisting">     CUnit - A Unit testing framework for C - Version 2.1-0
+	 http://cunit.sourceforge.net/
+
+
+Suite: print_suite
+  Test: test_lwprint_default_format ... passed
+  Test: test_lwprint_format_orders ... passed
+  Test: test_lwprint_optional_format ... passed
+  Test: test_lwprint_oddball_formats ... passed
+  Test: test_lwprint_bad_formats ... passed
+Suite: Misc Suite
+  Test: test_misc_force_2d ... passed
+  Test: test_misc_simplify ... passed
+  Test: test_misc_count_vertices ... passed
+  Test: test_misc_area ... passed
+  Test: test_misc_wkb ... passed
+Suite: PointArray Suite
+  Test: test_ptarray_append_point ... passed
+  Test: test_ptarray_append_ptarray ... passed
+Suite: PostGIS Computational Geometry Suite
+  Test: test_lw_segment_side ... passed
+  Test: test_lw_segment_intersects ... passed
+  Test: test_lwline_crossing_short_lines ... passed
+  Test: test_lwline_crossing_long_lines ... passed
+  Test: test_lwline_crossing_bugs ... passed
+  Test: test_lwpoint_set_ordinate ... passed
+  Test: test_lwpoint_get_ordinate ... passed
+  Test: test_point_interpolate ... passed
+  Test: test_lwline_clip ... passed
+  Test: test_lwline_clip_big ... passed
+  Test: test_lwmline_clip ... passed
+  Test: test_geohash_point ... passed
+  Test: test_geohash_precision ... passed
+  Test: test_geohash ... passed
+  Test: test_isclosed ... passed
+Suite: PostGIS Measures Suite
+  Test: test_mindistance2d_tolerance ... passed
+  Test: test_rect_tree_contains_point ... passed
+  Test: test_rect_tree_intersects_tree ... passed
+  Test: test_lwgeom_segmentize2d ... passed
+Suite: WKT Out Suite
+  Test: test_wkt_out_point ... passed
+  Test: test_wkt_out_linestring ... passed
+  Test: test_wkt_out_polygon ... passed
+  Test: test_wkt_out_multipoint ... passed
+  Test: test_wkt_out_multilinestring ... passed
+:
+:
+--Run Summary: Type      Total     Ran  Passed  Failed
+               suites       17      17     n/a       0
+               tests       143     143     143       0
+               asserts    1228    1228    1228       0
+
+
+Creating spatial db postgis_reg
+ Postgis 2.0.0SVN - 2011-01-11 15:33:37
+   GEOS: 3.3.0-CAPI-1.7.0
+   PROJ: Rel. 4.6.1, 21 August 2008
+
+Running tests
+
+ loader/Point.............. ok
+ loader/PointM.............. ok
+ loader/PointZ.............. ok
+ loader/MultiPoint.............. ok
+ loader/MultiPointM.............. ok
+ loader/MultiPointZ.............. ok
+ loader/Arc.............. ok
+ loader/ArcM.............. ok
+ loader/ArcZ.......... ok
+ loader/Polygon.............. ok
+ loader/PolygonM.............. ok
+ loader/PolygonZ.............. ok
+ regress. ok
+ regress_index. ok
+ regress_index_nulls. ok
+ lwgeom_regress. ok
+ regress_lrs. ok
+ removepoint. ok
+ setpoint. ok
+ simplify. ok
+ snaptogrid. ok
+ affine. ok
+ measures. ok
+ long_xact. ok
+ ctors. ok
+ sql-mm-serialize. ok
+ sql-mm-circularstring. ok
+ sql-mm-compoundcurve. ok
+ sql-mm-curvepoly. ok
+ sql-mm-general. ok
+ sql-mm-multicurve. ok
+ sql-mm-multisurface. ok
+ polyhedralsurface. ok
+ out_geometry. ok
+ out_geography. ok
+ in_gml. ok
+ in_kml. ok
+ iscollection. ok
+ regress_ogc. ok
+ regress_ogc_cover. ok
+ regress_ogc_prep. ok
+ regress_bdpoly. ok
+ regress_proj. ok
+ dump. ok
+ dumppoints. ok
+ wmsservers_new. ok
+ tickets. ok
+ remove_repeated_points. ok
+ split. ok
+ relatematch. ok
+ regress_buffer_params. ok
+ hausdorff. ok
+ clean. ok
+ sharedpaths. ok
+ snap. ok
+
+Run tests: 55
+Failed: 0
+</pre></div><div class="sect2" title="2.4.5. インストール"><div class="titlepage"><div><div><h3 class="title"><a name="id286979143"></a>2.4.5. インストール</h3></div></div></div><p>PostGISをインストールするには、次のコマンドを実行します。</p><p>
+		<span class="command"><strong>make install</strong></span>
+	  </p><p>これにより、PostGISのインストールファイルが、<span class="command"><strong>--prefix</strong></span>パラメータで指定した、適切なサブディレクトリに複写されます。次に特筆すべきサブディレクトリを示します。</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>ローダとダンパのバイナリのインストール先は<code class="filename">[prefix]/bin</code>です。</p></li><li class="listitem"><p><code class="filename">postgis.sql</code>などのSQLファイルのインストール先は<code class="filename">[prefix]/share/contrib</code>です。</p></li><li class="listitem"><p>PostGISライブラリのインストール先は<code class="filename">[prefix]/lib</code>です。</p></li></ul></div><p>先に<span class="command"><strong>make comments</strong></span>を実行していた場合は、次のコマンドを実行すると、SQLファイルのインストール先に<code class="filename">postgis_comments.sql</code>, <code class="filename">raster_comments.sql</code>がインストールされます。</p><p>
+		<span class="command"><strong>make comments-install</strong></span>
+	  </p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p><code class="filename">postgis_comments.sql</code>, <code class="filename">raster_comments.sql</code>, <code class="filename">topology_comments.sql</code>は、<span class="command"><strong>xsltproc</strong></span>の外部依存ができたので、通常のビルドとインストールから切り離されました。</p></td></tr></table></div></div></div><div class="sect1" title="2.5. PostgreSQL 9.1より前での空間データベースの作成"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="create_new_db"></a>2.5. PostgreSQL 9.1より前での空間データベースの作成</h2></div></div></div><p>PostGISデータベースを作る最初のステップは、単純なPostgreSQLデータベースの作成です. </p><p>
+	  <span class="command"><strong>createdb [yourdatabase]</strong></span>
+	</p><p>多くのPostGIS関数は、PL/pgSQL手続き言語で書かれています。 次のステップは、PL/pgSQL言語を新たに作成したデータベースで有効にすることです。 次のコマンドを実行します。PostgreSQL 8,4以上では、通常は既にインストールされています。</p><p>
+	  <span class="command"><strong>createlang plpgsql [yourdatabase]</strong></span>
+	</p><p>次に、PostGISオブジェクトと関数定義をデータベースにロードします。定義ファイル<code class="filename">postgis.sql</code>(コンフィギュレーション段階で指定した<code class="filename">[prefix]/share/contrib</code>にあります)をロードします。</p><p>
+	  <span class="command"><strong>psql -d [yourdatabase] -f postgis.sql</strong></span>
+	</p><p>完全なEPSG座標系定義IDセットについては、<code class="filename">spatial_ref_sys.sql</code>定義ファイルをロードして<code class="varname">spatial_ref_sys</code>を生成して下さい。これによりジオメトリ関数ST_Transform()が実行できるようになります。</p><p>
+	  <span class="command"><strong>psql -d [yourdatabase] -f spatial_ref_sys.sql</strong></span>
+	</p><p>PostGISが持つ関数についての助けとなるコメントが必要なら、<code class="filename">postgis_comments.sql</code>を、データベースにロードします。コメントは、<span class="command"><strong>psql</strong></span>ターミナルウィンドウで単に<span class="command"><strong>\dd [function_name]</strong></span>とすれば見ることができます。ロードは次のようにします。</p><p>
+	  <span class="command"><strong>psql -d [yourdatabase] -f postgis_comments.sql</strong></span>
+	</p><p>
+	  ラスタ機能をインストールします。
+	</p><p>
+	  <span class="command"><strong>psql -d [yourdatabase] -f rtpostgis.sql</strong></span>
+	</p><p>ラスタ機能のコメントをインストールします。ラスタ関数ごとの簡易説明が提供されます。psqlまたはPgAdmin等の関数コメントを表示できるPostgreSQLツールで使えます。</p><p>
+	  <span class="command"><strong>psql -d [yourdatabase] -f raster_comments.sql</strong></span>
+	</p><p>
+	  トポロジ機能をインストールします。
+	</p><p>
+	  <span class="command"><strong>psql -d [yourdatabase] -f topology/topology.sql</strong></span>
+	</p><p>トポロジ機能のコメントをインストールします。トポロジ関数/型ごとの簡易説明が提供されます。psqlまたはPgAdmin等の関数コメントを表示できるPostgreSQLツールで使えます。</p><p>
+	  <span class="command"><strong>psql -d [yourdatabase] -f topology/topology_comments.sql</strong></span>
+	</p><p>以前の版の古いバックアップを新しいデータベースにリストアする予定の場合には、次を実行します。</p><p><span class="command"><strong>psql -d [yourdatabase] -f legacy.sql</strong></span></p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>テーブルを回復し、MapServerやGeoServerのようなアプリケーションで動作させるのに必要な最低限をインストールするには<code class="filename">legacy_minimal.sql</code>という選択肢があります。distance/length等のようなものを使うビューがあるなら、<code class="filename">legacy.sql</code>が必要になります。</p></td></tr></table></div><p>リストアとクリーンアップを行った後で非推奨関数を消すために<code class="filename">uninstall_legacy.sql</code>を実行できます。</p></div><div class="sect1" title="2.6. EXTENSIONを使った空間データベースの生成"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="create_new_db_extensions"></a>2.6. EXTENSIONを使った空間データベースの生成</h2></div></div></div><p>PostgreSQL 9.1以上を使っていて、extensions/のPostGISモジュールをコンパイルとインストールを行っている場合は、新しい方法で空間データベースを生成できます。</p><p>
+	  <span class="command"><strong>createdb [yourdatabase]</strong></span>
+	</p><p>単純な</p><pre class="programlisting">CREATE EXTENSION postgis;</pre><p>によって、PostGIS EXTENSIONの中核によって、PostGISのGEOMETRY, GEOGRAPHY, RASTER, spatial_ref_sysおよび関数とコメントがインストールされます。</p><p>
+	  <span class="command"><strong>psql -d [yourdatabase] -c "CREATE EXTENSION postgis;"</strong></span>
+	</p><p>トポロジは別のEXTENSIONとして用意されています。次のコマンドでインストールします。</p><p>
+	  <span class="command"><strong>psql -d [yourdatabase] -c "CREATE EXTENSION postgis_topology;"</strong></span>
+	</p><p>以前の版の古いバックアップを新しいデータベースにリストアする予定の場合には、次を実行します。</p><p><span class="command"><strong>psql -d [yourdatabase] -f legacy.sql</strong></span></p><p>リストアとクリーンアップを行った後で非推奨関数を消すために<code class="filename">uninstall_legacy.sql</code>を実行できます。</p></div><div class="sect1" title="2.7. Tigerジオコーダのインストールとアップグレードとデータロード"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="loading_extras_tiger_geocoder"></a>2.7. Tigerジオコーダのインストールとアップグレードとデータロード</h2></div></div></div><div class="toc"><dl><dt><span class="sect2"><a href="postgis_installation.html#install_tiger_geocoder">2.7.1. TigerジオコーダをPostGISデータベースで有効にする</a></span></dt><dt><span class="sect2"><a href="postgis_installation.html#upgrade_tiger_geocoder">2.7.2. Tigerジオコーダのアップデート</a></span></dt><dt><span class="sect2"><a href="postgis_installation.html#tiger_geocoder_loading_data">2.7.3. Tigerデータのロード</a></span></dt></dl></div><p>Tigerジオコーダは、地域限定なので中核のPostGISスクリプトでインストール/アップデートされません。extrasフォルダ内にあるものは正規のPostGISインストール/アップグレードの際はデフォルトではインストールされません。Tigerジオコーダのようなextrasは、PostGISディストリビューションには含まれませんが、常にpostgis-2.0.0.tar.gzには存在します。ここで提供する説明は<code class="filename">extras/tiger_geocoder/tiger_2010/README</code>にもあります。</p><p>Windows上でtarの展開ができない場合は、<a class="ulink" href="http://www.7-zip.org/" target="_top">http://www.7-zip.org/</a>でPostGISのアーカイブファイルを展開できます。</p><div class="sect2" title="2.7.1. TigerジオコーダをPostGISデータベースで有効にする"><div class="titlepage"><div><div><h3 class="title"><a name="install_tiger_geocoder"></a>2.7.1. TigerジオコーダをPostGISデータベースで有効にする</h3></div></div></div><p>
+		  まず前述のPostGISのインストールを行います。
+		</p><p>
+		  extrasフォルダが無い場合は<a class="ulink" href="http://www.postgis.org/download/postgis-2.0.0.tar.gz" target="_top">http://www.postgis.org/download/postgis-2.0.0.tar.gz</a>をダウンロードして下さい。
+		</p><p>
+		  <span class="command"><strong>tar xvfz postgis-2.0.0.tar.gz</strong></span>
+		</p><p>
+		  <span class="command"><strong>cd postgis-2.0.0/extras/tiger_geocoder/tiger_2010</strong></span>
+		</p><p><code class="filename">tiger_loader.sql</code>のサーバ実行ファイルへのパス等を編集して下さい。</p><p>最初のTigerジオコーダのインストールで場合は、Windowsでは<code class="filename">create_geocode.bat</code>を、Linux/Unix/MacOS Xでは<code class="filename">create_geocode.sh</code>を、それぞれPostgreSQLの設定にあわせて編集します。コマンドラインから編集したスクリプトを実行します。このファイルを編集しない場合には、アイテムの位置が一般的なものになるだけです。<a class="xref" href="Loader_Generate_Script.html" title="Loader_Generate_Script">Loader_Generate_Script</a>実行後に生成されたスクリプトは編集できます。</p><p>データベースに<code class="varname">tiger</code>スキーマがあるか確認して下さい。データベースのsearch_pathに含まれているかを確認して、含まれていない場合は、</p><pre class="programlisting">ALTER DATABASE geocoder SET search_path=public, tiger;</pre><p>コマンドで追加して下さい。</p><p>住所正規化機能は、ややこしい住所を除いて、データなしでも大体動きます。次に示すテストを行って確認して下さい。
+			</p><pre class="programlisting">SELECT pprint_addy(normalize_address('202 East Fremont Street, Las Vegas, Nevada 89101')) As pretty_address;
+pretty_address
+---------------------------------------
+202 E Fremont St, Las Vegas, NV 89101
+			</pre><p>
+		</p></div><div class="sect2" title="2.7.2. Tigerジオコーダのアップデート"><div class="titlepage"><div><div><h3 class="title"><a name="upgrade_tiger_geocoder"></a>2.7.2. Tigerジオコーダのアップデート</h3></div></div></div><p>
+		  2.0に含まれるTigerジオコーダがインストールされている場合には、どうしても必要な訂正がある際の臨時のアーカイブファイルからでも機能のアップグレードができます。
+		</p><p>
+		  extrasフォルダが無い場合には<a class="ulink" href="http://www.postgis.org/download/postgis-2.0.0.tar.gz" target="_top">http://www.postgis.org/download/postgis-2.0.0.tar.gz</a>をダウンロードします。
+
+		</p><p>
+		  <span class="command"><strong>tar xvfz postgis-2.0.0.tar.gz</strong></span>
+		</p><p>
+		  <span class="command"><strong>cd postgis-2.0.0/extras/tiger_geocoder/tiger_2010</strong></span>
+		</p><p>Windowsの場合は<code class="filename">upgrade_geocoder.bat</code>スクリプト、Linux/Unix/MacOS Xの場合は<code class="filename">upgrade_geocoder.sh</code>スクリプトの位置を特定します。
+PostGISデータベースの資格情報を持つように編集し、コマンドラインからスクリプトを実行します。
+		</p></div><div class="sect2" title="2.7.3. Tigerデータのロード"><div class="titlepage"><div><div><h3 class="title"><a name="tiger_geocoder_loading_data"></a>2.7.3. Tigerデータのロード</h3></div></div></div><p>より詳細なデータロードの説明は<code class="filename">extras/tiger_geocoder/tiger_2010/README</code>にあります。ここでは一般的な手順に触れるだけです。</p><p>ロード処理によって、センサスウェブサイトからそれぞれ求める州のデータをダウンロードし、ファイルを展開し、各州をそれぞれの州テーブルにロードします。
+
+州テーブルは<code class="varname">tiger</code>スキーマで定義されているテーブルを継承しているので、全てのデータにアクセスするのは、これらのテーブルへのクエリで十分です。
+また、ある州の再読み込みを行う必要がある場合や、それ以上の州が不要である場合に、
+<a class="xref" href="Drop_State_Tables_Generate_Script.html" title="Drop_State_Tables_Generate_Script">Drop_State_Tables_Generate_Script</a>を使って州テーブルの集合を削除します。</p><p>必要なデータをロードできるようにするため、次のツールが必要です。</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>センサスウェブサイトから得られるZIPファイルを展開するツール。</p><p>Unix系システム: Unix系プラットフォームでは通常インストール済みの実行ファイル<code class="varname">unzip</code>。</p><p>Windows: フリーの圧縮/解凍ツールで、<a class="ulink" href="http://www.7-zip.org/" target="_top">http://www.7-zip.org/</a>からダウンロードできる7-zip。</p></li><li class="listitem"><p>PostGISをインストールしたときにデフォルトでインストールされるコマンドラインツール<code class="filename">shp2pgsql</code>。</p></li><li class="listitem"><p>通常ほとんどのUnix/Linuxシステムでインストールされているウェブ取得ツール<code class="filename">wget</code>。</p><p>Windowsの場合には、コンパイル済みのバイナリを<a class="ulink" href="http://gnuwin32.sourceforge.net/packages/wget.htm" target="_top">http://gnuwin32.sourceforge.net/packages/wget.htm</a>から取得できます。</p></li></ul></div><p>データロードについては、求める州のデータをロードするスクリプトをプラットフォームに合わせて生成する<a class="xref" href="Loader_Generate_Script.html" title="Loader_Generate_Script">Loader_Generate_Script</a>を参照して下さい。小さい単位でインストールできることに注意して下さい。求める州全てを一度にロードする必要はありません。必要に応じてロードすることができます。</p><p>求める州のダウンロードが終わった後に、次を実行します。
+		</p><pre class="programlisting">SELECT install_missing_indexes();</pre><p> as described in  <a class="xref" href="Install_Missing_Indexes.html" title="Install_Missing_Indexes">Install_Missing_Indexes</a></p><p>動作すべきように動作するかを試すために、ロードした州の住所のジオコードを<a class="xref" href="Geocode.html" title="Geocode">Geocode</a>で実行してみます。</p></div></div><div class="sect1" title="2.8. 空間データベースをテンプレートから生成する"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="templatepostgis"></a>2.8. 空間データベースをテンプレートから生成する</h2></div></div></div><p>PostGISのディストリビューション(特にPostGIS &gt;= 1.1.5のWin32インストーラ)の中には、<code class="varname">template_postgis</code>というテンプレートにPostGIS関数をロードしていることがあります。PostgreSQLに<code class="varname">template_postgis</code>データベースが存在するなら、ユーザまたはアプリケーションは、空間データベースの生成がコマンドひとつで済みます。この二種類のやり方のどちらを使うににしても、データベースユーザは、新しいデータベースを作成する権限を与えられている必要があります。</p><p>
+	  シェルからの実行:
+	</p><pre class="programlisting"># createdb -T template_postgis my_spatial_db</pre><p>
+	  SQLからの実行:
+	</p><pre class="programlisting">postgres=# CREATE DATABASE my_spatial_db TEMPLATE=template_postgis</pre></div><div class="sect1" title="2.9. アップグレード"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgrading"></a>2.9. アップグレード</h2></div></div></div><div class="toc"><dl><dt><span class="sect2"><a href="postgis_installation.html#soft_upgrade">2.9.1. ソフトアップグレード </a></span></dt><dt><span class="sect2"><a href="postgis_installation.html#hard_upgrade">2.9.2. ハードアップグレード</a></span></dt></dl></div><p>
+	  既存の空間データベースのアップグレードは、新しいPostGISオブジェクト定義の置き換えや導入を必要とするとき、慎重を要することがあります。
+	</p><p>
+	  不幸なことに、定義の全てが実行中のデータベース内で簡単には置き換えられるわけではないので、ダンプ/リロードが最善策となることがあります。
+	</p><p>
+	  PostGISには、マイナーバージョンアップやバグフィクスリリースの場合に使うソフトアップグレードと、メジャーアップグレードで使うハードアップグレードが用意されています。
+	</p><p>
+	  PostGISをアップグレードしようとする前にデータのバックアップを取ることは、常に価値のあるものです。pg_dumpで -Fc フラグを使うと、ハードアップグレードによってダンプを常にリストアすることができます。
+	</p><div class="sect2" title="2.9.1. ソフトアップグレード"><div class="titlepage"><div><div><h3 class="title"><a name="soft_upgrade"></a>2.9.1. ソフトアップグレード </h3></div></div></div><p>
+	  EXTENSIONを使ってインストールした場合は、EXTENSIONモデルでアップグレードしなければなりません。
+	  古いSQLスクリプトを使ってインストールした場合は、SQLスクリプトでアップグレードすべきです。適切な方を参照して下さい。</p><div class="sect3" title="2.9.1.1. 9.1より前またはEXTENSIONを使わないソフトアップグレード"><div class="titlepage"><div><div><h4 class="title"><a name="soft_upgrade_sql_script"></a>2.9.1.1. 9.1より前またはEXTENSIONを使わないソフトアップグレード</h4></div></div></div><p>PostGISをEXTENSIONを使わずにインストールした人向けです。EXTENSIONを使っていてこの方法を使うと、次のようなメッセージが現れます。</p><pre class="programlisting">can't drop ... because postgis extension depends on it</pre><p>コンパイル後に<code class="filename">postgis_upgrade*.sql</code>を探して下さい。PostGISの版にあったものをインストールします。たとえば、PostGIS 1.3から1.5に上げるには postgis_upgrade_13_to_15.sqlを使います。PostGIS 1.*から2.0に移動したり、2.*からr7409以前に落とす場合は、ハードアップグレードして下さい。</p><pre class="programlisting">psql -f postgis_upgrade_20_minor.sql -d your_spatial_database</pre><p>
+		ラスタ機能とトポロジ機能についても同じ手続きです。それぞれ<code class="filename">rtpostgis_upgrade*.sql</code>, <code class="filename">topology_upgrade*.sql</code>になります。次のようにします。
+	  </p><pre class="programlisting">psql -f rtpostgis_upgrade_20_minor.sql -d your_spatial_database</pre><pre class="programlisting">psql -f topology_upgrade_20_minor.sql -d your_spatial_database</pre><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>
+		  アップグレードのための特定の版の<code class="filename">postgis_upgrade*.sql</code>が見つからない場合は、非常に古い版を使っています。ハードアップグレードが必要です。
+		</p></td></tr></table></div><p>
+		<a class="xref" href="PostGIS_Full_Version.html" title="PostGIS_Full_Version">PostGIS_Full_Version</a>関数によって、"procs need upgrade"メッセージを使ってこの種のアップグレードを実行する必要性についての情報が得られます。
+	  </p></div><div class="sect3" title="2.9.1.2. 9.1以上でEXTENSIONを使ったソフトアップグレード"><div class="titlepage"><div><div><h4 class="title"><a name="soft_upgrade_extensions"></a>2.9.1.2. 9.1以上でEXTENSIONを使ったソフトアップグレード</h4></div></div></div><p>EXTENSIONを使ってPostGISをインストールした場合には、EXTENSIONを使ってアップグレードする必要があります。EXTENSIONを使ったマイナーアップグレードはかなり楽です。</p><pre class="programlisting">ALTER EXTENSION postgis UPDATE TO "2.0.0";
+ALTER EXTENSION postgis_topology UPDATE TO "2.0.0";</pre><p>次のようなエラー通知が表示されることがあります。</p><pre class="programlisting">No migration path defined for ... to 2.0.0</pre><p>この場合は、データベースをバックアップして、<a class="xref" href="postgis_installation.html#create_new_db_extensions" title="2.6. EXTENSIONを使った空間データベースの生成">「EXTENSIONを使った空間データベースの生成」</a>に記述されているように新しいデータベースを生成し、バックアップを新しいデータベースにリストアしなければなりません。
+		<code class="code">postgis extension</code>が既にインストールされているとのメッセージを得るかも知れませんが、無視して問題ありません。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>PostGISをバージョン指定なしにインストールした場合には、
+しばしばリストアの前のPostGIS EXTENSIONの再インストールをとばすことができます。
+バックアップは<code class="code">CREATE EXTENSION postgis</code>だけで、リストアの間に最新版になります。</p></td></tr></table></div></div></div><div class="sect2" title="2.9.2. ハードアップグレード"><div class="titlepage"><div><div><h3 class="title"><a name="hard_upgrade"></a>2.9.2. ハードアップグレード</h3></div></div></div><p>
+		ハードアップグレードとは、PostGISで利用可能なデータの完全なダンプ/リロードを意味します。PostGISオブジェクトの内部格納状態が変更される場合や、ソフトアップグレードができない場合に、ハードアップグレードが必要です。付録の<a class="link" href="release_notes.html" title="付録A Appendix">Release Notes</a>に、版ごとについて、ダンプ/リロード(ハードアップグレード)の要否を記載しています。
+	  </p><p>
+		ダンプ/リロード作業はpostgis_restore.plスクリプトが補助します。このスクリプトは、PostGIS(古いものを含む)に属する定義を全て飛ばすように注意します。また、重複シンボルエラーや非推奨オブジェクトの持越し無く、スキーマとデータをPostGISをインストールしたデータベースにリストアできます
+	  </p><p>Windows用に関する追加情報は <a class="ulink" href="http://trac.osgeo.org/postgis/wiki/UsersWikiWinUpgrade" target="_top">Windows Hard upgrade</a>にあります。</p><p>
+		手続きは次の通りです。
+	  </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+		アップグレードしたデータベース(<code class="varname">olddb</code>と呼ぶことにしましょう)の「カスタム書式」のダンプを、バイナリBLOBデータを含めたダンプを指定して(-b)、verboseモード(-v)で生成します。ユーザはデータベースのオーナーになることができ、PostgreSQLのスーパーアカウントである必要はありません。
+	  </p><pre class="programlisting">pg_dump -h localhost -p 5432 -U postgres -Fc -b -v -f "/somepath/olddb.backup" olddb</pre></li><li class="listitem"><p>
+		新しいデータベースにPostGISを、PostGISが無い状態からインストールします。このデータベースを<code class="varname">newdb</code>と呼ぶことにします。この作業に関する説明については<a class="xref" href="postgis_installation.html#create_new_db" title="2.5. PostgreSQL 9.1より前での空間データベースの作成">「PostgreSQL 9.1より前での空間データベースの作成」</a>と<a class="xref" href="postgis_installation.html#create_new_db_extensions" title="2.6. EXTENSIONを使った空間データベースの生成">「EXTENSIONを使った空間データベースの生成」</a>を参照して下さい。
+	  </p><p>
+ダンプにあるspatial_ref_sysは、リストアされますが、既にあるspatial_ref_sysを上書きしません。リストア対象のデータベースに公式データセットの訂正が確実に伝わるようにするためです。標準のエントリを上書きしたい場合は、newdbを生成する際にspaltial_ref_sys.sqlファイルをロードしないだけです。
+	  </p><p>
+		データベースが本当に古く、ビューや関数に、長く非推奨になっている関数があるような場合には、関数やビューを使えるようにする<code class="filename">legacy.sql</code>をロードする必要があるでしょう。ただし、本当に必要な場合に限ります。可能なら、ビューや関数をダンプせずにアップグレードすることを検討して下さい。非推奨関数は<code class="filename">uninstall_legacy.sql</code>で後から削除することができます。
+	  </p></li><li class="listitem"><p>
+		バックアップを新しい<code class="varname">newdb</code>データベースにリストアするには、postgis_restore.plを使います。psqlが予期せぬエラーを標準エラー出力に出すことがあります。これらのログを保存しておいて下さい。
+	  </p><pre class="programlisting">perl utils/postgis_restore.pl "/somepath/olddb.backup" | psql -h localhost -p 5432 -U postgres newdb 2&gt; errors.txt</pre></li></ol></div><p>
+		エラーは次の場合に起こりえます。
+	</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+		ビューまたは関数の中に非推奨のPostGISオブジェクトを使っているものがある場合。これの訂正には、リストア前に<code class="filename">legacy.sql</code>スクリプトのロードを試してみることができます。非推奨オブジェクトをまだ持っている版のPostGISにリストアして、コードを作り替えた後に再び移動させることもできます。
+<code class="filename">legacy.sql</code>を利用する場合は、非推奨関数を使うのをやめたコードに訂正して、<code class="filename">uninstall_legacy.sql</code>をロードするのを忘れないでください。
+	</p></li><li class="listitem"><p>
+		ダンプファイル内のspatial_ref_sysにあるカスタムレコードが不正なSRIDになっている場合。妥当なSRID値は0より大きく999000より小さくなります。999000から999999の間は内部利用のための予約領域ですが、999999より大きい値は一切使用できません。全ての不正なSRIDを持つカスタムレコードは、予約領域に移動しても保持されます。しかし、spatial_ref_sysテーブルは、保持している不変値と、場合によっては主キー(複数の不正なSRIDが同じ予約領域のSRID値に変換されるとき)を保護するチェック制約を緩くできます。
+  </p><p>
+		これの訂正には、カスタムSRSを妥当値(多分91000から910999の間になります)に複写して、全てのテーブルを新しいSRIDに変換して(<a class="xref" href="UpdateGeometrySRID.html" title="UpdateGeometrySRID">UpdateGeometrySRID</a>を参照して下さい)、不正なエントリをspatial_ref_sysから削除して、次を実行してチェック制約を再構築します。
+
+		</p><pre class="programlisting">ALTER TABLE spatial_ref_sys ADD CONSTRAINT spatial_ref_sys_srid_check check (srid &gt; 0 AND srid &lt; 999000 );</pre><p>
+
+		</p><pre class="programlisting">ALTER TABLE spatial_ref_sys ADD PRIMARY KEY(srid));</pre><p>
+	
+	</p></li></ol></div></div></div><div class="sect1" title="2.10. 共通の問題"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id286982433"></a>2.10. 共通の問題</h2></div></div></div><p>
+	  インストールやアップグレードが思うようにいかない時にチェックすることがいくつかあります。
+	</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+		  PostgreSQL 8.4以上をインストールしているか、実行中のPostgreSQLと同じ版のソースでコンパイルしているか、をチェックします。(Linuxの)ディストリビューションによって既にPostgreSQLがインストールされている時や、 PostgreSQLを以前にインストールして忘れた場合に、 混乱が発生することがあります。PostGISはPostgreSQL 8.4以上で動作します。古い版のものを使った場合には、おかしな予想外のエラーメッセージが表示されます。実行中のPostgreSQLの版をチェックするには、psqlを使ってデータベースを接続して、次のクエリを実行して下さい。
+		</p><pre class="programlisting">SELECT version();</pre><p>
+		  RPMベースのディストリビューションを実行している場合、 プリインストールされたパッケージが存在するかのチェックは、<span class="command"><strong>rpm</strong></span>コマンドを使って<span class="command"><strong>rpm -qa | grep postgresql</strong></span>でチェックできます。
+		</p></li><li class="listitem"><p>アップグレードに失敗する場合、既にPostGISがインストールされているデータベースにリストアしているか確認して下さい。</p><pre class="programlisting">SELECT postgis_full_version();</pre></li></ol></div><p>
+	  また、コンフィギュアが正しくPostgreSQL、Proj4ライブラリ、GEOSライブラリのインストール先を検出したかチェックして下さい。
+	</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+		  コンフィギュアからの出力で<code class="filename">postgis_config.h</code>ファイルが作られます。<code class="varname">POSTGIS_PGSQL_VERSION</code>, <code class="varname">POSTGIS_PROJ_VERSION</code>, <code class="varname">POSTGIS_GEOS_VERSION</code>変数が正しくセットされたかをチェックして下さい。
+		</p></li></ol></div></div><div class="sect1" title="2.11. JDBC"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id286982510"></a>2.11. JDBC</h2></div></div></div><p>
+	  JDBC拡張によって、JavaオブジェクトがPostGISの内部型に対応できるようになります。このオブジェクトを使って、PostGISデータベースに問い合わせを出して、PostGISにあるGISデータの描画や計算を行うJavaクライアントを作成することができます。
+	</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+		  PostGIS配布物の<code class="filename">java/jdbc</code>サブディレクトリに入ります。
+		</p></li><li class="listitem"><p>
+		  <code class="filename">ant</code>コマンドを実行します。<code class="filename">postgis.jar</code>ファイルをJavaライブラリを保存しているところに複写します。
+		</p></li></ol></div><p>
+	  JDBC拡張は、ビルド実行中は現在のCLASSPATHにPostgreSQL JDBCドライバがあるようにしておく必要があります。PostgreSQL JDBCドライバがCLASSPATHに無い場合には、個別にJDBCドライバのJARのありかを伝えます。次のようにします。
+	</p><pre class="programlisting"># ant -Dclasspath=/path/to/postgresql-jdbc.jar</pre><p>
+	  PostgreSQL JDBCドライバは
+	  <a class="ulink" href="http://jdbc.postgresql.org" target="_top">
+		http://jdbc.postgresql.org
+	  </a>
+	  からダウンロードできます。
+	</p></div><div class="sect1" title="2.12. ローダ/ダンパ"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id286982567"></a>2.12. ローダ/ダンパ </h2></div></div></div><p>
+	  データのローダとダンパは、PostGISのビルドの一部として、自動的にビルド、インストールされます。手動でビルド、インストールするには、次を実行します。 
+	</p><pre class="programlisting"># cd postgis-2.0.0/loader
+# make
+# make install</pre><p>
+	  ローダは<code class="filename">shp2pgsql</code>と呼ばれ、ESRIシェープファイルをPostGIS/PostgreSQLにロードするのに適したSQLに変換します。ダンパは<code class="filename">pgsql2shp</code>と呼ばれ、PostGISのテーブル(またはクエリ)からESRIシェープファイルに変換します。より詳しいドキュメントをご覧になるには、オンラインヘルプとマニュアルページをご覧ください。 
+	</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="postgis_introduction.html">戻る</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="PostGIS_FAQ.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">第1章 導入 </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> 第3章 PostGIS よくある質問</td></tr></table></div></body></html>

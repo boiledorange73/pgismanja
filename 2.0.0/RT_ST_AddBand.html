@@ -1,0 +1,40 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_AddBand</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.0.0マニュアル日本語訳"><link rel="up" href="RT_reference.html#Raster_Constructors" title="9.3. ラスタ コンストラクタ"><link rel="prev" href="RT_ST_GDALDrivers.html" title="ST_GDALDrivers"><link rel="next" href="RT_ST_AsRaster.html" title="ST_AsRaster"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_AddBand</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_GDALDrivers.html">戻る</a> </td><th width="60%" align="center">9.3. ラスタ コンストラクタ</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_AsRaster.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_AddBand"><a name="RT_ST_AddBand"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_AddBand — 与えられたタイプで、与えられた初期値にした新しいバンドを、与えられたインデクス位置に付けたラスタを返します。インデクス位置を指定していない場合には、バンドは末尾に追加されます。</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">raster <b class="fsfunc">ST_AddBand</b>(</code>raster  <var class="pdparam">rast</var>, text  <var class="pdparam">pixeltype</var>, double precision  <var class="pdparam">initialvalue=0</var>, double precision  <var class="pdparam">nodataval=NULL</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_AddBand</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">index</var>, text  <var class="pdparam">pixeltype</var>, double precision  <var class="pdparam">initialvalue=0</var>, double precision  <var class="pdparam">nodataval=NULL</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_AddBand</b>(</code>raster  <var class="pdparam">torast</var>, raster  <var class="pdparam">fromrast</var>, integer  <var class="pdparam">fromband=1</var>, integer  <var class="pdparam">torastindex=at_end</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_AddBand</b>(</code>raster  <var class="pdparam">torast</var>, raster[]  <var class="pdparam">fromrasts</var>, integer  <var class="pdparam">fromband=1</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="id287147513"></a><h2>説明</h2><p>与えられたタイプで、与えられた初期値にし、与えられたnodata値を付した新しいバンドを追加したラスタを返します。インデクス位置を指定していない場合には、バンドは末尾に追加されます。
+<code class="varname">fromband</code>が指定されない場合には、1番バンドと仮定します。ピクセルタイプは<a class="xref" href="RT_ST_BandPixelType.html" title="ST_BandPixelType">ST_BandPixelType</a>で指定されているピクセルタイプの文字列表現です。
+既存のインデクスが指定された場合には、以降のバンドは全て1以上足されたインデクスになります。初期値としてピクセルタイプの最大値を超えた値が指定された場合には、初期値にピクセルタイプの許容最大値が指定されます。ふたつめの版は<code class="varname">fromrast</code>ラスタから<code class="varname">torast</code>に<code class="varname">torastindex</code>の位置に<code class="varname">fromband</code>を追加します。</p><p>バンド配列を取る版については、<code class="varname">torast</code>がNULLの場合には、バンド配列の要素ごとの<code class="varname">fromband</code>のバンドを新しいラスタに集めます。</p></div><div class="refsection" title="例: 単一のバンド追加版"><a name="id287147552"></a><h2>例: 単一のバンド追加版</h2><pre class="programlisting">-- 8ビット符号無し整数で初期値200のバンドを追加します
+UPDATE dummy_rast
+    SET rast = ST_AddBand(rast,'8BUI',200)  
+WHERE rid = 1;
+					</pre><pre class="programlisting">-- 100x100単位で左上を0,0としたラスタを生成して、2バンドを追加します
+-- (1番バンドは0/1の真偽ビットスイッチで、2番バンドは0-15の値を取ります)
+INSERT INTO dummy_rast(rid,rast)
+    VALUES(10, ST_AddBand(ST_AddBand(ST_MakeEmptyRaster(100, 100, 0, 0, 1, -1, 0, 0, 0), '1BB'), '4BUI') );
+    
+-- output meta data of raster bands to verify all is right --
+SELECT  (bmd).*
+FROM (SELECT ST_BandMetaData(rast,generate_series(1,2)) As bmd 
+    FROM dummy_rast WHERE rid = 10) AS foo;
+ --result --   
+ pixeltype | nodatavalue | isoutdb | path
+-----------+----------------+-------------+---------+------
+ 1BB       |             | f       |
+ 4BUI      |             | f       |
+ 
+ 
+-- ラスタのメタデータを出力します -
+SELECT  (rmd).width, (rmd).height, (rmd).numbands
+FROM (SELECT ST_MetaData(rast) As rmd 
+    FROM dummy_rast WHERE rid = 10) AS foo;
+-- 結果 --
+ upperleftx | upperlefty | width | height | scalex | scaley | skewx | skewy | srid | numbands
+------------+------------+-------+--------+------------+------------+-------+-------+------+----------
+          0 |          0 |   100 |    100 |      1 |     -1 |     0 |     0 |   0 |        2
+					</pre></div><div class="refsection" title="例: 複数バンド版"><a name="id287147568"></a><h2>例: 複数バンド版</h2><pre class="programlisting">-- ラスタのようなテーブルの1番バンドを集計して単一ラスタに入れます。
+-- test_typeと同じ数のバンドを持つ、マウスの数と同じ行(新しいラスタ)になります。
+-- ご注意: ORDER BY test_typeは、PostgreSQL 9.0以上でのみ対応します
+--   8.4以下では副問い合わせ内の並び順になります(保証もされません)
+-- 結果ラスタはtest_typeのアルファベット順でtest_typeごとのバンドを持ちます
+-- マウス好きの方へ: この例ではマウスは傷つきませんでした
+SELECT mouse, ST_AddBand(NULL, array_agg(rast ORDER BY test_type), 1 ) As rast 
+	FROM mice_studies
+			GROUP BY mouse; 	
+					</pre></div><div class="refsection" title="関連情報"><a name="id287147578"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_BandMetaData.html" title="ST_BandMetaData">ST_BandMetaData</a>, <a class="xref" href="RT_ST_BandPixelType.html" title="ST_BandPixelType">ST_BandPixelType</a>, <a class="xref" href="RT_ST_MakeEmptyRaster.html" title="ST_MakeEmptyRaster">ST_MakeEmptyRaster</a>, <a class="xref" href="RT_ST_MetaData.html" title="ST_MetaData">ST_MetaData</a>, <a class="xref" href="RT_ST_NumBands.html" title="ST_NumBands">ST_NumBands</a>, <a class="xref" href="RT_ST_Reclass.html" title="ST_Reclass">ST_Reclass</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_GDALDrivers.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Constructors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_AsRaster.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_GDALDrivers </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_AsRaster</td></tr></table></div></body></html>

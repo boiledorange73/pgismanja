@@ -1,0 +1,51 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Intersects</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.0.0マニュアル日本語訳"><link rel="up" href="RT_reference.html#Raster_Relationships" title="9.14. ラスタ/ラスタバンドの空間関係関数"><link rel="prev" href="RT_Raster_OverRight.html" title="&amp;&gt;"><link rel="next" href="RT_ST_SameAlignment.html" title="ST_SameAlignment"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Intersects</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_Raster_OverRight.html">戻る</a> </td><th width="60%" align="center">9.14. ラスタ/ラスタバンドの空間関係関数</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_SameAlignment.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_Intersects"><a name="RT_ST_Intersects"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_Intersects — バンド番号が省略された場合はラスタの凸包を考慮するだけです。指定したバンドのNODATA値でない値を持つピクセルがインタセクトする場合のみTRUEを返します。</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">boolean <b class="fsfunc">ST_Intersects</b>(</code>
+				  raster 
+				  <var class="pdparam">rast</var>
+				, 
+				  integer 
+				  <var class="pdparam">band</var>
+				, 
+				  geometry 
+				  <var class="pdparam">geommin</var>
+				<code>)</code>;</p><p><code class="funcdef">boolean <b class="fsfunc">ST_Intersects</b>(</code>
+				  geometry 
+				  <var class="pdparam">geommin</var>
+				, 
+				  raster 
+				  <var class="pdparam">rast</var>
+				, 
+				  integer 
+				  <var class="pdparam">nband=NULL</var>
+				<code>)</code>;</p><p><code class="funcdef">boolean <b class="fsfunc">ST_Intersects</b>(</code>
+				  raster 
+				  <var class="pdparam">rasta</var>
+				, 
+				  raster 
+				  <var class="pdparam">rastb</var>
+				<code>)</code>;</p><p><code class="funcdef">boolean <b class="fsfunc">ST_Intersects</b>(</code>
+				  raster 
+				  <var class="pdparam">rasta</var>
+				, 
+				  integer 
+				  <var class="pdparam">nbanda</var>
+				, 
+				  raster 
+				  <var class="pdparam">rastb</var>
+				, 
+				  integer 
+				  <var class="pdparam">nbandb=1</var>
+				<code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="id287168323"></a><h2>説明</h2><p>ジオメトリがラスタとインタセクトする場合にTRUEを返します。NODATA値は考慮に入れられるので、ジオメトリがNODATA値のみとインタセクトする場合には、FALSEを返します。バンドを指定しない場合は1番と仮定します。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>ラスタ/ジオメトリとジオメトリ/ラスタの場合、
+ST_Intersects(raster,nband,geometry)はラスタ空間で実行され(ジオメトリは最初にラスタに変換されます)、ST_Intersects(geometry, raster)はジオメトリ空間で実行されます(ラスタは最初にジオメトリに変換されます)。</p></td></tr></table></div><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>この演算子はジオメトリ/ラスタで利用できるインデクスを使用します。</p></td></tr></table></div><p>機能強化: 2.0.0 ラスタとラスタを引数にとる形式が導入されました。</p></div><div class="refsection" title="例"><a name="id287168379"></a><h2>例</h2><pre class="programlisting">SELECT A.rid, g.gid , ST_Intersects(A.rast, g.geom) As inter
+FROM dummy_rast AS A CROSS JOIN 
+	(VALUES (1, ST_Point(3427928, 5793243.85) ) ,
+		(2, ST_GeomFromText('LINESTRING(3427927.85 5793243.75,3427927.8 5793243.75,3427927.8 5793243.8)') ),
+		(3, ST_GeomFromText('LINESTRING(1 2, 3 4)') )
+		) As g(gid,geom)
+WHERE A.rid =2 ;
+
+ rid | gid | inter
+-----+-----+-------
+   2 |   1 | t
+   2 |   2 | t
+   2 |   3 | f
+</pre></div><div class="refsection" title="関連情報"><a name="id287168390"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_Intersection.html" title="ST_Intersection">ST_Intersection</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_Raster_OverRight.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Relationships">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_SameAlignment.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">&amp;&gt; </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_SameAlignment</td></tr></table></div></body></html>

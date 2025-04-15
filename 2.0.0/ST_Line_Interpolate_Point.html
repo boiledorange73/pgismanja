@@ -1,0 +1,25 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Line_Interpolate_Point</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.0.0マニュアル日本語訳"><link rel="up" href="reference.html#Linear_Referencing" title="8.10. 線型参照"><link rel="prev" href="ST_UnaryUnion.html" title="ST_UnaryUnion"><link rel="next" href="ST_Line_Locate_Point.html" title="ST_Line_Locate_Point"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Line_Interpolate_Point</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_UnaryUnion.html">戻る</a> </td><th width="60%" align="center">8.10. 線型参照</th><td width="20%" align="right"> <a accesskey="n" href="ST_Line_Locate_Point.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_Line_Interpolate_Point"><a name="ST_Line_Interpolate_Point"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_Line_Interpolate_Point — 線に沿った内挿点を返します。第2引数はfloat8で0から1の区間で、そのポイントが位置するラインストリングの総延長についての割合です。</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_Line_Interpolate_Point</b>(</code>geometry  <var class="pdparam">a_linestring</var>, float  <var class="pdparam">a_fraction</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="id287089704"></a><h2>説明</h2><p>線に沿った内挿点を返します。第1引数は LINESTRINGでなければなりません。第2引数はfloat8で0から1の区間で、そのポイントが位置するラインストリングの総延長に対する割合です。</p><p>ポイントに最も近いライン位置の計算については<a class="xref" href="ST_Line_Locate_Point.html" title="ST_Line_Locate_Point">ST_Line_Locate_Point</a>を参照して下さい。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>1.1.1から、この関数はM軸やZ軸の内挿点も(存在するなら)計算するようになりました。それより前の版では0.0となります。</p></td></tr></table></div><p>初出: 0.8.2, Z軸とM軸のサポートが1.1.1で追加されました。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ この関数は3次元に対応しています。Zインデクスを削除しません。</p></div><div class="refsection" title="例"><a name="id287089741"></a><h2>例</h2><div class="informalfigure"><div class="mediaobject"><img src="images/st_line_interpolate_point01.png"><div class="caption"><p>ラインストリングの20%(0.20)位置の内挿点</p></div></div></div><pre class="programlisting">-- 2次元ラインに沿った20%ポイント
+SELECT ST_AsEWKT(ST_Line_Interpolate_Point(the_line, 0.20))
+	FROM (SELECT ST_GeomFromEWKT('LINESTRING(25 50, 100 125, 150 190)') as the_line) As foo;
+   st_asewkt
+----------------
+ POINT(51.5974135047432 76.5974135047432)
+
+</pre><pre class="programlisting">
+-- 3次元線の中点
+SELECT ST_AsEWKT(ST_Line_Interpolate_Point(the_line, 0.5))
+	FROM (SELECT ST_GeomFromEWKT('LINESTRING(1 2 3, 4 5 6, 6 7 8)') as the_line) As foo;
+
+	st_asewkt
+--------------------
+ POINT(3.5 4.5 5.5)
+
+-- ポイントまたは他のジオメトリへの、ライン上の最短点の探索
+ SELECT ST_AsText(ST_Line_Interpolate_Point(foo.the_line, ST_Line_Locate_Point(foo.the_line, ST_GeomFromText('POINT(4 3)'))))
+FROM (SELECT ST_GeomFromText('LINESTRING(1 2, 4 5, 6 7)') As the_line) As foo;
+   st_astext
+----------------
+ POINT(3 4)
+
+</pre></div><div class="refsection" title="関連情報"><a name="id287089778"></a><h2>関連情報</h2><p><a class="xref" href="ST_AsText.html" title="ST_AsText">ST_AsText</a>, <a class="xref" href="ST_AsEWKT.html" title="ST_AsEWKT">ST_AsEWKT</a>, <a class="xref" href="ST_Length.html" title="ST_Length">ST_Length</a>, <a class="xref" href="ST_Line_Locate_Point.html" title="ST_Line_Locate_Point">ST_Line_Locate_Point</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_UnaryUnion.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Linear_Referencing">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_Line_Locate_Point.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_UnaryUnion </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_Line_Locate_Point</td></tr></table></div></body></html>

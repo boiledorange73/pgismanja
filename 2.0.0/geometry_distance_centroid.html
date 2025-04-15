@@ -1,0 +1,69 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>&lt;-&gt;</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.0.0マニュアル日本語訳"><link rel="up" href="reference.html#Operators" title="8.7. 演算子"><link rel="prev" href="ST_Geometry_Same.html" title="~="><link rel="next" href="geometry_distance_box.html" title="&lt;#&gt;"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">&lt;-&gt;</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_Geometry_Same.html">戻る</a> </td><th width="60%" align="center">8.7. 演算子</th><td width="20%" align="right"> <a accesskey="n" href="geometry_distance_box.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="&lt;-&gt;"><a name="geometry_distance_centroid"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>&lt;-&gt; — 
+2つのポイントの間の距離を返します。ポイントでは、ポイントは単精度(元となるポイントジオメトリが倍精度ですが)を使って調べます。他のジオメトリタイプでは、バウンディングボックスの重心どうしの距離を返します。KNN GiST機能を使った距離による並べ替えや近傍の制限に使います。</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">double precision <b class="fsfunc">&lt;-&gt;</b>(</code>
+				  geometry 
+
+				  <var class="pdparam">A</var>
+				, 
+				  geometry 
+
+				  <var class="pdparam">B</var>
+				<code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="id287057838"></a><h2>説明</h2><p>
+<code class="varname">&lt;-&gt;</code>演算子はポイント(単精度)の空間インデクスから読まれた2ポイント間の距離を返します。他のジオメトリについては、ジオメトリのバウンディングボックスの重心からの距離を返します。近傍の<span class="strong"><strong>概ねの</strong></span>距離による並べ替えに使います。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>この演算子はジオメトリで利用できるインデクスを使用します。他の演算子との相違点は、ORDER BY節でのみインデクスが使用される点です。</p></td></tr></table></div><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>ジオメトリのひとつが定数(副問い合わせ/共通テーブル式にない)となる(a.geomでなく'SRID=3005;POINT(1011102 450541)'::geometry等となる)場合には、インデクスが有効になるだけです。</p></td></tr></table></div><p>初出: 2.0.0 PostgreSQL 9.1以上でのみ有効です。</p></div><div class="refsection" title="例"><a name="id287058176"></a><h2>例</h2><pre class="programlisting">SELECT ST_Distance(geom, 'SRID=3005;POINT(1011102 450541)'::geometry) as d,edabbr, vaabbr 
+FROM va2005 
+ORDER BY d limit 10;
+
+        d         | edabbr | vaabbr
+------------------+--------+--------
+                0 | ALQ    | 128
+ 5541.57712511724 | ALQ    | 129A
+ 5579.67450712005 | ALQ    | 001
+  6083.4207708641 | ALQ    | 131
+  7691.2205404848 | ALQ    | 003
+ 7900.75451037313 | ALQ    | 122
+ 8694.20710669982 | ALQ    | 129B
+ 9564.24289057111 | ALQ    | 130
+  12089.665931705 | ALQ    | 127
+ 18472.5531479404 | ALQ    | 002
+(10 rows)
+</pre><p>
+KNNの答えは次のようになります。
+</p><pre class="programlisting">SELECT st_distance(geom, 'SRID=3005;POINT(1011102 450541)'::geometry) as d,edabbr, vaabbr 
+FROM va2005 
+ORDER BY geom &lt;-&gt; 'SRID=3005;POINT(1011102 450541)'::geometry limit 10;
+
+        d         | edabbr | vaabbr
+------------------+--------+--------
+                0 | ALQ    | 128
+ 5579.67450712005 | ALQ    | 001
+ 5541.57712511724 | ALQ    | 129A
+ 8694.20710669982 | ALQ    | 129B
+ 9564.24289057111 | ALQ    | 130
+  6083.4207708641 | ALQ    | 131
+  12089.665931705 | ALQ    | 127
+  24795.264503022 | ALQ    | 124
+ 24587.6584922302 | ALQ    | 123
+ 26764.2555463114 | ALQ    | 125
+(10 rows)
+</pre><p>実際の距離との順序が違い、実際に表示される上位10行が違うことに注意して下さい。</p><p>最終的なハイブリッドのクエリは次の通りです。</p><pre class="programlisting">WITH index_query AS (
+  SELECT ST_Distance(geom, 'SRID=3005;POINT(1011102 450541)'::geometry) as d,edabbr, vaabbr
+  	FROM va2005
+  ORDER BY geom &lt;-&gt; 'SRID=3005;POINT(1011102 450541)'::geometry LIMIT 100) 
+  SELECT * 
+  	FROM index_query 
+  ORDER BY d limit 10;
+
+        d         | edabbr | vaabbr
+------------------+--------+--------
+                0 | ALQ    | 128
+ 5541.57712511724 | ALQ    | 129A
+ 5579.67450712005 | ALQ    | 001
+  6083.4207708641 | ALQ    | 131
+  7691.2205404848 | ALQ    | 003
+ 7900.75451037313 | ALQ    | 122
+ 8694.20710669982 | ALQ    | 129B
+ 9564.24289057111 | ALQ    | 130
+  12089.665931705 | ALQ    | 127
+ 18472.5531479404 | ALQ    | 002
+(10 rows)
+
+ 			</pre></div><div class="refsection" title="関連情報"><a name="id287058205"></a><h2>関連情報</h2><p><a class="xref" href="ST_DWithin.html" title="ST_DWithin">ST_DWithin</a>, <a class="xref" href="ST_Distance.html" title="ST_Distance">ST_Distance</a>, <a class="xref" href="geometry_distance_box.html" title="&lt;#&gt;">&lt;#&gt;</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_Geometry_Same.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Operators">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="geometry_distance_box.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">~= </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> &lt;#&gt;</td></tr></table></div></body></html>

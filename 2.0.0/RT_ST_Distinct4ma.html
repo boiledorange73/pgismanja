@@ -1,0 +1,22 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Distinct4ma</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.0.0マニュアル日本語訳"><link rel="up" href="RT_reference.html#Raster_Processing_Builtin_Functions" title="9.12. ラスタ処理組み込み関数"><link rel="prev" href="RT_ST_Range4ma.html" title="ST_Range4ma"><link rel="next" href="RT_ST_StdDev4ma.html" title="ST_StdDev4ma"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Distinct4ma</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_Range4ma.html">戻る</a> </td><th width="60%" align="center">9.12. ラスタ処理組み込み関数</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_StdDev4ma.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_Distinct4ma"><a name="RT_ST_Distinct4ma"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_Distinct4ma — 近傍における一意となるピクセル値の数を計算するラスタ処理関数です。
+
+Raster processing function that calculates the number of unique pixel values in a neighborhood.</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">float8 <b class="fsfunc">ST_Distinct4ma</b>(</code>float8[][] <var class="pdparam">matrix</var>, text <var class="pdparam">nodatamode</var>, text[] <var class="pdparam">VARIADIC args</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="id287167602"></a><h2>説明</h2><p>近傍における一意となるピクセル値の数を計算します。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>この関数は<a class="xref" href="RT_ST_MapAlgebraFctNgb.html" title="ST_MapAlgebraFctNgb">ST_MapAlgebraFctNgb</a>に渡すのに特化したユーザ定義関数です。</p></td></tr></table></div><p>初出: 2.0.0</p></div><div class="refsection" title="例"><a name="id287167624"></a><h2>例</h2><pre class="programlisting">SELECT 
+    rid,
+    st_value(
+        st_mapalgebrafctngb(rast, 1, NULL, 1, 1, 'st_distinct4ma(float[][],text,text[])'::regprocedure, 'ignore', NULL), 2, 2
+    ) 
+FROM dummy_rast 
+WHERE rid = 2;
+ rid | st_value
+-----+----------
+   2 |        3
+(1 row)
+				</pre></div><div class="refsection" title="関連情報"><a name="id287167635"></a><h2>関連情報</h2><p>
+                    <a class="xref" href="RT_ST_MapAlgebraFctNgb.html" title="ST_MapAlgebraFctNgb">ST_MapAlgebraFctNgb</a>,
+                    <a class="xref" href="RT_ST_Min4ma.html" title="ST_Min4ma">ST_Min4ma</a>,
+                    <a class="xref" href="RT_ST_Max4ma.html" title="ST_Max4ma">ST_Max4ma</a>,
+                    <a class="xref" href="RT_ST_Sum4ma.html" title="ST_Sum4ma">ST_Sum4ma</a>,
+                    <a class="xref" href="RT_ST_Mean4ma.html" title="ST_Mean4ma">ST_Mean4ma</a>,
+                    <a class="xref" href="RT_ST_Distinct4ma.html" title="ST_Distinct4ma">ST_Distinct4ma</a>
+                    <a class="xref" href="RT_ST_StdDev4ma.html" title="ST_StdDev4ma">ST_StdDev4ma</a>
+                </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_Range4ma.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#Raster_Processing_Builtin_Functions">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_StdDev4ma.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Range4ma </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_StdDev4ma</td></tr></table></div></body></html>

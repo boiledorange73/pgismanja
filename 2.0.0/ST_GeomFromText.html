@@ -1,0 +1,39 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_GeomFromText</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.0.0マニュアル日本語訳"><link rel="up" href="reference.html#Geometry_Constructors" title="8.3. ジオメトリ コンストラクタ"><link rel="prev" href="ST_GMLToSQL.html" title="ST_GMLToSQL"><link rel="next" href="ST_GeomFromWKB.html" title="ST_GeomFromWKB"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_GeomFromText</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_GMLToSQL.html">戻る</a> </td><th width="60%" align="center">8.3. ジオメトリ コンストラクタ</th><td width="20%" align="right"> <a accesskey="n" href="ST_GeomFromWKB.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_GeomFromText"><a name="ST_GeomFromText"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_GeomFromText — Well-Known Text表現(WKT)から指定したST_Geometryを返します。 </p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_GeomFromText</b>(</code>text  <var class="pdparam">WKT</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_GeomFromText</b>(</code>text  <var class="pdparam">WKT</var>, integer  <var class="pdparam">srid</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="id287016368"></a><h2>説明</h2><p>OGC Well-Known Text表現からPostGIS ST_Geometryオブジェクトを生成します。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>2種類のST_GeomFromText関数があります。ひとつはSRIDを取らずに空間参照系を定義しないジオメトリを返すものです。 もうひとつは空間参照系識別番号を第二引数で取り、このSRIDをメタデータの一部として含むST_Geometryを返すものです。 SRIDはspatial_ref_sysテーブルで定義されていなければなりません。</p></td></tr></table></div><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ このメソッドは<a class="ulink" href="http://www.opengeospatial.org/standards/sfs" target="_top">OpenGIS Simple Features
+ Implementation Specification for SQL 1.1.</a>の実装です s3.2.6.2 - option SRID is from the conformance suite.</p><p><span class="inlinemediaobject"><img src="images/check.png"></span> このメソッドはSQL/MM仕様の実装です。 SQL-MM 3: 5.1.40</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ このメソッドは曲線ストリングと曲線に対応しています</p><div class="warning" title="警告" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Warning"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[警告]" src="images/warning.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>変更: 2.0.0以前ではST_GeomFromText('GEOMETRYCOLLECTION(EMPTY)')が許されていました。SQL/MM標準への適合のためPostGIS 2.0.0では不正とされます。今はST_GeomFromText('GEOMETRYCOLLECTION EMPTY')となります。</p></td></tr></table></div></div><div class="refsection" title="例"><a name="id287016428"></a><h2>例</h2><pre class="programlisting">SELECT ST_GeomFromText('LINESTRING(-71.160281 42.258729,-71.160837 42.259113,-71.161144 42.25932)');
+SELECT ST_GeomFromText('LINESTRING(-71.160281 42.258729,-71.160837 42.259113,-71.161144 42.25932)',4269);
+
+SELECT ST_GeomFromText('MULTILINESTRING((-71.160281 42.258729,-71.160837 42.259113,-71.161144 42.25932))');
+
+SELECT ST_GeomFromText('POINT(-71.064544 42.28787)');
+
+SELECT ST_GeomFromText('POLYGON((-71.1776585052917 42.3902909739571,-71.1776820268866 42.3903701743239,
+-71.1776063012595 42.3903825660754,-71.1775826583081 42.3903033653531,-71.1776585052917 42.3902909739571))');
+
+SELECT ST_GeomFromText('MULTIPOLYGON(((-71.1031880899493 42.3152774590236,
+-71.1031627617667 42.3152960829043,-71.102923838298 42.3149156848307,
+-71.1023097974109 42.3151969047397,-71.1019285062273 42.3147384934248,
+-71.102505233663 42.3144722937587,-71.10277487471 42.3141658254797,
+-71.103113945163 42.3142739188902,-71.10324876416 42.31402489987,
+-71.1033002961013 42.3140393340215,-71.1033488797549 42.3139495090772,
+-71.103396240451 42.3138632439557,-71.1041521907712 42.3141153348029,
+-71.1041411411543 42.3141545014533,-71.1041287795912 42.3142114839058,
+-71.1041188134329 42.3142693656241,-71.1041112482575 42.3143272556118,
+-71.1041072845732 42.3143851580048,-71.1041057218871 42.3144430686681,
+-71.1041065602059 42.3145009876017,-71.1041097995362 42.3145589148055,
+-71.1041166403905 42.3146168544148,-71.1041258822717 42.3146748022936,
+-71.1041375307579 42.3147318674446,-71.1041492906949 42.3147711126569,
+-71.1041598612795 42.314808571739,-71.1042515013869 42.3151287620809,
+-71.1041173835118 42.3150739481917,-71.1040809891419 42.3151344119048,
+-71.1040438678912 42.3151191367447,-71.1040194562988 42.3151832057859,
+-71.1038734225584 42.3151140942995,-71.1038446938243 42.3151006300338,
+-71.1038315271889 42.315094347535,-71.1037393329282 42.315054824985,
+-71.1035447555574 42.3152608696313,-71.1033436658644 42.3151648370544,
+-71.1032580383161 42.3152269126061,-71.103223066939 42.3152517403219,
+-71.1031880899493 42.3152774590236)),
+((-71.1043632495873 42.315113108546,-71.1043583974082 42.3151211109857,
+-71.1043443253471 42.3150676015829,-71.1043850704575 42.3150793250568,-71.1043632495873 42.315113108546)))',4326);
+
+SELECT ST_GeomFromText('CIRCULARSTRING(220268 150415,220227 150505,220227 150406)');
+	</pre></div><div class="refsection" title="関連情報"><a name="id287016439"></a><h2>関連情報</h2><p><a class="xref" href="ST_GeomFromEWKT.html" title="ST_GeomFromEWKT">ST_GeomFromEWKT</a>, <a class="xref" href="ST_GeomFromWKB.html" title="ST_GeomFromWKB">ST_GeomFromWKB</a>, <a class="xref" href="ST_SRID.html" title="ST_SRID">ST_SRID</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_GMLToSQL.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Geometry_Constructors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_GeomFromWKB.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_GMLToSQL </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_GeomFromWKB</td></tr></table></div></body></html>

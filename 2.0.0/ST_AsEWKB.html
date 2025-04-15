@@ -1,0 +1,26 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_AsEWKB</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.0.0マニュアル日本語訳"><link rel="up" href="reference.html#Geometry_Outputs" title="8.6. ジオメトリ出力"><link rel="prev" href="ST_AsBinary.html" title="ST_AsBinary"><link rel="next" href="ST_AsEWKT.html" title="ST_AsEWKT"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_AsEWKB</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_AsBinary.html">戻る</a> </td><th width="60%" align="center">8.6. ジオメトリ出力</th><td width="20%" align="right"> <a accesskey="n" href="ST_AsEWKT.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_AsEWKB"><a name="ST_AsEWKB"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_AsEWKB — ジオメトリのSRIDメタデータが付いたWell-Known Binary(WKB)表現を返します。</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">bytea <b class="fsfunc">ST_AsEWKB</b>(</code>geometry  <var class="pdparam">g1</var><code>)</code>;</p><p><code class="funcdef">bytea <b class="fsfunc">ST_AsEWKB</b>(</code>geometry  <var class="pdparam">g1</var>, text <var class="pdparam">NDR_or_XDR</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="id287046908"></a><h2>説明</h2><p>ジオメトリのSRIDメタデータが付いWell-Knwon Binary表現を返します。2つの形式があります。ひとつめの形式では、エンディアンエンコーディングのパラメータを取らずにサーバ機のエンディアンとします。ふたつめの形式では、第2引数にリトルエンディアン('NDR')かビッグエンディアン('XDR')を使ってエンコーディングを明示します。</p><p>これは文字列表現に変換することなくデータベース外にデータを引き出すバイナリカーソルに使用します。 </p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>WKB仕様ではSRIDは入りません。SRIDを持たないOGC WKBの書式を得るにはST_AsBinaryを使用します。</p></td></tr></table></div><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>ST_AsEWKBはジオメトリに対するST_GeomFromEWKBの逆です。PostGISジオメトリをST_AsEWKB表現から変換するにはST_GeomFromEWKBを使います。 </p></td></tr></table></div><p>機能強化: 2.0.0では、多角形サーフェス、三角形、TINが導入されました。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ この関数は3次元に対応しています。Zインデクスを削除しません。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ このメソッドは曲線ストリングと曲線に対応しています</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ この関数は多面体サーフェスに対応しています。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ この関数は三角形と不規則三角網(TIN)に対応しています。</p></div><div class="refsection" title="例"><a name="id287046983"></a><h2>例</h2><pre class="programlisting">SELECT ST_AsEWKB(ST_GeomFromText('POLYGON((0 0,0 1,1 1,1 0,0 0))',4326));
+
+		   st_asewkb
+--------------------------------
+\001\003\000\000 \346\020\000\000\001\000
+\000\000\005\000\000\000\000
+\000\000\000\000\000\000\000\000
+\000\000\000\000\000\000\000\000\000
+\000\000\000\000\000\000\000\000\000\000
+\000\000\360?\000\000\000\000\000\000\360?
+\000\000\000\000\000\000\360?\000\000\000\000\000
+\000\360?\000\000\000\000\000\000\000\000\000\000\000
+\000\000\000\000\000\000\000\000\000\000\000\000\000
+(1 row)</pre><pre class="programlisting">SELECT ST_AsEWKB(ST_GeomFromText('POLYGON((0 0,0 1,1 1,1 0,0 0))',4326), 'XDR');
+		   st_asewkb
+--------------------------------
+\000 \000\000\003\000\000\020\346\000\000\000\001\000\000\000\005\000\000\000\000\
+000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000?
+\360\000\000\000\000\000\000?\360\000\000\000\000\000\000?\360\000\000\000\000
+\000\000?\360\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000
+\000\000\000\000\000\000\000\000\000\000\000\000\000
+		</pre></div><div class="refsection" title="関連情報"><a name="id287049629"></a><h2>関連情報</h2><p><a class="xref" href="ST_AsBinary.html" title="ST_AsBinary">ST_AsBinary</a>, <a class="xref" href="ST_AsEWKT.html" title="ST_AsEWKT">ST_AsEWKT</a>, <a class="xref" href="ST_AsText.html" title="ST_AsText">ST_AsText</a>, <a class="xref" href="ST_GeomFromEWKT.html" title="ST_GeomFromEWKT">ST_GeomFromEWKT</a>, <a class="xref" href="ST_SRID.html" title="ST_SRID">ST_SRID</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_AsBinary.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Geometry_Outputs">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_AsEWKT.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_AsBinary </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_AsEWKT</td></tr></table></div></body></html>
