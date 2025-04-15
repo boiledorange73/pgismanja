@@ -1,0 +1,22 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_SetBandNoDataValue</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.3.0 マニュアル"><link rel="up" href="RT_reference.html#RasterBand_Editors" title="9.8. ラスタバンドエディタ"><link rel="prev" href="RT_ST_Transform.html" title="ST_Transform"><link rel="next" href="RT_ST_SetBandIsNoData.html" title="ST_SetBandIsNoData"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_SetBandNoDataValue</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="RT_ST_Transform.html">戻る</a> </td><th width="60%" align="center">9.8. ラスタバンドエディタ</th><td width="20%" align="right"> <a accesskey="n" href="RT_ST_SetBandIsNoData.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_SetBandNoDataValue"><a name="RT_ST_SetBandNoDataValue"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_SetBandNoDataValue — 指定したバンドにNODATAを表現する値を設定します。バンドを指定しない場合には、1番と仮定します。NODATA値を持たないようにするには、nodatavalueにNULLを指定します。</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">raster <b class="fsfunc">ST_SetBandNoDataValue</b>(</code>raster  <var class="pdparam">rast</var>, double precision  <var class="pdparam">nodatavalue</var><code>)</code>;</p><p><code class="funcdef">raster <b class="fsfunc">ST_SetBandNoDataValue</b>(</code>raster  <var class="pdparam">rast</var>, integer  <var class="pdparam">band</var>, double precision  <var class="pdparam">nodatavalue</var>, boolean  <var class="pdparam">forcechecking=false</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp92978000"></a><h2>説明</h2><p>指定したバンドにNODATAを表現する値を設定します。バンドを指定しない場合には、1番と仮定します。この関数は<a class="xref" href="RT_ST_Polygon.html" title="ST_Polygon">ST_Polygon</a>, <a class="xref" href="RT_ST_DumpAsPolygons.html" title="ST_DumpAsPolygons">ST_DumpAsPolygons</a>, ST_PixelAs系関数群からの結果に影響を与えます。</p></div><div class="refsection" title="例"><a name="idp92979920"></a><h2>例</h2><pre class="programlisting">-- 1番バンドのNODATA値を変更します
+UPDATE dummy_rast
+        SET rast = ST_SetBandNoDataValue(rast,1, 254)
+WHERE rid = 2;
+
+-- 1番、2番、3番のNODATA値を変更します
+UPDATE dummy_rast
+        SET rast =
+                ST_SetBandNoDataValue(
+                        ST_SetBandNoDataValue(
+                                ST_SetBandNoDataValue(
+                                        rast,1, 254)
+                                ,2,99),
+                                3,108)
+                WHERE rid = 2;
+
+-- NODATA値の設定を解除して、処理関数が全てのピクセルを考慮するようにします
+-- wipe out the nodata value this will ensure all pixels are considered for all processing functions
+UPDATE dummy_rast
+        SET rast = ST_SetBandNoDataValue(rast,1, NULL)
+WHERE rid = 2;
+                                        </pre></div><div class="refsection" title="関連情報"><a name="idp92981200"></a><h2>関連情報</h2><p><a class="xref" href="RT_ST_BandNoDataValue.html" title="ST_BandNoDataValue">ST_BandNoDataValue</a>, <a class="xref" href="RT_ST_NumBands.html" title="ST_NumBands">ST_NumBands</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="RT_ST_Transform.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="RT_reference.html#RasterBand_Editors">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="RT_ST_SetBandIsNoData.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_Transform </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_SetBandIsNoData</td></tr></table></div></body></html>

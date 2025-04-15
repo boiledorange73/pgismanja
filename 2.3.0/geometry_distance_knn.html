@@ -1,0 +1,57 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>&lt;-&gt;</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.3.0 マニュアル"><link rel="up" href="reference.html#Operators" title="8.8. 演算子"><link rel="prev" href="ST_Geometry_Same.html" title="~="><link rel="next" href="geometry_distance_cpa.html" title="|=|"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">&lt;-&gt;</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_Geometry_Same.html">戻る</a> </td><th width="60%" align="center">8.8. 演算子</th><td width="20%" align="right"> <a accesskey="n" href="geometry_distance_cpa.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="&lt;-&gt;"><a name="geometry_distance_knn"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>&lt;-&gt; — AとBの2次元距離を返します。 </p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">double precision <b class="fsfunc">&lt;-&gt;</b>(</code> geometry  <var class="pdparam">A</var> ,  geometry  <var class="pdparam">B</var> <code>)</code>;</p><p><code class="funcdef">double precision <b class="fsfunc">&lt;-&gt;</b>(</code> geography  <var class="pdparam">A</var> ,  geography  <var class="pdparam">B</var> <code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp76792784"></a><h2>説明</h2><p><code class="varname">&lt;-&gt;</code>演算子は二つのジオメトリの2次元距離を返します。"ORDER BY"句内で使われ、インデクスの援助を受けた近傍結果集合を提供します。PostgreSQL 9.5より前では、バウンディングボックスの中心距離を出すだけでしたが、PostgreSQL 9.5以上では、ジオメトリ間の本当の距離が与えられた本当のKNN距離検索を行います。ジオグラフィでは球面上の距離を計算します。 </p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>これのオペランドはジオメトリで利用できるインデクスを使用します。他の演算子との相違点は、ORDER BY句でのみインデクスが使用される点です。</p></td></tr></table></div><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>ジオメトリのひとつが定数となる (副問い合わせ/共通テーブル式にない)場合 (a.geomでなく'SRID=3005;POINT(1011102 450541)'::geometry等となる場合)には、インデクスが有効になるだけです。</p></td></tr></table></div><p>実際の生きた例については<a class="ulink" href="http://workshops.opengeo.org/postgis-intro/knn.html" target="_top">OpenGeo workshop: Nearest-Neighbour Searching</a>を参照して下さい。</p><p>Enhanced: 2.2.0 ジオメトリとジオグラフィとのKNN (k近傍法)の動作が本当のものになりました。ジオグラフィのKNNは回転楕円体面上でなく球面上の計算となることに注意して下さい。PostgreSQL 9.4以下では、ジオグラフィに対応していますが、バウンディングボックスの重心に対応するだけです。</p><p>Changed: 2.2.0 PostgreSQL 9.5では、古いハイブリッド書式は遅くなりる可能性があります。そのため、PostGIS 2.2以上かつPostgreSQL 9.5以上においてのみ動作させる場合には、そのやり方をり除きたくなるでしょう。</p><p>Availability: 2.0.0 弱いKNNによって、実際の距離の代わりにジオメトリの重心による近傍が得られます。ポイントは確実な結果を得て、他のタイプは全て不確実な結果を得ます。PostgreSQL 9.1以上で有効です。</p></div><div class="refsection" title="例"><a name="idp76797264"></a><h2>例</h2><pre class="programlisting">SELECT ST_Distance(geom, 'SRID=3005;POINT(1011102 450541)'::geometry) as d,edabbr, vaabbr
+FROM va2005
+ORDER BY d limit 10;
+
+        d         | edabbr | vaabbr
+------------------+--------+--------
+                0 | ALQ    | 128
+ 5541.57712511724 | ALQ    | 129A
+ 5579.67450712005 | ALQ    | 001
+  6083.4207708641 | ALQ    | 131
+  7691.2205404848 | ALQ    | 003
+ 7900.75451037313 | ALQ    | 122
+ 8694.20710669982 | ALQ    | 129B
+ 9564.24289057111 | ALQ    | 130
+  12089.665931705 | ALQ    | 127
+ 18472.5531479404 | ALQ    | 002
+(10 rows)
+</pre><p>KNNの生の答は次のとおりです。 </p><pre class="programlisting">SELECT st_distance(geom, 'SRID=3005;POINT(1011102 450541)'::geometry) as d,edabbr, vaabbr
+FROM va2005
+ORDER BY geom &lt;-&gt; 'SRID=3005;POINT(1011102 450541)'::geometry limit 10;
+
+        d         | edabbr | vaabbr
+------------------+--------+--------
+                0 | ALQ    | 128
+ 5541.57712511724 | ALQ    | 129A
+ 5579.67450712005 | ALQ    | 001
+  6083.4207708641 | ALQ    | 131
+  7691.2205404848 | ALQ    | 003
+ 7900.75451037313 | ALQ    | 122
+ 8694.20710669982 | ALQ    | 129B
+ 9564.24289057111 | ALQ    | 130
+  12089.665931705 | ALQ    | 127
+ 18472.5531479404 | ALQ    | 002
+(10 rows)
+</pre><p>二つのクエリで"EXPLAIN ANALYZE"を実行すると、二つ目で速度が改善したことが分かります。 </p><p>PostgreSQL 9.5未満では、実際の近傍を発見するために、ハイブリッドのクエリを使います。最初にインデクスを用いたKNNを使って共通テーブル式 (CTE)クエリを行い、正しい順序を得る確実なクエリを実行します。 </p><pre class="programlisting">WITH index_query AS (
+  SELECT ST_Distance(geom, 'SRID=3005;POINT(1011102 450541)'::geometry) as d,edabbr, vaabbr
+        FROM va2005
+  ORDER BY geom &lt;-&gt; 'SRID=3005;POINT(1011102 450541)'::geometry LIMIT 100)
+  SELECT *
+        FROM index_query
+  ORDER BY d limit 10;
+
+        d         | edabbr | vaabbr
+------------------+--------+--------
+                0 | ALQ    | 128
+ 5541.57712511724 | ALQ    | 129A
+ 5579.67450712005 | ALQ    | 001
+  6083.4207708641 | ALQ    | 131
+  7691.2205404848 | ALQ    | 003
+ 7900.75451037313 | ALQ    | 122
+ 8694.20710669982 | ALQ    | 129B
+ 9564.24289057111 | ALQ    | 130
+  12089.665931705 | ALQ    | 127
+ 18472.5531479404 | ALQ    | 002
+(10 rows)
+
+                        </pre></div><div class="refsection" title="関連情報"><a name="idp76825552"></a><h2>関連情報</h2><p><a class="xref" href="ST_DWithin.html" title="ST_DWithin">ST_DWithin</a>, <a class="xref" href="ST_Distance.html" title="ST_Distance">ST_Distance</a>, <a class="xref" href="geometry_distance_box.html" title="&lt;#&gt;">&lt;#&gt;</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_Geometry_Same.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Operators">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="geometry_distance_cpa.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">~= </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> |=|</td></tr></table></div></body></html>

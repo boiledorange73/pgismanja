@@ -1,0 +1,22 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_ShortestLine</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.3.0 マニュアル"><link rel="up" href="reference.html#Spatial_Relationships_Measurements" title="8.9. 空間関係関数と空間計測関数"><link rel="prev" href="ST_RelateMatch.html" title="ST_RelateMatch"><link rel="next" href="ST_Touches.html" title="ST_Touches"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_ShortestLine</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_RelateMatch.html">戻る</a> </td><th width="60%" align="center">8.9. 空間関係関数と空間計測関数 </th><td width="20%" align="right"> <a accesskey="n" href="ST_Touches.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_ShortestLine"><a name="ST_ShortestLine"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_ShortestLine — 二つのジオメトリの2次元長が最短となるラインを返します。</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_ShortestLine</b>(</code>geometry  <var class="pdparam">g1</var>, geometry  <var class="pdparam">g2</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp78708432"></a><h2>説明</h2><p>二つのジオメトリの2次元最短ラインを返します。複数発見した場合には、最初のラインを返します。g1とg2が1点でインタセクトする場合には、インタセクトした点を始点と終点として返します。g1とg2が複数点でインタセクトする場合には、インタセクトした点からなるラインを返しますが、どの点になるかは分かりません。返されるラインは常にg1が始点でg2が終点です。この関数が返すラインの長さは常にg1とg2を引数に取ったST_Distanceの返り値と同じです。 </p><p>Availability: 1.5.0</p></div><div class="refsection" title="例"><a name="idp78709968"></a><h2>例</h2><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td><div class="informalfigure"><div class="mediaobject"><img src="images/st_shortestline01.png"><div class="caption"><p>ポイントとラインストリングの最短ライン</p></div></div></div><p>
+				</p><pre class="programlisting">SELECT ST_AsText(
+        ST_ShortestLine('POINT(100 100)'::geometry,
+                'LINESTRING (20 80, 98 190, 110 180, 50 75 )'::geometry)
+        ) As sline;
+
+
+   sline
+-----------------
+LINESTRING(100 100,73.0769230769231 115.384615384615)
+                                </pre><p>
+						  </p></td><td><div class="informalfigure"><div class="mediaobject"><img src="images/st_shortestline02.png"><div class="caption"><p>ポリゴンとポリゴンの最短ライン</p></div></div></div><p>
+				</p><pre class="programlisting">SELECT ST_AsText(
+                ST_ShortestLine(
+                        ST_GeomFromText('POLYGON((175 150, 20 40, 50 60, 125 100, 175 150))'),
+                        ST_Buffer(ST_GeomFromText('POINT(110 170)'), 20)
+                        )
+                ) As slinewkt;
+
+ LINESTRING(140.752120669087 125.695053378061,121.111404660392 153.370607753949)
+                                </pre><p>
+						</p></td></tr></tbody></table></div></div><div class="refsection" title="関連情報"><a name="idp78722768"></a><h2>関連情報</h2><p><a class="xref" href="ST_ClosestPoint.html" title="ST_ClosestPoint">ST_ClosestPoint</a>, <a class="xref" href="ST_Distance.html" title="ST_Distance">ST_Distance</a>, <a class="xref" href="ST_LongestLine.html" title="ST_LongestLine">ST_LongestLine</a>, <a class="xref" href="ST_MaxDistance.html" title="ST_MaxDistance">ST_MaxDistance</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_RelateMatch.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Spatial_Relationships_Measurements">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_Touches.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_RelateMatch </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_Touches</td></tr></table></div></body></html>

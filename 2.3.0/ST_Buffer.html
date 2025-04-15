@@ -1,0 +1,73 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_Buffer</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.3.0 マニュアル"><link rel="up" href="reference.html#Geometry_Processing" title="8.11. ジオメトリ処理関数"><link rel="prev" href="ST_IsSolid.html" title="ST_IsSolid"><link rel="next" href="ST_BuildArea.html" title="ST_BuildArea"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_Buffer</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_IsSolid.html">戻る</a> </td><th width="60%" align="center">8.11. ジオメトリ処理関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_BuildArea.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_Buffer"><a name="ST_Buffer"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_Buffer — (T) このジオメトリからの距離が指定された距離以下となる点全てを表現するジオメトリを返します。 </p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_Buffer</b>(</code>geometry  <var class="pdparam">g1</var>, float  <var class="pdparam">radius_of_buffer</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_Buffer</b>(</code>geometry  <var class="pdparam">g1</var>, float  <var class="pdparam">radius_of_buffer</var>, integer  <var class="pdparam">num_seg_quarter_circle</var><code>)</code>;</p><p><code class="funcdef">geometry <b class="fsfunc">ST_Buffer</b>(</code>geometry  <var class="pdparam">g1</var>, float  <var class="pdparam">radius_of_buffer</var>, text  <var class="pdparam">buffer_style_parameters</var><code>)</code>;</p><p><code class="funcdef">geography <b class="fsfunc">ST_Buffer</b>(</code>geography  <var class="pdparam">g1</var>, float  <var class="pdparam">radius_of_buffer_in_meters</var><code>)</code>;</p><p><code class="funcdef">geography <b class="fsfunc">ST_Buffer</b>(</code>geography  <var class="pdparam">g1</var>, float  <var class="pdparam">radius_of_buffer</var>, integer  <var class="pdparam">num_seg_quarter_circle</var><code>)</code>;</p><p><code class="funcdef">geography <b class="fsfunc">ST_Buffer</b>(</code>geography  <var class="pdparam">g1</var>, float  <var class="pdparam">radius_of_buffer</var>, text  <var class="pdparam">buffer_style_parameters</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp80755280"></a><h2>説明</h2><p>このジオメトリ/ジオグラフィからの距離が指定された距離以下となる点全てを表現するジオメトリ/ジオグラフィを返します。 </p><p>ジオメトリ: 計算は、ジオメトリの空間参照系で行われます。形状制御のために異なる終端キャップと継ぎ目を設定する機能が1.5で導入されました。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>負の半径: ポリゴンでは、負の半径が使えます。ポリゴンを拡張させずに縮小させることができます。</p></td></tr></table></div><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>ジオグラフィ: ジオメトリ実装にかぶさる、薄いラッパです。ジオグラフィオブジェクトのバウンディングボックスに最適なSRIDを決定し (UTMが望ましいですが、ランベルト正積方位図法 (北/南)や、最悪のシナリオではメルカトルに頼ります)、その平面でバッファを生成し、WGS84ジオグラフィに戻します。</p></td></tr></table></div><p><img src="images/warning.png"> ジオグラフィでは、オブジェクトが二つのUTMゾーンをまたいだり、日付変更線をまたぐような、相当に大きい場合には、期待した通りの動作をないかも知れません。</p><p>Availability: 1.5 - ST_Bufferが異なる終端と継ぎ目の型に対応するよう強化されました。たとえば、道路ラインストリングを、丸の代わりに平坦や四角形の終端を持つ道路ポリゴンに変換するのに使います。ジオグラフィ用の薄いラッパが追加されました。最新のジオメトリ機能の利点を得るにはGEOS 3.2以上が必要です。 </p><p>第3引数 (現在ジオメトリしか適用できません)で、4分の1円に近づけるための区分数を指定でき (整数の場合、デフォルトは8です)、また、空白区切りのkey=valueペア (文字列の場合)を、次に示す操作として指定することができます。 </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>'quad_segs=#' : 4分の1円区分数に近づけるために使われる区分の数 (デフォルトは8)。</p></li><li class="listitem"><p>'endcap=round|flat|square' : 終端スタイル (デフォルトは"round"、他の値を取るにはGEOS 3.2以上が必要)。'butt'は'flat'の同意語として受け付けます。</p></li><li class="listitem"><p>'join=round|mitre|bevel' : 接続スタイル (デフォルトは"round"、他の値を取るにはGEOS 3.2以上が必要)。'miter'は'mitre'の同義語として受け付けます。</p></li><li class="listitem"><p>'mitre_limit=#.#' : マイター比 (訳注: 継ぎ目の内側と外側の距離と線幅との比)の最大値 (継ぎ目スタイルがmiterである場合のみ有効)。'miter_limit'は'mitre_limit'の同義語として受け付けます。</p></li></ul></div><p>
+				</p><p>半径の単位は空間参照系の単位です。</p><p>入力は、POINT, MULTIPOINT, LINESTRING, MULTILINESTRING, POLYGON, MULTIPOLYGON, GEOMETRYCOLLECTIONが可能です。</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>この関数は第3次元 (Z軸)は無視し、3次元ジオメトリが与えられても、常に2次元バッファを返します。</p></td></tr></table></div><p>GEOSモジュールで実現しています。</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This method implements the <a class="ulink" href="http://www.opengeospatial.org/standards/sfs" target="_top">OpenGIS Simple Features
+ Implementation Specification for SQL 1.1.</a> s2.1.1.3</p><p><span class="inlinemediaobject"><img src="images/check.png"></span> This method implements the SQL/MM specification. SQL-MM 3: 5.1.17</p><div class="note" title="注記" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[注記]" src="images/note.png"></td><th align="left"></th></tr><tr><td align="left" valign="top"><p>しばしば距離圏検索に使用されていますが、間違いです。距離圏検索でバッファを生成するのは、遅く、かつ無益です。替わりに<a class="xref" href="ST_DWithin.html" title="ST_DWithin">ST_DWithin</a>を使います。</p></td></tr></table></div></div><div class="refsection" title="例"><a name="idp80768720"></a><h2>例</h2><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td><div class="informalfigure"><div class="mediaobject"><img src="images/st_buffer01.png"><div class="caption"><p>quad_segs=8 (デフォルト)</p></div></div></div><p>
+				</p><pre class="programlisting">SELECT ST_Buffer(
+ ST_GeomFromText('POINT(100 90)'),
+ 50, 'quad_segs=8');
+                                </pre><p>
+						  </p></td><td><div class="informalfigure"><div class="mediaobject"><img src="images/st_buffer02.png"><div class="caption"><p>quad_segs=2 (不十分)</p></div></div></div><p>
+				</p><pre class="programlisting">SELECT ST_Buffer(
+ ST_GeomFromText('POINT(100 90)'),
+ 50, 'quad_segs=2');
+                                </pre><p>
+						</p></td></tr><tr><td><div class="informalfigure"><div class="mediaobject"><img src="images/st_buffer03.png"><div class="caption"><p>endcap=round join=round (デフォルト)</p></div></div></div><p>
+				</p><pre class="programlisting">SELECT ST_Buffer(
+ ST_GeomFromText(
+  'LINESTRING(50 50,150 150,150 50)'
+ ), 10, 'endcap=round join=round');
+                                </pre><p>
+						 </p></td><td><div class="informalfigure"><div class="mediaobject"><img src="images/st_buffer04.png"><div class="caption"><p>endcap=square</p></div></div></div><p>
+				</p><pre class="programlisting">SELECT ST_Buffer(
+ ST_GeomFromText(
+  'LINESTRING(50 50,150 150,150 50)'
+ ), 10, 'endcap=square join=round');
+                                </pre><p>
+						  </p></td><td><div class="informalfigure"><div class="mediaobject"><img src="images/st_buffer05.png"><div class="caption"><p>endcap=flat</p></div></div></div><p>
+				</p><pre class="programlisting">SELECT ST_Buffer(
+ ST_GeomFromText(
+  'LINESTRING(50 50,150 150,150 50)'
+ ), 10, 'endcap=flat join=round');
+                                </pre><p>
+						  </p></td></tr><tr><td><div class="informalfigure"><div class="mediaobject"><img src="images/st_buffer07.png"><div class="caption"><p>join=bevel</p></div></div></div><p>
+				</p><pre class="programlisting">SELECT ST_Buffer(
+ ST_GeomFromText(
+  'LINESTRING(50 50,150 150,150 50)'
+ ), 10, 'join=bevel');
+                                </pre><p>
+						  </p></td><td><div class="informalfigure"><div class="mediaobject"><img src="images/st_buffer06.png"><div class="caption"><p>join=mitre mitre_limit=5.0 (デフォルトの最大マイター比)</p></div></div></div><p>
+				</p><pre class="programlisting">SELECT ST_Buffer(
+ ST_GeomFromText(
+  'LINESTRING(50 50,150 150,150 50)'
+ ), 10, 'join=mitre mitre_limit=5.0');
+                                </pre><p>
+						  </p></td><td><div class="informalfigure"><div class="mediaobject"><img src="images/st_buffer08.png"><div class="caption"><p>join=mitre mitre_limit=1</p></div></div></div><p>
+				</p><pre class="programlisting">SELECT ST_Buffer(
+ ST_GeomFromText(
+  'LINESTRING(50 50,150 150,150 50)'
+ ), 10, 'join=mitre mitre_limit=1.0');
+                                </pre><p>
+						  </p></td></tr></tbody></table></div><pre class="programlisting">-- ポイントに対する近似円バッファ
+-- 4分の1円を2点で近似するようにバッファを施された点は8辺のポリゴンです。
+-- (ダイアグラム参照)
+SELECT ST_NPoints(ST_Buffer(ST_GeomFromText('POINT(100 90)'), 50)) As promisingcircle_pcount,
+ST_NPoints(ST_Buffer(ST_GeomFromText('POINT(100 90)'), 50, 2)) As lamecircle_pcount;
+
+promisingcircle_pcount | lamecircle_pcount
+------------------------+-------------------
+                         33 |                9
+
+-- 手軽だけれども不十分な円(4分の1円で2点だけの八角形)
+-- 次に示すのは100メートルの八角形です。
+-- 座標系は、メートル単位マサチューセッツ州平面に変換したNAD 83経度緯度で、
+-- メートルでバッファを取っています。
+SELECT ST_AsText(ST_Buffer(
+ST_Transform(
+ST_SetSRID(ST_MakePoint(-71.063526, 42.35785),4269), 26986)
+,100,2)) As octagon;
+----------------------
+POLYGON((236057.59057465 900908.759918696,236028.301252769 900838.049240578,235
+957.59057465 900808.759918696,235886.879896532 900838.049240578,235857.59057465
+900908.759918696,235886.879896532 900979.470596815,235957.59057465 901008.759918
+696,236028.301252769 900979.470596815,236057.59057465 900908.759918696))
+                </pre></div><div class="refsection" title="関連情報"><a name="idp80805584"></a><h2>関連情報</h2><p><a class="xref" href="ST_Collect.html" title="ST_Collect">ST_Collect</a>, <a class="xref" href="ST_DWithin.html" title="ST_DWithin">ST_DWithin</a>, <a class="xref" href="ST_SetSRID.html" title="ST_SetSRID">ST_SetSRID</a>, <a class="xref" href="ST_Transform.html" title="ST_Transform">ST_Transform</a>, <a class="xref" href="ST_Union.html" title="ST_Union">ST_Union</a></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_IsSolid.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Geometry_Processing">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_BuildArea.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_IsSolid </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_BuildArea</td></tr></table></div></body></html>

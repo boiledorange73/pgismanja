@@ -1,0 +1,17 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_IsValidTrajectory</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.3.0 マニュアル"><link rel="up" href="reference.html#Temporal" title="8.13. 時間機能"><link rel="prev" href="ST_AddMeasure.html" title="ST_AddMeasure"><link rel="next" href="ST_ClosestPointOfApproach.html" title="ST_ClosestPointOfApproach"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_IsValidTrajectory</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_AddMeasure.html">戻る</a> </td><th width="60%" align="center">8.13. 時間機能</th><td width="20%" align="right"> <a accesskey="n" href="ST_ClosestPointOfApproach.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_IsValidTrajectory"><a name="ST_IsValidTrajectory"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_IsValidTrajectory — ジオメトリが妥当なトラジェクトリの場合には<code class="varname">true</code>を返します。 </p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">boolean <b class="fsfunc">ST_IsValidTrajectory</b>(</code>geometry  <var class="pdparam">line</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp83127888"></a><h2>説明</h2><p>ジオメトリが妥当なトラジェクトリになっているかどうかを問い合わせます。妥当なトラジェクトリはM値を持つLINESTRINGで、頂点を追うごとにM値が大きくなっていなければなりません。 </p><p>妥当なトラジェクトリは<a class="xref" href="ST_ClosestPointOfApproach.html" title="ST_ClosestPointOfApproach">ST_ClosestPointOfApproach</a>のような時空間クエリの入力で期待されます。 </p><p>初出: 2.2.0</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports 3d and will not drop the z-index.</p></div><div class="refsection" title="例"><a name="idp83131600"></a><h2>例</h2><pre class="programlisting">-- 妥当なトラジェクトリ
+SELECT ST_IsValidTrajectory(ST_MakeLine(
+  ST_MakePointM(0,0,1),
+  ST_MakePointM(0,1,2))
+);
+ t
+
+-- 不正なトラジェクトリ
+SELECT ST_IsValidTrajectory(ST_MakeLine(ST_MakePointM(0,0,1), ST_MakePointM(0,1,0)));
+NOTICE:  Measure of vertex 1 (0) not bigger than measure of vertex 0 (1)
+ st_isvalidtrajectory
+----------------------
+ f
+</pre></div><div class="refsection" title="関連情報"><a name="idp83141456"></a><h2>関連情報</h2><p>
+<a class="xref" href="ST_ClosestPointOfApproach.html" title="ST_ClosestPointOfApproach">ST_ClosestPointOfApproach</a>
+			</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_AddMeasure.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#Temporal">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_ClosestPointOfApproach.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_AddMeasure </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_ClosestPointOfApproach</td></tr></table></div></body></html>

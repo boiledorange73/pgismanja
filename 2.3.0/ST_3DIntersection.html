@@ -1,0 +1,44 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>ST_3DIntersection</title><link rel="stylesheet" type="text/css" href="style.css"><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"><link rel="home" href="index.html" title="PostGIS 2.3.0 マニュアル"><link rel="up" href="reference.html#reference_sfcgal" title="8.10. SFCGAL関数"><link rel="prev" href="ST_MinkowskiSum.html" title="ST_MinkowskiSum"><link rel="next" href="ST_3DDifference.html" title="ST_3DDifference"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">ST_3DIntersection</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ST_MinkowskiSum.html">戻る</a> </td><th width="60%" align="center">8.10. SFCGAL関数</th><td width="20%" align="right"> <a accesskey="n" href="ST_3DDifference.html">次へ</a></td></tr></table><hr></div><div class="refentry" title="ST_3DIntersection"><a name="ST_3DIntersection"></a><div class="titlepage"></div><div class="refnamediv"><h2>名前</h2><p>ST_3DIntersection — 3次元のインタセクトした (共有する)部分を計算します。</p></div><div class="refsynopsisdiv" title="概要"><h2>概要</h2><div class="funcsynopsis"><p><code class="funcdef">geometry <b class="fsfunc">ST_3DIntersection</b>(</code>geometry <var class="pdparam">geom1</var>, geometry <var class="pdparam">geom2</var><code>)</code>;</p></div></div><div class="refsection" title="説明"><a name="idp80188880"></a><h2>説明</h2><p>geom1とgeom2の間で共有される部分のジオメトリを返します。</p><p>Availability: 2.1.0</p><p><span class="inlinemediaobject"><img src="images/check.png"></span> This method needs SFCGAL backend.</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports 3d and will not drop the z-index.</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports Polyhedral surfaces.</p><p><span class="inlinemediaobject"><img src="images/check.png"></span>
+ This function supports Triangles and Triangulated Irregular Network Surfaces (TIN).</p></div><div class="refsection" title="例"><a name="idp80196176"></a><h2>例</h2><p>PostGIS関数<a class="xref" href="ST_AsX3D.html" title="ST_AsX3D">ST_AsX3D</a>を使って3次元イメージを生成し、<a class="ulink" href="http://www.x3dom.org" target="_top">X3Dom HTML Javascript redering library</a>を使ってHTMLでの描画を行います。</p><div class="informaltable"><table border="1"><colgroup><col><col></colgroup><tbody><tr><td><p>
+                </p><pre class="programlisting">SELECT ST_Extrude(ST_Buffer(ST_GeomFromText('POINT(100 90)'),
+ 50, 'quad_segs=2'),0,0,30) AS geom1,
+        ST_Extrude(ST_Buffer(ST_GeomFromText('POINT(80 80)'),
+ 50, 'quad_segs=1'),0,0,30) AS geom2;
+                </pre><p>
+                </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_3ddifference01.png"><div class="caption"><p>元の3次元ジオメトリを重ねたもの。geom2は半透明で示しています。</p></div></div></div>
+              </td><td><p>
+              </p><pre class="programlisting">SELECT ST_3DIntersection(geom1,geom2)
+FROM ( SELECT ST_Extrude(ST_Buffer(ST_GeomFromText('POINT(100 90)'),
+ 50, 'quad_segs=2'),0,0,30) AS geom1,
+        ST_Extrude(ST_Buffer(ST_GeomFromText('POINT(80 80)'),
+ 50, 'quad_segs=1'),0,0,30) AS geom2 ) As t;</pre><p>
+              </p><div class="informalfigure"><div class="mediaobject"><img src="images/st_3dintersection01.png"><div class="caption"><p>geom1とgeom2の共有部分</p></div></div></div>
+              </td></tr></tbody></table></div><p>3次元ラインストリングとポリゴン</p><pre class="programlisting">SELECT ST_AsText(ST_3DIntersection(linestring, polygon)) As wkt
+FROM  ST_GeomFromText('LINESTRING Z (2 2 6,1.5 1.5 7,1 1 8,0.5 0.5 8,0 0 10)') AS linestring
+ CROSS JOIN ST_GeomFromText('POLYGON((0 0 8, 0 1 8, 1 1 8, 1 0 8, 0 0 8))') AS polygon;
+
+              wkt
+--------------------------------
+ LINESTRING Z (1 1 8,0.5 0.5 8)
+                </pre><p>立方体 (閉じた多面体サーフェス)と3次元ポリゴン</p><pre class="programlisting">SELECT ST_AsText(ST_3DIntersection(
+                ST_GeomFromText('POLYHEDRALSURFACE Z( ((0 0 0, 0 0 1, 0 1 1, 0 1 0, 0 0 0)),
+        ((0 0 0, 0 1 0, 1 1 0, 1 0 0, 0 0 0)), ((0 0 0, 1 0 0, 1 0 1, 0 0 1, 0 0 0)),
+        ((1 1 0, 1 1 1, 1 0 1, 1 0 0, 1 1 0)),
+        ((0 1 0, 0 1 1, 1 1 1, 1 1 0, 0 1 0)), ((0 0 1, 1 0 1, 1 1 1, 0 1 1, 0 0 1)) )'),
+        'POLYGON Z ((0 0 0, 0 0 0.5, 0 0.5 0.5, 0 0.5 0, 0 0 0))'::geometry))</pre><pre class="screen">TIN Z (((0 0 0,0 0 0.5,0 0.5 0.5,0 0 0)),((0 0.5 0,0 0 0,0 0.5 0.5,0 0.5 0)))</pre><p>二つの立体の共通部分もまた立体です (ST_Dimensionで3を返します)。</p><pre class="programlisting">SELECT ST_AsText(ST_3DIntersection( ST_Extrude(ST_Buffer('POINT(10 20)'::geometry,10,1),0,0,30),
+ ST_Extrude(ST_Buffer('POINT(10 20)'::geometry,10,1),2,0,10) ));</pre><pre class="screen">POLYHEDRALSURFACE Z (((13.3333333333333 13.3333333333333 10,20 20 0,20 20 10,13.3333333333333 13.3333333333333 10)),
+        ((20 20 10,16.6666666666667 23.3333333333333 10,13.3333333333333 13.3333333333333 10,20 20 10)),
+        ((20 20 0,16.6666666666667 23.3333333333333 10,20 20 10,20 20 0)),
+        ((13.3333333333333 13.3333333333333 10,10 10 0,20 20 0,13.3333333333333 13.3333333333333 10)),
+        ((16.6666666666667 23.3333333333333 10,12 28 10,13.3333333333333 13.3333333333333 10,16.6666666666667 23.3333333333333 10)),
+        ((20 20 0,9.99999999999995 30 0,16.6666666666667 23.3333333333333 10,20 20 0)),
+        ((10 10 0,9.99999999999995 30 0,20 20 0,10 10 0)),((13.3333333333333 13.3333333333333 10,12 12 10,10 10 0,13.3333333333333 13.3333333333333 10)),
+        ((12 28 10,12 12 10,13.3333333333333 13.3333333333333 10,12 28 10)),
+        ((16.6666666666667 23.3333333333333 10,9.99999999999995 30 0,12 28 10,16.6666666666667 23.3333333333333 10)),
+        ((10 10 0,0 20 0,9.99999999999995 30 0,10 10 0)),
+        ((12 12 10,11 11 10,10 10 0,12 12 10)),((12 28 10,11 11 10,12 12 10,12 28 10)),
+        ((9.99999999999995 30 0,11 29 10,12 28 10,9.99999999999995 30 0)),((0 20 0,2 20 10,9.99999999999995 30 0,0 20 0)),
+        ((10 10 0,2 20 10,0 20 0,10 10 0)),((11 11 10,2 20 10,10 10 0,11 11 10)),((12 28 10,11 29 10,11 11 10,12 28 10)),
+        ((9.99999999999995 30 0,2 20 10,11 29 10,9.99999999999995 30 0)),((11 11 10,11 29 10,2 20 10,11 11 10)))</pre></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ST_MinkowskiSum.html">戻る</a> </td><td width="20%" align="center"><a accesskey="u" href="reference.html#reference_sfcgal">上に戻る</a></td><td width="40%" align="right"> <a accesskey="n" href="ST_3DDifference.html">次へ</a></td></tr><tr><td width="40%" align="left" valign="top">ST_MinkowskiSum </td><td width="20%" align="center"><a accesskey="h" href="index.html">ホーム</a></td><td width="40%" align="right" valign="top"> ST_3DDifference</td></tr></table></div></body></html>
